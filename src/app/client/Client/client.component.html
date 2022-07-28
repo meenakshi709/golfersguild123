@@ -1,0 +1,105 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6 col-xs-12 col-md-6 col-sm-6 bg-white text-dark">
+            <div class="p-5 login-container">
+                <div class="row">
+                    <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12  text-center">
+                        <img src="../../../assets/images/GolfersGuild_Logo.png" width="250">
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-lg-12 col-xs-12 col-md-12 col-sm-12 form-signin">
+
+                        <h6>Hello Golfers !</h6>
+                        <p>Please enter your username & password to login</p>
+
+                        <form [formGroup]="clientSignup">
+
+                            <mat-form-field class="col-sm-12" appearance="standard">
+                                <mat-label>Client Name* </mat-label>
+                                <input maxlength=50 matInput type="text" placeholder="Client Name" formControlName="email"
+                                    maxlength="50" id="email" />
+                                <mat-icon matSuffix>email</mat-icon>
+                                <mat-error *ngIf="clientSignup.controls['email'].errors?.required">
+                                    Please enter email address
+                                </mat-error>
+                                <mat-error *ngIf="clientSignup.controls['email'].errors?.pattern">
+                                    Please enter valid emailAddress
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field class="col-sm-12" appearance="standard">
+                                <mat-label>Email* </mat-label>
+                                <input maxlength=50 matInput type="email" placeholder="Email Id" formControlName="email"
+                                    maxlength="50" id="email" />
+                                <mat-icon matSuffix>email</mat-icon>
+                                <mat-error *ngIf="clientSignup.controls['email'].errors?.required">
+                                    Please enter email address
+                                </mat-error>
+                                <mat-error *ngIf="clientSignup.controls['email'].errors?.pattern">
+                                    Please enter valid emailAddress
+                                </mat-error>
+                            </mat-form-field>
+
+                            
+                            <mat-form-field class="col-sm-12" appearance="standard">
+                                <mat-label>Address* </mat-label>
+                                <input maxlength=50 matInput type="email" placeholder="Address" formControlName="email"
+                                    maxlength="50" id="email" />
+                                <mat-icon matSuffix>email</mat-icon>
+                                <mat-error *ngIf="clientSignup.controls['email'].errors?.required">
+                                    Please enter email address
+                                </mat-error>
+                                <mat-error *ngIf="clientSignup.controls['email'].errors?.pattern">
+                                    Please enter valid emailAddress
+                                </mat-error>
+                            </mat-form-field>
+
+                            
+                            <mat-form-field class="col-sm-12" appearance="standard">
+                                <mat-label>Contact* </mat-label>
+                                <input maxlength=50 matInput type="text" placeholder="Contact" formControlName="email"
+                                    maxlength="50" id="email" />
+                                <mat-icon matSuffix>email</mat-icon>
+                                <mat-error *ngIf="clientSignup.controls['email'].errors?.required">
+                                    Please enter email address
+                                </mat-error>
+                                <mat-error *ngIf="clientSignup.controls['email'].errors?.pattern">
+                                    Please enter valid emailAddress
+                                </mat-error>
+                            </mat-form-field>
+
+                            <!-- <mat-form-field class="col-sm-12" appearance="standard">
+                                <mat-label>Password* </mat-label>
+                                <input maxlength=50 matInput [type]="hide ? 'password' : 'text'" type="password"
+                                    formControlName="password" maxlength="50" id="password" />
+                                <button mat-icon-button matSuffix (click)="hide = !hide"
+                                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                                <mat-error *ngIf="clientSignup.controls['password'].errors?.required">
+                                    Please enter password
+                                </mat-error>
+                            </mat-form-field> -->
+                            
+
+
+
+                            <button type="submit" class="btn btn-danger btn-block mt-3"
+                                [disabled]="!this.clientSignup.valid" (click)="userLoggedIn()">Login</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="col-lg-6 col-xs-12 col-md-6 col-sm-6  bg-white m-0 p-0 sideimage">
+
+
+        </div>
+    </div>
+
+</div>

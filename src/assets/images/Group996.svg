@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38">
+  <g id="Group_996" data-name="Group 996" transform="translate(-1376 -7956)">
+    <g id="Group_994" data-name="Group 994" transform="translate(1376 7956.065)">
+      <g id="Rectangle_67" data-name="Rectangle 67" transform="translate(0 -0.065)" fill="none" stroke="#fe0000" stroke-width="1">
+        <rect width="38" height="38" rx="10" stroke="none"/>
+        <rect x="0.5" y="0.5" width="37" height="37" rx="9.5" fill="none"/>
+      </g>
+    </g>
+    <g id="twitter" transform="translate(1325.642 7870.959)">
+      <path id="Path_6" data-name="Path 6" d="M60.359,109.431a10.865,10.865,0,0,0,16.672-9.182q0-.225-.009-.447a8.537,8.537,0,0,0,1.888-1.938,8.812,8.812,0,0,1-2.157.56h-.007l.006,0A4.039,4.039,0,0,0,78.411,96.3a13.233,13.233,0,0,1-1.85.772c-.179.059-.366.118-.559.172a3.812,3.812,0,0,0-6.5,3.468,11.48,11.48,0,0,1-7.824-3.955s-1.822,2.487,1.086,5.045a3.917,3.917,0,0,1-1.647-.491,3.623,3.623,0,0,0,3.013,3.784,3.488,3.488,0,0,1-1.682.07,3.758,3.758,0,0,0,3.5,2.662,7.322,7.322,0,0,1-5.6,1.6Z" transform="translate(0 0)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

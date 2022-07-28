@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38">
+  <g id="Group_997" data-name="Group 997" transform="translate(-1432 -7956)">
+    <g id="Group_995" data-name="Group 995" transform="translate(1432 7956.065)">
+      <g id="Rectangle_67" data-name="Rectangle 67" transform="translate(0 -0.065)" fill="none" stroke="#fe0000" stroke-width="1">
+        <rect width="38" height="38" rx="10" stroke="none"/>
+        <rect x="0.5" y="0.5" width="37" height="37" rx="9.5" fill="none"/>
+      </g>
+    </g>
+    <g id="instagram" transform="translate(1442.001 7966)">
+      <path id="Path_588" data-name="Path 588" d="M13.1,0H4.863A4.87,4.87,0,0,0,0,4.864v8.241A4.87,4.87,0,0,0,4.863,17.97H13.1a4.87,4.87,0,0,0,4.864-4.864V4.864A4.87,4.87,0,0,0,13.1,0ZM8.984,13.9A4.913,4.913,0,1,1,13.9,8.985,4.919,4.919,0,0,1,8.984,13.9ZM14.015,5.23a1.452,1.452,0,1,1,1.452-1.452A1.453,1.453,0,0,1,14.015,5.23Zm0,0" fill="#fff"/>
+      <path id="Path_589" data-name="Path 589" d="M149.88,146.02a3.86,3.86,0,1,0,3.86,3.86A3.864,3.864,0,0,0,149.88,146.02Zm0,0" transform="translate(-140.896 -140.895)" fill="#fff"/>
+      <path id="Path_590" data-name="Path 590" d="M388.391,96.3a.4.4,0,1,0,.4.4A.4.4,0,0,0,388.391,96.3Zm0,0" transform="translate(-374.376 -92.921)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,8 @@
+.container-fluid{
+    margin: 0px!important;
+    padding: 0px;
+}
+.mat-form-field{
+    float: left!important;
+    margin-left: 4rem!important;
+}

@@ -1,0 +1,62 @@
+.picsum-img-wrapper img{
+
+    margin-bottom: 1rem!important;
+    margin-top: 1rem!important;
+}
+#testi{
+  
+width: 100%;
+
+
+}
+
+#innerTesti{
+
+   
+    
+    width: 100%;
+    margin: auto;
+    position: relative;
+   
+    background-size: 100% 80%!important;
+}
+.carousel-caption{
+   
+    position:relative;
+    right: 0!important;
+    bottom: .25rem!important;
+    left: 0!important;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    color: #fff;
+    text-align: center;
+    font-weight: 500;
+    
+}
+
+.carousel-caption h4{
+    font-size:1rem!important;
+    font-weight: 600;
+}
+.carousel-caption p{
+    font-size:14px!important;
+    font-weight: 400;
+    margin: 1rem!important;
+}
+@media screen and (max-width:600px) {
+    .carousel-caption{
+        position: relative!important;
+      
+         left:0!important;
+        text-align: center!important;
+        font-size:12px!important;
+        bottom: 0!important;
+    }
+    #innerTesti{
+        height: auto;
+    }
+}
+.quots{
+    font-size:3rem;
+    line-height: 1;
+}

@@ -1,0 +1,95 @@
+.login-container{
+       -ms-flex-align: center;
+    align-items: center;
+    padding-top: 40px;
+    /* padding-bottom: 40px; */
+     height: 100vh; 
+    overflow: hidden!important;
+
+}
+.form-signin{
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+}
+.sideimage{
+        top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0!important;
+   
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+h6{
+    margin-top: 3rem!important;
+    font-weight: 700;
+    font-family: Poppins-Medium!important;
+}
+p{
+    color:#707070ab!important;
+    font-size: 0.9rem;
+    text-align: center;
+    line-height: 2;
+    font-family: Poppins-Medium!important;
+}
+label{
+    color:#1266FB!important;
+    font-size: 14px;
+    font-family: Poppins-Medium!important;
+}
+.mat-form-field-outline {
+    border:1px solid #1266FB!important;
+    font-family: Poppins-Medium!important;
+   }
+mat-icon{
+    color:#707070ab!important;
+}
+.mat-form-field-outline {
+    color:#1266FB!important;
+    border:1px solid #1266FB!important;
+}
+.example-container .mat-form-field + .mat-form-field {
+    margin-left: 8px;
+  }
+  
+  .example-right-align {
+    text-align: right;
+  }
+  
+  input.example-right-align::-webkit-outer-spin-button,
+  input.example-right-align::-webkit-inner-spin-button {
+    display: none;
+  }
+  
+  input.example-right-align {
+    -moz-appearance: textfield;
+  }
+  .text-blue{
+    color:#1266FB!important;
+    font-family: Poppins-Medium!important;
+  }
+  .darkBlue{
+    color: #00215a!important;
+    font-family: Poppins-Medium!important;
+  }
+  @font-face {
+    font-family: Poppins-Medium;
+    src: url(../../../assets/fonts/Poppins-Regular.ttf);
+  }
+  *{
+   
+    background-color: #F3F8FF;
+  }
+  .btn-primary{
+    background-color: #1266FB!important;
+  }
+  mat-form-field-autofill-control  {
+  color:#1266FB;
+  border:1px #1266FB solid;
+  }
+
+
+ 

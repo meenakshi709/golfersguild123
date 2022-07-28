@@ -1,0 +1,438 @@
+<div class="container">
+
+    <div class="row headerBox">
+        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6 pt-3">
+            <h4 class="text-darkBlue" mat-dialog-title>Score</h4>
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6  pt-2">
+            <button class="text-right" (click)="closeDialogClick()">X</button>
+        </div>
+    </div>
+
+
+
+
+    <form [formGroup]="summaryForm">
+        <div class="sidebox ">
+
+            <div class="container-fluid pt-3 pb-3 mt-1">
+                <div class="row">
+                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
+                        <div class="smallBox">
+                            <h2 id="outt">
+                                {{this.summaryForm.controls.outTotal.value?this.summaryForm.controls.outTotal.value:00}}</h2>
+                            <p>Out Holes</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
+                        <div class="smallBox">
+                            <h2 id="inn">{{this.summaryForm.controls.inTotal.value?this.summaryForm.controls.inTotal.value:00}}
+                            </h2>
+                            <p>In Holes</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
+                        <div class="smallBox">
+                            <h2>{{ this.summaryForm.controls.inTotal.value+this.summaryForm.controls.outTotal.value}}</h2>
+                            <p>Gross</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
+                        <div class="smallBox">
+                            <h2>{{this.scoreForm.controls.hdcp.value?this.scoreForm.controls.hdcp.value:0}}</h2>
+                            <p>HDCP</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
+                        <div class="smallBox">
+                            <h2>{{(this.summaryForm.controls.inTotal.value+this.summaryForm.controls.outTotal.value)-(this.scoreForm.controls.hdcp.value)}}
+                            </h2>
+                            <p>Net</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
+                        <div class="smallBox">
+                            <h2>{{this.summaryForm.controls.birdieTotal.value}}</h2>
+                            <p>Birdie</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+
+        <form [formGroup]="scoreForm">
+            <section class="container">
+                <div class="row">
+
+                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Tournament Name* </mat-label>
+                            <mat-select formControlName="tour_id" id="tour_id"
+                                (selectionChange)="getRoundDetails()">
+                                <option value="" selected></option>
+                                <mat-option *ngFor="let tournament of this.data.tournamentList"
+                                    [value]="tournament.tourID">{{tournament.tournamentName}}</mat-option>
+                            </mat-select>
+
+                            <mat-error *ngIf="scoreForm.controls['tour_id'].errors?.required">
+                                Please select tournament
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Round* </mat-label>
+                            <mat-select formControlName="round_Id" id="round_Id" (selectionChange)="getGroupList()">
+                                <mat-option *ngFor="let round of this.roundList" [value]="round.round_Id">
+                                    {{round.round_name}}
+                                </mat-option>
+                            </mat-select>
+
+                            <mat-error *ngIf="scoreForm.controls['round_Id'].errors?.required">
+                                Please select round
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+
+                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Group* </mat-label>
+                            <mat-select formControlName="groupId" id="groupId" (selectionChange)="getPlayerList()">
+                                <option value="" selected></option>
+                                <mat-option *ngFor="let player of groupList" [value]="player.groupId">{{player.group}}
+                                </mat-option>
+                            </mat-select>
+
+                            <mat-error *ngIf="scoreForm.controls['groupId'].errors?.required">
+                                Please select group
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+
+                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Player's Name* </mat-label>
+                            <mat-select formControlName="p_id" id="p_id" (selectionChange)="onPlayerSelection()">
+                                <option value="" selected></option>
+                                <mat-option *ngFor="let player of playerList" [value]="player.playerId">{{player.playerName}}
+                                </mat-option>
+                            </mat-select>
+
+                            <mat-error *ngIf="scoreForm.controls['p_id'].errors?.required">
+                                Please select player name
+                            </mat-error>
+                        </mat-form-field>
+                    </div> 
+
+                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Course Name* </mat-label>
+                            <mat-select formControlName="cid" id="course_id">
+                                <option value="" selected></option>
+                                <mat-option *ngFor="let course of this.data.courseListing" [value]="course.cid">{{course.cname}}
+                                </mat-option>
+                            </mat-select>
+
+                            <mat-error *ngIf="scoreForm.controls['cid'].errors?.required">
+                                Please select course name
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                        <mat-form-field appearance="outline">
+                            <mat-label>HDCP* </mat-label>
+                            <input matInput type="text" placeholder="HDCP" formControlName="hdcp" maxlength="100"
+                                id="hdcp" />
+
+                            <mat-error *ngIf="scoreForm.controls['hdcp'].errors?.required">
+                                Please enter hdcp value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Holes* </mat-label>
+                            <mat-select formControlName="holeNum" id="holeNum" (selectionChange)="onChangeHoles()">
+                                    <mat-option  value="18" selected>18    </mat-option>
+                                      <mat-option  value="9" >9    </mat-option>
+                            </mat-select>
+
+                            <mat-error *ngIf="scoreForm.controls['holeNum'].errors?.required">
+                                Please enter number of hole value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+
+
+
+                </div>
+
+                
+
+                <div class="row">
+                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                        <mat-label>Score </mat-label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 1" (change)="calculateScoreOut('score1')"
+                                formControlName="score1" maxlength="2" id="score1" />
+
+                            <mat-error *ngIf="scoreForm.controls['score1'].errors?.required">
+                                Please enter score 1 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                            <input matInput type="text" placeholder="Score2" (change)="calculateScoreOut('score2')"
+                                formControlName="score2" maxlength="2" id="score2" />
+
+                            <mat-error *ngIf="scoreForm.controls['score2'].errors?.required">
+                                Please enter score2 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12" appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 3" (change)="calculateScoreOut('score3')"
+                                formControlName="score3" maxlength="2" id="score3" />
+
+                            <mat-error *ngIf="scoreForm.controls['score3'].errors?.required">
+                                Please enter score 3 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 4" (change)="calculateScoreOut('score4')"
+                                formControlName="score4" maxlength="2" id="score4" />
+
+                            <mat-error *ngIf="scoreForm.controls['score4'].errors?.required">
+                                Please enter score 4 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 5" (change)="calculateScoreOut('score5')"
+                                formControlName="score5" maxlength="2" id="score5" />
+
+                            <mat-error *ngIf="scoreForm.controls['score5'].errors?.required">
+                                Please enter score 5 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 6" (change)="calculateScoreOut('score6')"
+                                formControlName="score6" maxlength="2" id="score6" />
+
+                            <mat-error *ngIf="scoreForm.controls['score6'].errors?.required">
+                                Please enter score 6 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 7" (change)="calculateScoreOut('score7')"
+                                formControlName="score7" maxlength="2" id="score7" />
+
+                            <mat-error *ngIf="scoreForm.controls['score7'].errors?.required">
+                                Please enter score 7 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 8" (change)="calculateScoreOut('score8')"
+                                formControlName="score8" maxlength="2" id="score8" />
+
+                            <mat-error *ngIf="scoreForm.controls['score8'].errors?.required">
+                                Please enter score 8 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 9" (change)="calculateScoreOut('score9')"
+                                formControlName="score9" maxlength="2" id="score9" />
+
+                            <mat-error *ngIf="scoreForm.controls['score9'].errors?.required">
+                                Please enter score 9 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 10" (change)="calculateScoreIn('score10')"
+                                formControlName="score10" maxlength="2" id="score10" />
+
+                            <mat-error *ngIf="scoreForm.controls['score10'].errors?.required">
+                                Please enter score 10 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 11" (change)="calculateScoreIn('score11')"
+                                formControlName="score11" maxlength="2" id="score11" />
+
+                            <mat-error *ngIf="scoreForm.controls['score11'].errors?.required">
+                                Please enter score 11 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+
+                            <input matInput type="text" placeholder="Score 12" (change)="calculateScoreIn('score12')"
+                                formControlName="score12" maxlength="2" id="score1" />
+
+                            <mat-error *ngIf="scoreForm.controls['score12'].errors?.required">
+                                Please enter score 12 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 13" (change)="calculateScoreIn('score13')"
+                                formControlName="score13" maxlength="2" id="score13" />
+
+                            <mat-error *ngIf="scoreForm.controls['score13'].errors?.required">
+                                Please enter score 13 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 14" (change)="calculateScoreIn('score14')"
+                                formControlName="score14" maxlength="2" id="score14" />
+
+                            <mat-error *ngIf="scoreForm.controls['score14'].errors?.required">
+                                Please enter score 14 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 15" (change)="calculateScoreIn('score15')"
+                                formControlName="score15" maxlength="2" id="score15" />
+
+                            <mat-error *ngIf="scoreForm.controls['score15'].errors?.required">
+                                Please enter score 15 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="Score 16" (change)="calculateScoreIn('score16')"
+                                formControlName="score16" maxlength="2" id="score16" />
+
+                            <mat-error *ngIf="scoreForm.controls['score16'].errors?.required">
+                                Please enter score 16 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+
+                            <input matInput type="text" placeholder="Score 17" (change)="calculateScoreIn('score17')"
+                                formControlName="score17" maxlength="2" id="score17" />
+
+                            <mat-error *ngIf="scoreForm.controls['score17'].errors?.required">
+                                Please enter score 17 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            
+                            <input matInput type="text" placeholder="Score 18" (change)="calculateScoreIn('score18')"
+                                formControlName="score18" maxlength="2" id="score18" />
+
+                            <mat-error *ngIf="scoreForm.controls['score18'].errors?.required">
+                                Please enter score 18 value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+                <div class="row text-right">
+                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+
+
+                        <div mat-dialog-actions>
+                            <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
+                            <button type="submit" class="btn btn-primary" [disabled]="!this.scoreForm.valid"
+                                (click)="saveScoreDetails()">Submit</button>
+
+                            <!-- <button type="submit" class="btn btn-danger" [disabled]="!this.scoreForm.valid"
+                        (click)="calculateResult();" id="calculateResult">Calculate</button> -->
+
+
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </section>
+        </form>
+    </div>
+</div>
+
+
+
+
+<!-- <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-xs-12 col-sm-4">
+                                            <label for="playername">Player's Name </label>
+                                               <select id="playerName"  formControlName="playerName" class="form-select mb-3"  >
+                                                     <option  selected >Select Player's Name</option>
+                                                </select>
+                                        </div>
+                                    </div> -->

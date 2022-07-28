@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38">
+  <g id="Group_993" data-name="Group 993" transform="translate(0 0.065)">
+    <g id="Rectangle_67" data-name="Rectangle 67" transform="translate(0 -0.065)" fill="none" stroke="#fe0000" stroke-width="1">
+      <rect width="38" height="38" rx="10" stroke="none"/>
+      <rect x="0.5" y="0.5" width="37" height="37" rx="9.5" fill="none"/>
+    </g>
+    <g id="linkedin" transform="translate(10 9.067)">
+      <g id="Group_2" data-name="Group 2">
+        <path id="Path_3" data-name="Path 3" d="M71.149,69.215a2.286,2.286,0,1,1-2.3,2.283A2.3,2.3,0,0,1,71.149,69.215Z" transform="translate(-68.847 -69.215)" fill="#fff"/>
+        <path id="Path_4" data-name="Path 4" d="M77.511,187.365h-2.68a.63.63,0,0,1-.63-.63V175.3a.63.63,0,0,1,.63-.63h2.68a.63.63,0,0,1,.63.63v11.434A.63.63,0,0,1,77.511,187.365Z" transform="translate(-73.88 -168.351)" fill="#fff"/>
+        <path id="Path_5" data-name="Path 5" d="M193.82,173.6a4.34,4.34,0,0,0-4.34-4.34h-.687a3.86,3.86,0,0,0-3.378,1.994l-.036,0v-1.4a.261.261,0,0,0-.261-.262h-3.344a.262.262,0,0,0-.262.262v12.171a.261.261,0,0,0,.261.261h3.417a.261.261,0,0,0,.262-.262v-7.031a2.229,2.229,0,0,1,2.185-2.238,2.21,2.21,0,0,1,2.236,2.21v7.061a.262.262,0,0,0,.261.261h3.425a.261.261,0,0,0,.262-.261V173.6Z" transform="translate(-174.76 -163.266)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>

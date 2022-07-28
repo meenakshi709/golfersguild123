@@ -1,0 +1,168 @@
+body{
+    box-sizing: padding-box!important;
+}
+.navbar-nav{
+    float: right!important;
+}
+.nav-link{
+    color: #fff!important;
+    font-weight: 500;
+
+}
+.nav-link:hover{
+    border-top:2px solid #FE0000!important;
+
+}
+.nav-link .active{
+    border-top:2px solid #FE0000!important;
+}
+#clubsitem{
+    opacity: 0.9;
+}
+.btn-danger{
+    background-color: #FE0000!important;
+    border-radius: 20px;
+    padding: 5px 20px;
+    font-weight: 500;
+}
+.box{
+    width:100%;
+    text-align: center;
+    padding: 15px;
+ 
+    
+}
+.box h4{
+    color:#fff;
+    text-align: center;
+    font-size: 1.2rem!important;
+    font-weight: 400!important;
+}
+.box img{
+    max-width:60px;
+    height: 60px;
+    margin-bottom: 0.6rem;
+}
+#about{
+    padding-top: 2rem;
+    line-height: 1.5;
+    padding-bottom: 2rem;
+
+}
+#about h2{
+    margin-bottom: 1.6rem;
+}
+#about img{
+    text-align: right;
+}
+#about p{
+    font-size: 1rem;
+}
+
+.bold{
+    font-weight: 900;
+    font-style: italic!important;
+}
+
+
+#tournament{
+    padding: 1.5rem;
+    background-image: url("../../../assets/images/background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
+.glimpsesbg{
+    background-image:url("../../../assets/images/glimpses.png") ;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height:350px;
+    background-position: center center;
+
+
+}
+.mt-5{
+padding-top: 2rem;
+}
+.imgbox{
+    margin: .5rem ;
+    border-radius: 20px;
+    width: 23%;
+}
+.carousel-indicators{
+    z-index: 20!important;
+}
+.carousel-item {
+    display: flex !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1.2s ease-in-out, visibility 1.2s;
+    z-index: -1;
+}
+
+#sponser{
+background: url("../../../assets/images/sponserBg.svg") no-repeat;
+background-color:#FE0000 ;
+background-size: cover;
+background-position: center;
+
+}
+#contactform{
+    border-radius: 20px;
+    background: #ffffff3d;
+    padding: 1.5rem 1rem; 
+}
+
+.carousel-item span{
+    
+    display: block!important;
+} 
+.testbox{
+    background:#fff;
+    color: #15181F;
+    border-radius: 20px;
+    padding: 1rem;
+    margin: 0.6rem;
+    min-height: 300px;
+    }
+.testbox h4{
+          color: #15181F;
+     } 
+ .testbox p{ 
+   color: #15181fcb;
+ } 
+ .testbox img{
+     vertical-align: top!important;
+     height: 100%;
+     display: inline-block;
+ }
+@media screen and (max-width:600px) {
+    #sponser h5,  #sponser h3 {
+        text-align: center!important;
+    }
+    .box img{
+        max-width:50px;
+        height: 50px;
+        margin-bottom: 0.6rem;
+    }
+    .box{
+       
+        padding: 10px;
+        
+    }
+    #clubsitem{
+        margin-top: 1.8rem;
+    }
+    .box h4{
+      
+        font-size: 0.7rem!important;
+    }
+}
+
+
+#testimonial{
+
+    border-radius: 30px;   
+
+}
+/*slider code */

@@ -1,0 +1,27 @@
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px!important;
+    font-size:12px!important;
+  }
+  .mat-radio-button {
+  
+    font-size:12px!important;
+  }
+.mat-radio-group{
+    margin-left: 1rem!important;
+}
+.header{
+  background-color: #fff2f2!important;
+  color: #fe0000 !important;
+  padding: 0px 1rem!important;
+  margin-bottom: 1rem!important;
+}
+.header button{
+  background-color: #fff2f2!important;
+  border: none!important;
+  color:#fe0000!important;
+  margin-top: 0.9rem!important;
+  font-weight: 900!important;
+}
+.header button:focus{
+  background-color: transparent;
+}

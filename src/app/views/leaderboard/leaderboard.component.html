@@ -1,0 +1,220 @@
+
+<app-navigation></app-navigation>
+<div class="container-fluid" id="leaderbrd">
+    <div class="row">
+        <div class="col-12 col-lg-12 col-sm-12 col-xs-12 col-md-12 text-center">
+            <h3 class="mt-5">GOLFERS GUILD CHAMPIONSHIP 2022</h3>
+            <h4 class="text-danger">LEADERBOARD</h4>
+            <p class="text-white" style="text-align:center;margin:auto;margin-bottom: 20px;">  Media Coverage Partner &nbsp;
+                <img src="../../../assets/images/GolfPlusLogo.jpg" width="150" style="border-radius:10px;"></p>
+              
+        </div>
+    </div>
+ 
+    <div class="row">
+        <div class="col-12 col-lg-12 col-sm-12 col-xs-12 col-md-12 text-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-lg-12 col-sm-12 col-xs-12 col-md-12 text-center">
+            <ul  class="nav-tabs" >
+                <li>
+                    
+                    <a class="btn btn-red mr-2" *ngFor="let item of roundData?.result" (click)="getRoundDetailByID(item?.tourID,item?.round_Id)" >{{item?.round_name}} </a>
+
+                        <div   class="div-static" *ngFor="let rd of scoreData;let ij=index;">
+                            <div class="div-scroll" >
+                        <table class="table table-striped bg-light table-hover" datatable [dtOptions]="dtOptions" id="" >
+                            <thead>
+                                <tr>
+
+                                    <th scope="col" colspan="8" class="holeboxBg text-left"> <h6>{{rd.data[0]?.course}} <img
+                                            src="../../../assets/images/loc.svg"></h6></th>
+
+
+                                </tr>
+                          
+                                <tr>
+                                    <td scope="col" class="holebox2 text-left" colspan="2">&nbsp;&nbsp;Holes</td>
+                                    <td>
+                                        <span>1</span>
+                                        <span>2</span>
+                                        <span>3</span>
+                                        <span>4</span>
+                                        <span>5</span>
+                                        <span>6</span>
+                                        <span>7</span>
+                                        <span>8</span>
+                                        <span>9</span>
+                                        <span class="text-danger bg-white">OUT</span>
+                                  </td>
+                                <td>
+                                        <span>10</span>
+                                        <span>11</span>
+                                        <span>12</span>
+                                        <span>13</span>
+                                        <span>14</span>
+                                        <span>15</span>
+                                        <span>16</span>
+                                        <span>17</span>
+                                        <span>18</span>
+                                        <span class="text-danger bg-white">IN</span>
+                                </td>  
+                                    
+                                          
+
+                                                                    
+                                    <td scope="col" class="text-dark bg-white text-center" rowspan="3" colspan="3">
+                                                                                    
+                                        <table class="cornerCard m-0">
+                                            <tr>
+                                               
+                                                <th colspan="3" class="text-left"><h5><img src="../../assets/images/congo.svg" width="60"><br> &nbsp;Congratulations!!</h5></th>
+                                            </tr>
+                                            <tr class="p-0 m-0" *ngFor="let item of filteredGross">
+                                                <td><p>  {{ item?.name}}
+                                                </td>
+                                                <td> <p> {{ item?.gross}}</p> </td>
+                                                <td ><span class="gross"> Gross</span></td>
+                                            </tr>
+                                            <tr *ngFor="let item of filteredNet">
+                                                <td><p>{{ item?.name}}</p></td>
+                                                <td>  <p>{{ item?.net}}</p> </td>
+                                                <td><span class="net"> Net</span></td>
+                                            </tr>
+                                            <tr *ngFor="let item of filteredBirdie">
+                                                <td><p>{{ item?.name}}</p></td>
+                                                <td> <p>{{ item?.birdie}}</p> </td>
+                                                <td><span class="birdie"> Birdie</span></td>
+                                            </tr>
+                                        </table>
+                                        
+                                   </td>
+                                  
+                                    <th scope="col" class="holebox2">&nbsp;</th>
+                                </tr>
+                                <tr class="bgRed"  >
+       
+
+                                    <td scope="row" class="holebox2 text-left " colspan="2">&nbsp;&nbsp;Par</td>
+
+                                    <td *ngFor="let part of rd.data[0]?.par" width="">
+                                        <span *ngFor="let par of part.parValue">
+                                            {{par}}
+                                        </span>
+                                        <span  class=""><b class="p-3" >{{part.parsum}}</b></span>
+                                   </td>
+                                        <th scope="col" class="holebox2">&nbsp;</th>
+                                </tr>
+                                <tr class="bgRed"  >
+       
+
+                                    <td scope="row" class="holebox2 text-left " colspan="2">&nbsp;&nbsp;Index</td>
+
+                                    <td *ngFor="let hdc of rd.data[0]?.hdcap" width="">
+                                        <span *ngFor="let hdcp of hdc.hcdpValue">
+                                            {{hdcp}}
+                                        </span>
+                                        <span  class=""><b class="p-3" >&nbsp;</b></span>
+                                   </td>
+                                        <th scope="col" class="holebox2">&nbsp;</th>
+                                </tr>
+                                <tr>
+                                   
+                                    <td scope="col" class="holebox2 text-left" colspan="2">&nbsp;&nbsp;Players</td>
+                                                                                                             
+                                        <th><span class="text-danger bg-white">&nbsp;</span></th>
+                                                                           
+                                        <th><span class="text-danger bg-white">&nbsp;</span></th> 
+                                        <th>GROSS</th> 
+                                        <th>HDCP</th> 
+                                        <th>NET</th>                     
+
+                                        <th scope="col" class="holebox2 birdiBox" width="50">Birdie</th>
+                                </tr>
+                              
+                            </thead>
+                              <tbody>
+                                <tr *ngFor="let player of rd.data;let k=index">
+                                  
+                                    
+                                    <th scope="row" class="starbg" width="40"> </th>
+                                    <td class="holebox2" width="110">
+                                        {{ player?.board?.playerName }}
+                                    </td>
+                              
+                                   
+                                   <td *ngFor="let partt of player?.board?.score" width="350">
+                                        <span *ngFor="let score of partt.scoreArr;let ik=index">
+                                            <span class="{{ getactiveClass(partt,ik)}}">{{score}}</span>
+                                        </span>
+                                        <span class=""><b>{{partt.scoresum}}</b></span>
+                                    </td>   
+
+                                   
+                                    <td class=""> {{player?.board?.gross}}</td>
+                                    <td class=""> {{player?.board?.hdcp}}</td>
+                                    <th> {{player?.board?.net}}</th>
+                                    <th scope="col" class="holebox2 text-center">
+                                        
+                                        {{player?.board?.birdie}}
+                                    </th>
+                                </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th scope="col" colspan="2" class="holeboxBgFootL"></th>
+                                <td scope="col" colspan="4" class="holeboxBgFoot text-left" >
+                                    <table class="table-condensed  text-white">
+                                        <tr>
+                                            <td ><span class="dblcircle">&nbsp;</span>&nbsp;<i class="pt-2" >Eagle</i></td>
+                                          
+                                           
+                                            <td><span class="circle">&nbsp;</span> &nbsp;Birdie</td>
+                                           
+                                           
+                                            <td><span class="rect1">&nbsp;</span> &nbsp; Bogey </td>
+                                           
+                                           
+                                            <td><span class="rect2">&nbsp;</span> &nbsp; Double bogey</td>
+                                            <td><span class="rect3">&nbsp;</span> &nbsp; Triple bogey </td>
+                                           
+                                            <td>&nbsp;</td>
+                                        </tr>
+    
+                                    </table>
+                                  </td>
+                                
+                                <th scope="col" colspan="2" class="holeboxBgFootR"> &nbsp;</th>
+    
+                            </tr>
+                        </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+
+
+
+
+          
+                    <!-- </ng-template> -->
+                   
+          
+                </li>
+               
+
+
+            </ul>
+        </div>
+        </div>
+        </div>
+           <div  class=""></div> 
+
+           <!-- <a routerLink="" class="btn btn-danger">GO BACK</a>-->
+        </div>
+    </div>
+
+</div>
+
+<h5 id="msg" *ngIf="(scoreData.length==0) && dnotfound==true" class="text-center btn-danger text-white"> You swing your best when you have the fewest things to think about.</h5>
+<app-footer></app-footer>

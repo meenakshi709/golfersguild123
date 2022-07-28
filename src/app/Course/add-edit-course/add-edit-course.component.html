@@ -1,0 +1,431 @@
+<div class="container">
+
+    <div class="row headerBox">
+        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6 pt-3">
+            <h4 class="text-red " mat-dialog-title>{{!this.data?'Add Course':'Edit Course'}}</h4>
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6  pt-2">
+            <button class="text-right" (click)="closeDialogClick()">X</button>
+        </div>
+    </div>
+
+ 
+
+    <div class="row">
+        <form [formGroup]="courseForm" >
+            <section class="container">
+                <div class="row">
+                <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+
+               
+                <mat-form-field  appearance="outline">
+                    <mat-label>Course Name*</mat-label>
+                    <input matInput type="text" placeholder="Course Name" formControlName="cname" maxlength="100"
+                        id="cname" />
+
+                    <mat-error *ngIf="courseForm.controls['cname'].errors?.required">
+                        Please enter course name
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                <mat-form-field  appearance="outline">
+                    <mat-label>Course Address* </mat-label>
+                    <input matInput type="text" placeholder="Course Address" formControlName="caddress" maxlength="100"
+                        id="caddress" />
+
+                    <mat-error *ngIf="courseForm.controls['caddress'].errors?.required">
+                        Please enter course address
+                    </mat-error>
+                </mat-form-field>
+         </div>
+         <!-- <div class="col-sm-3">
+                         
+             <mat-form-field  appearance="outline">
+                <mat-label>Course Location </mat-label>
+                 <input matInput type="text" placeholder="Course Location" formControlName="courseLoc" maxlength="100" 
+                  id="courseLoc"/>
+                 
+                 <mat-error *ngIf="courseForm.controls['courseLoc'].errors?.required">
+                     Please enter course location
+                 </mat-error>                   
+             </mat-form-field> 
+             </div> -->
+            </div>
+            <div class="row">
+                <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                        <mat-label>Par </mat-label>
+                </div>
+            </div>
+                <div class="row">
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                                      
+                         <mat-form-field  class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                            
+                                <input matInput type="text" (keypress)="keyPress($event)" (change)="calculateParIn()" placeholder="Par 1" formControlName="par1" maxlength="2" 
+                                id="par1"/>
+                                
+                                                
+                            </mat-form-field>
+                      </div>
+             <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                <mat-form-field  class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                     <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 2" (change)="calculateParIn()" formControlName="par2" maxlength="2" 
+                    id="par2"/>
+                    
+                                   
+                </mat-form-field>
+            </div>
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+            
+                <mat-form-field  class="col-sm-12 col-lg-12 col-xs-12 col-md-12" appearance="outline">
+                
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 3" (change)="calculateParIn()" formControlName="par3" maxlength="2" 
+                    id="par3"/>
+                    
+                                    
+                </mat-form-field>
+            </div>
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 4" (change)="calculateParIn()" formControlName="par4" maxlength="2" 
+                    id="par4"/>
+                    
+                                     
+                </mat-form-field>
+            </div>
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 "  appearance="outline">
+                
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 5" (change)="calculateParIn()" formControlName="par5" maxlength="2" 
+                    id="par5"/>
+                    
+                                  
+                </mat-form-field>
+            </div>
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 6" (change)="calculateParIn()" formControlName="par6" maxlength="2" 
+                    id="par6"/>
+                    
+                                 
+                </mat-form-field>
+            </div>
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                
+                    <input matInput type="text"  (keypress)="keyPress($event)" placeholder="Par 7" (change)="calculateParIn()" formControlName="par7" maxlength="2" 
+                    id="par7"/>
+                    
+                                
+                </mat-form-field>
+            </div>
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 8"  (change)="calculateParIn()" formControlName="par8" maxlength="2" 
+                    id="par8"/>
+                    
+                                 
+                </mat-form-field>
+            </div>
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 9" (change)="calculateParIn()" formControlName="par9" maxlength="2" 
+                    id="par9"/>
+                    
+                                      
+                </mat-form-field>
+            </div>
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+    
+                <mat-label>In </mat-label>
+                <input matInput type="text" (keypress)="keyPress($event)" placeholder="Total" formControlName="pinn" maxlength="2" 
+                id="pinn"/>
+            </mat-form-field>
+         </div>
+        </div>
+        <div class="row">
+        <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+            <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+             
+                 <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 10" (change)="calculateParOut()" formControlName="par10" maxlength="2" 
+                  id="par10"/>
+                 
+                                   
+             </mat-form-field>
+            </div>
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+              
+                 <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 11" (change)="calculateParOut()" formControlName="par11" maxlength="2" 
+                  id="par11"/>
+                 
+                                
+             </mat-form-field>
+            </div>
+             <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+            
+              
+                 <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 12" (change)="calculateParOut()"  formControlName="par12" maxlength="2" 
+                  id="par1"/>
+                 
+                                   
+             </mat-form-field>
+             </div>
+             <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+               
+                 <input matInput type="text" (keypress)="keyPress($event)"  placeholder="Par 13" (change)="calculateParOut()"  formControlName="par13" maxlength="2" 
+                  id="par13"/>
+                                  
+             </mat-form-field>
+            </div>
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+          
+                     <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 14" (change)="calculateParOut()"  formControlName="par14" maxlength="2" 
+                      id="par14"/>
+                 
+                                  
+             </mat-form-field>
+             </div>
+             <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                        
+                 <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 15" (change)="calculateParOut()"  formControlName="par15" maxlength="2" 
+                  id="par15"/>
+                 
+                                  
+             </mat-form-field>
+            </div>
+
+             <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+             
+                 <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 16" (change)="calculateParOut()"  formControlName="par16" maxlength="2" 
+                  id="par16"/>
+                 
+                                 
+             </mat-form-field>
+            </div>
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+            
+               
+                 <input matInput type="text"  (keypress)="keyPress($event)" placeholder="Par 17" (change)="calculateParOut()" formControlName="par17" maxlength="2" 
+                  id="par17"/>
+                 
+                                 
+             </mat-form-field>
+            </div>
+             <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+       
+                <mat-label>Par 18 </mat-label>
+                 <input matInput type="text" (keypress)="keyPress($event)" placeholder="Par 18"  (change)="calculateParOut()" formControlName="par18" maxlength="2" 
+                  id="par18"/>
+                               
+             </mat-form-field>
+             </div>
+             <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                    <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+        
+                    <mat-label>Out </mat-label>
+                    <input matInput type="text" placeholder="Total" formControlName="pout" maxlength="2" 
+                    id="pout"/>
+                </mat-form-field>
+             </div>
+             </div>
+             <div class="row">
+                <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1">
+                    <mat-label>HDCP </mat-label>
+                 </div>
+             </div>
+             <div class="row">
+
+                <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                    <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                        <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 1" formControlName="hdcp1" maxlength="2" 
+                        id="hdcp1"/>
+
+                                        
+                        </mat-form-field>
+                        </div>
+
+        <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 2" formControlName="hdcp2" maxlength="2" 
+                id="hdcp2"/>
+
+                               
+                </mat-form-field>
+            </div>
+
+ <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 3" formControlName="hdcp3" maxlength="2" 
+                    id="hdcp3"/>
+
+                                    
+                    </mat-form-field>
+                </div>
+
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 4" formControlName="hdcp4" maxlength="2" 
+                    id="hdcp4"/>
+
+                                  
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                    <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                        <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 5" formControlName="hdcp5" maxlength="2" 
+                        id="hdcp5"/>
+
+                                          
+                    </mat-form-field>
+                </div>
+
+        <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 6" formControlName="hdcp6" maxlength="2" 
+                    id="hdcp6"/>
+
+                                    
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                    <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                        <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 7" formControlName="hdcp7" maxlength="2" 
+                        id="hdcp7"/>
+
+                                         
+                        </mat-form-field>
+                    </div>
+                
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                            <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 8" formControlName="hdcp8" maxlength="2" 
+                            id="hdcp8"/>
+
+                                           
+                            </mat-form-field>
+                        </div>
+
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                    <input matInput type="text"  (keypress)="keyPress($event)" placeholder="hdcp 9" formControlName="hdcp9" maxlength="2" 
+                    id="hdcp9"/>
+
+                              
+                    </mat-form-field>
+                </div>
+                </div>
+<div class="row">
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 10" formControlName="hdcp10" maxlength="2" 
+                    id="hdcp10"/>
+
+                              
+                    </mat-form-field>
+                </div>
+
+ <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 11" formControlName="hdcp11" maxlength="2" 
+                    id="hdcp11"/>
+
+                                    
+                    </mat-form-field>
+                </div>
+
+             <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                        <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 12" formControlName="hdcp12" maxlength="2" 
+                        id="hdcp1"/>
+
+                                        
+                        </mat-form-field>
+                    </div>
+
+ <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 13" formControlName="hdcp13" maxlength="2" 
+                    id="hdcp13"/>
+                  
+                    </mat-form-field>
+                </div>
+
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 14" formControlName="hdcp14" maxlength="2" 
+                    id="hdcp14"/>
+
+                                  
+                    </mat-form-field>
+                </div>
+
+ <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 15" formControlName="hdcp15" maxlength="2" 
+                    id="hdcp15"/>
+
+                                    
+                </mat-form-field>
+            </div>
+            <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 16" formControlName="hdcp16" maxlength="2" 
+                    id="hdcp16"/>
+
+                                     
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                    <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 17" formControlName="hdcp17" maxlength="2" 
+                    id="hdcp17"/>
+
+                                    
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+                    <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                    <mat-label>hdcp 18 </mat-label>
+                    <input matInput type="text" (keypress)="keyPress($event)" placeholder="hdcp 18" formControlName="hdcp18" maxlength="2" 
+                    id="hdcp18"/>
+
+                               
+                </mat-form-field>
+            </div>
+            </div>
+            <div class="row text-right">
+                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+                        <div mat-dialog-actions >
+                            <button mat-stroked-button  (click)="closeDialogClick()"  >Cancel</button>
+                            <button type="submit" class="btn btn-danger" [disabled]="!this.courseForm.valid"
+                            (click)="saveCourseDetails()">{{!this.data?'Add ':'Update'}}</button>
+                        </div>
+                    </div>
+                </div>
+        
+        </section>
+        </form>
+
+    </div>

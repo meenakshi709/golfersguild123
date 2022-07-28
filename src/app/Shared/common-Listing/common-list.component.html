@@ -1,0 +1,90 @@
+<div class="normal-box tableData min-record">
+    <div class="mat-elevation-z8 tableStyle">
+        <div class="table-outerScroller table-scroll-mi-listing">
+            <table mat-table [dataSource]="CommonListProperties.miDataSource" #table matSort
+                class="mat-elevation-z8  demo-table table-responsive-md responsive-table">
+                <ng-container *ngFor="let columData of CommonListProperties.displayedColumns;let i = index"
+                    matColumnDef="{{ columData }}">
+                    <p>{{ CommonListProperties.columnLabels[i] }}</p>
+                    <p *ngIf="CommonListProperties.columnLabels[i] =='Action' ">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <p
+                                [ngClass]="{'action-button-text px-2': CommonListProperties.miListMenu.menuItems.length<=4,'action-button-text-center': CommonListProperties.miListMenu.menuItems.length>4}">
+                                {{ CommonListProperties.columnLabels[i] }}
+                            </p>
+                        </th>
+                    </p>
+                    <p>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header
+                            [disabled]="CommonListProperties.columnLabels[i] == 'Status' || !CommonListProperties.sortingShown"
+                            [id]="CommonListProperties.columnLabels[i]">
+                            <!-- *ngIf="(CommonListProperties.columnLabels[i] !== 'Status')" -->
+                            <p class="mat-header-cell" *ngIf="(CommonListProperties.columnLabels[i] !== 'Status')">{{
+                                CommonListProperties.columnLabels[i] }}</p>
+                            <p class="mat-header-cell"
+                                *ngIf="(CommonListProperties.columnLabels[i] == 'Status')">
+                                {{
+                                CommonListProperties.columnLabels[i] }}</p>
+
+                        </th>
+                    </p>
+
+                    <td class="f16" mat-cell *matCellDef="let element; let ij = index">
+                        <p [class.overflow]="isExpand" id={{ij}}+{{i}}
+                            *ngIf="(CommonListProperties.columnLabels[i] !== 'Status' ) "
+                            [matTooltip]="element[columData]" matTooltipPosition="above"
+                       >
+                           
+                            {{ (element[columData] && (element[columData]).length>20)? ( element[columData] | slice:0:20)+'..':( element[columData]) }}
+                        </p>
+
+                       
+                        
+                
+                        
+
+                        <!--  shown a Action Menu in listing -->
+                        <div *ngIf="(CommonListProperties.columnLabels[i] === 'action' ||columData === 'Action')"
+                            class="text-right">
+                            <div *ngFor="let miItem of CommonListProperties.miListMenu.menuItems" class="table-buttons ">
+                              
+                                <mat-icon id="{{ miItem.itemName + ij}}" [inline]="true" class="mat-font-decrease"
+                                    style="cursor: pointer;" aria-hidden="false" aria-label="edit icon"
+                                    (click)=" menuItemClicked(miItem.itemName,element,ij,element[columData])"
+                                    [matTooltip]="miItem.itemName"
+                                    matTooltipPosition="above" tooltip="element[columData]">{{miItem.class}}
+                                </mat-icon>
+
+
+                            </div>
+                        </div>
+
+                        <!-- -------------------------Code is used for render context menu-------------------------------------------------------- -->
+                        <!-- <div   
+                            *ngIf="(CommonListProperties.columnLabels[i] === 'action' ||columData === 'Action') && CommonListProperties.isContextMenuShown">
+                            <div *ngFor="let miItem of CommonListProperties.miListMenu.menuItems" class="table-buttons">
+                                <span  class="{{miItem.primaryClass}}" matTooltip="{{miItem.itemName}}" (click)=" menuItemClicked(miItem.itemName,element,ij,element[columData])"
+                                    matTooltipPosition="above">
+                                    <i class="{{miItem.class}}" aria-hidden="true"></i>
+                                </span>
+                            </div>
+
+                        </div> -->
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="CommonListProperties.displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: CommonListProperties.displayedColumns"></tr>
+            </table>
+        </div>
+        <p *ngIf="CommonListProperties.miDataSource.filteredData.length === 0" class="noDataFound">
+            No Records Found
+        </p>
+
+        <div
+            [ngClass]="{'hide': CommonListProperties.miDataSource.data.length < 1 || CommonListProperties.miDataSource.filteredData.length === 0 ||CommonListProperties.showPaging==false}">
+            <mat-paginator (page)="onPaginateChange($event)" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                class="pagination" [pageIndex]="pageIndex"></mat-paginator>
+        </div>
+    </div>
+</div>
