@@ -1,0 +1,118 @@
+
+table ,.table{
+    border-radius: 20px!important;
+    font-size: 0.8rem;
+ 
+}
+.table th{
+   color:#fff;
+   font-weight: 400;
+   text-align: left;
+}
+.table thead{
+    border-top-left-radius: 20px!important;
+    border-top-right-radius: 20px!important;
+}
+.table tr{
+    margin-top: 10px;
+  
+   
+}
+thead tr{
+    background:#15181fd8;
+    border-radius: 30px!important;
+}
+.starbg{
+    background: url("../../../assets/images/avtar.png") no-repeat center;
+    background-size: 35px 30px;
+    color: #fe0000;
+    font-weight: 600;
+    font-size: 0.7rem;
+    vertical-align: middle;
+   
+}
+.table>:not(caption)>*>*{
+    border-bottom-width: 0px!important;
+    padding: 0.5rem .4rem;
+}
+.borderrdius{
+    border-radius: 30px!important;
+    background:#15181F ;
+}
+#smlltable{
+    border-radius: 30px;
+    background-color:#fff;
+    padding: 1rem;
+    padding-top: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    min-height: 420px;
+}
+
+thead tr{
+    border-top-left-radius:30px!important;
+    border-top-right-radius: 30px!important;
+    font-weight: 400;
+
+}
+label{
+    display: none!important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button{
+    font: size 12px !important;
+}
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate{
+    font-size:12px!important;
+}
+.dataTables_wrapper .dataTables_length select{
+    border:none;
+    border-bottom:1px solid #ccc;
+}
+.paginate_button{
+   background: #fff;
+   cursor: pointer;
+   }
+   .paginate_button:hover{
+     background: #b20000;
+   }
+   .paginate_button.current{
+     background: #b20000;
+   }
+   .dataTables_paginate {
+       font-size: 12px!important;
+   }
+   .dataTables_filter{
+       display: none!important;
+   }
+   .div-static {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    margin: auto;
+}
+.div-scroll{
+     width: 32em;
+}
+@media screen and (max-width:600px) {
+    #smlltable{
+            width: 360px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  } 

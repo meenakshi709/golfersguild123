@@ -1,0 +1,16 @@
+<div class="container-fluid bg-dark">
+  <div class="row">
+    <div class="col-12 col-xs-12 col-sm-12 col-md-12 col-lg-12" id="golferbanner">
+              <ngb-carousel *ngIf="images" [showNavigationArrows]="showNavigationArrows" [showNavigationIndicators]="showNavigationIndicators">
+                  <ng-template ngbSlide *ngFor="let image of images">
+                    <div class="picsum-img-wrapper">
+                      <img [src]="image" alt="Golfers guild" width="100%">
+                    </div>
+                   
+                  </ng-template>
+                </ngb-carousel>
+      </div>
+  </div>
+</div>
+  
+ 

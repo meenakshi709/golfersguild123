@@ -1,0 +1,537 @@
+<div class="container">
+
+    <div class="row headerBox">
+        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6 pt-3">
+            <h4 class="text-darkBlue" mat-dialog-title>{{this.data.title}}</h4>
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6  pt-2">
+            <button class="text-right" [mat-dialog-close]="false">X</button>
+        </div>
+    </div>
+</div>
+<!-- ---------------------Section for tournament------------------------------------- -->
+
+
+
+<!-- ----------------------- section for event ---------------------------------- -->
+<div *ngIf="this.data.sectionName=='tournament'" class="p-3">
+    <div>
+
+        <form [formGroup]="eventFormGroup">
+
+            <div formArrayName='eventDetailsArr'>
+                <div *ngFor="let item of this.eventFormGroup.get('eventDetailsArr')['controls'];let i=index">
+                    <div [formGroupName]="i">
+
+                        <div class="row">
+                            <section>
+                                <mat-form-field appearance="outline" class="ml-11">
+                                    <mat-label>Tournament Name*</mat-label>
+                                    <input matInput type="text" placeholder="Tournament Name"
+                                        formControlName="tournamentName" maxlength="100" id="tournamentName" />
+                                    <mat-error *ngIf="item.controls['tournamentName'].errors?.required">
+                                        Please enter tournament name
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="ml-11">
+                                    <mat-label>Match Format*</mat-label>
+
+                                    <mat-select formControlName="eventType" id="eventType">
+                                        <mat-option *ngFor="let item of this.data.eventType" [value]=item> {{item}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="item.controls['eventType'].errors?.required">
+                                        Please enter event type
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="ml-11">
+                                    <mat-label>Rounds*</mat-label>
+
+                                    <mat-select formControlName="numRounds" id="numRounds"
+                                        (selectionChange)="onShownRounds(item)">
+                                        <mat-option *ngFor="let item of this.data.roundsList" [value]="item">{{item}}
+                                        </mat-option>
+
+                                    </mat-select>
+                                    <mat-error *ngIf="item.controls['numRounds'].errors?.required">
+                                        Please enter number of rounds
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" class="col-lg-2 ml-11">
+                                    <mat-label>Holes*</mat-label>
+
+                                    <mat-select formControlName="holes" id="holes"
+                                        >
+                                        <mat-option value="9">9   </mat-option>
+                                        <mat-option value="18">18   </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="item.controls['holes'].errors?.required">
+                                        Please enter number of holes
+                                    </mat-error>
+                                </mat-form-field>
+                                <!-- <mat-icon class="ml-11"
+                                    *ngIf="this.eventFormGroup.get('eventDetailsArr')['controls'].length==i+1"
+                                    (click)="onAddingNewEvent()">add</mat-icon>
+                                <mat-icon class="ml-11 delete-icon" (click)="onDeleteEvent(i)">delete</mat-icon> -->
+
+                                <div> <span class="round-section"
+                                        *ngIf="item.get('roundsArray').controls.length>0">Round Details </span></div>
+                                <div class="col-3-lg p-t-4 p-b-0 p-l-8 p-r-8 mt-9"
+                                    *ngFor="let roundsDetails of item.get('roundsArray').controls;let ij=index">
+
+                                    <form [formGroup]='roundsDetails'>
+
+                                        <mat-label class="ml-11"> </mat-label>
+                                        <mat-form-field appearance="outline" class="ml-11">
+                                            <mat-label>Round {{ij+1}}</mat-label>
+                                            <input matInput type="text" disabled>
+
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="outline" class="ml-11">
+                                            <mat-label>Event Date*</mat-label>
+                                            <input matInput [matDatepicker]="picker" formControlName="eventDate"
+                                                id="eventDate" [min]="todayDate">
+                                               
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                            <mat-error *ngIf="roundsDetails.controls['eventDate'].errors?.required">
+                                                Please enter event date
+                                            </mat-error>
+                                        </mat-form-field>
+
+
+                                        <mat-form-field appearance="outline" class="ml-11">
+                                            <mat-label>Course*</mat-label>
+
+                                            <mat-select formControlName="cname" id="cname">
+                                                <mat-option *ngFor="let course of this.data.courseList"
+                                                    [value]="course.cid">{{course.cname}}
+                                                </mat-option>
+
+                                            </mat-select>
+                                            <mat-error *ngIf="roundsDetails.controls['cname'].errors?.required">
+                                                Please select course
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                    </form>
+                                </div>
+                            </section>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-12 col-xs-12 col-md-3 mt-1 tournament-Edit">
+
+
+                <div class="row text-right">
+                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+                        <div mat-dialog-actions>
+                            <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
+                            <button type="button" class="btn btn-primary" *ngIf="this.data.isTournamentAdd"
+                                [disabled]="!this.eventFormGroup.valid||this.isButtonDisable" (click)="saveTournamentDetails()">{{!this.data.details?'Add ':'Update'}}</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </form>
+    </div>
+</div>
+
+
+
+<!-- --------------------------section for invite------------------------- -->
+
+<div *ngIf="this.data.sectionName=='sendInvite'" class="p-3">
+    <div class="container">
+        <div class="row">
+
+
+            <section>
+                <form>
+
+                    <div>
+                        <div>
+                            <div>
+
+                                <div class="row">
+                                    <div class="col-lg-4 col-xs-6 col-sm-4 col-md-4 listBox">
+
+
+                                        <mat-label *ngFor="let item of this.playerList;let i=index" class="list-field">
+                                            <div>
+                                                <mat-checkbox (change)="getInvitedPlayerList($event,item.p_id)"> &nbsp;
+                                                    {{item.playerName}} </mat-checkbox>
+                                            </div>
+
+                                        </mat-label>
+
+
+
+                                        <!-- <mat-form-field appearance="outline" class="ml-11">
+                                            <mat-label>Players*</mat-label>
+
+                                            <mat-select formControlName="players" id="players" multiple
+                                                (selectionChange)="getPlayerNames(item)">
+                                                <mat-option *ngFor="let item of this.data.playerList"
+                                                    [value]="item.pid">
+                                                    {{item.playerName}}
+                                                </mat-option>
+
+                                            </mat-select>
+                                            <mat-error *ngIf="item['players'].errors?.required">
+                                                Please select player
+                                            </mat-error>
+                                        </mat-form-field> -->
+
+
+
+
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12 mt-1 tournament-Edit ">
+
+                        <div mat-dialog-actions class="text-right">
+                            <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
+                            <button type="button" class="btn btn-primary" (click)="sendInviteLink()">Send Invite</button>
+
+                        </div>
+                    </div>
+
+                </form>
+            </section>
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- ----------------------- section for group ---------------------------------- -->
+<div *ngIf="this.data.sectionName=='group'" class="p-3">
+    <div class="container">
+        <div *ngIf="this.groupFormGroup.get('groupDetailsArr')['controls'].length==0">
+            <div class="row">
+                <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Group(Player)</mat-label>
+                        <input type="text" matInput placeholder="" [formControl]="noPlayerGroup">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3">
+                    <button mat-stroked-button class="ml-3" (click)="manualGroupInit()">Manual Group </button>
+                    <button mat-raised-button color="warn" (click)="automaticGroupInit()">Generate Group </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <form [formGroup]="groupFormGroup">
+
+                    <div class="row" *ngIf="this.groupFormGroup.get('groupDetailsArr')['controls'].length>0">
+
+                        <section>
+                            <div class="col-lg-3">
+                                <mat-form-field appearance="outline" class="ml-11">
+                                    <mat-label>Round*
+
+
+                                    </mat-label>
+                                    <mat-select formControlName="roundId" id="roundId">
+                                        <mat-option *ngFor="let item of this.data.roundList" [value]=item.round_Id>
+                                            {{item.round_name}}
+                                        </mat-option>
+                                    </mat-select>
+
+                                </mat-form-field>
+                            </div>
+                        </section>
+
+                    </div>
+                    <div formArrayName='groupDetailsArr'>
+                        <div *ngFor="let item of this.groupFormGroup.get('groupDetailsArr')['controls'];let i=index">
+                            <div [formGroupName]="i">
+
+                                <div class="row">
+                                    <section>
+                                        <mat-form-field appearance="outline" class="ml-11">
+                                            <mat-label>Group*</mat-label>
+
+                                            <mat-select formControlName="group" id="group">
+                                                <mat-option *ngFor="let item of this.data.groupList" [value]=item>
+                                                    {{item}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="item.controls['group'].errors?.required">
+                                                Please select group
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="outline" class="ml-11">
+                                            <mat-label>Players*</mat-label>
+
+                                            <mat-select formControlName="players" id="players" multiple
+                                                (selectionChange)="getPlayerNames(item)">
+                                                <mat-option *ngFor="let item of this.data.playerList"
+                                                    [value]="item.playerID">
+                                                    {{item.playerName}}|{{item.value}}
+                                                </mat-option>
+
+                                            </mat-select>
+                                            <mat-error *ngIf="item.controls['players'].errors?.required">
+                                                Please select player
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" class="ml-11">
+                                            <mat-label>Tee*</mat-label>
+
+                                            <mat-select formControlName="tee" id="tee">
+                                                <mat-option *ngFor="let item of this.data.teeList"
+                                                    [value]="item.tee_Id">
+                                                    {{item.tee_Name}}
+                                                </mat-option>
+
+                                            </mat-select>
+                                            <mat-error *ngIf="item.controls['tee'].errors?.required">
+                                                Please select tee
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="outline" class="ml-11">
+                                            <mat-label>Tee Time*</mat-label>
+
+                                            <input matInput type="time" formControlName="teeTime" id="teeTime"
+                                                (change)=assignTeeTime(item)>
+
+                                            <mat-error *ngIf="item.controls['teeTime'].errors?.required">
+                                                Please select tee time
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-icon class="ml-11"
+                                            *ngIf="this.groupFormGroup.get('groupDetailsArr')['controls'].length==i+1"
+                                            (click)="onAddingNewGroup()">add</mat-icon>
+                                        <mat-icon class="ml-11 delete-icon" (click)="onDeleteGroup(i)">delete</mat-icon>
+
+
+                                    </section>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+                    <div *ngFor="let items of this.groupFormGroup.get('groupDetailsArr')['controls']">
+                        <div *ngIf="items.controls.group.value && items.controls.players.value"
+                            class="ml-11  group-tab col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div><span class="group-title">{{getGroupNames(items)}}</span><span class="text-right">
+                                    <mat-icon class="ml-11 delete-icon">delete</mat-icon>
+                                </span>
+                                <mat-divider></mat-divider>
+                                <span class="teeText">{{items.controls.tee.value}}</span>
+                            </div>
+                            <div *ngFor="let players of items.controls.playerDetails.controls" class="group-text mt-1">
+                                <span>{{players.value.name}}</span> <span
+                                    class="text-right">{{players.value.teeTime}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12 mt-1 tournament-Edit "
+                        *ngIf="this.groupFormGroup.get('groupDetailsArr')['controls'].length>0">
+
+                        <div mat-dialog-actions class="text-right">
+                            <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
+                            <button type="button" class="btn btn-primary" (click)="saveGroupDetails()"
+                                [disabled]="!this.groupFormGroup.valid">Save</button>
+                        </div>
+
+
+                    </div>
+
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- ----------------------- section for coupon ---------------------------------- -->
+<div *ngIf="this.data.sectionName=='coupon'" class="p-3">
+    <div>
+
+        <form [formGroup]="couponFormGroup">
+
+            <div formArrayName='couponArr'>
+                <div *ngFor="let item of this.couponFormGroup.get('couponArr')['controls'];let i=index">
+                    <div [formGroupName]="i">
+
+                        <div class="row">
+                            <section>
+                                <mat-form-field appearance="outline" class="ml-11">
+                                    <mat-label>Round*</mat-label>
+
+                                    <mat-select id="roundId" formControlName="roundId">
+                                        <mat-option *ngFor="let item of this.data.roundList" [value]=item.round_Id> {{item.round_name}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="item.controls['roundId'].errors?.required">
+                                        Please select round
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" class="ml-11">
+                                    <mat-label>Coupon*</mat-label>
+                                    <input matInput type="text" formControlName="name" maxlength="100" id="name" />
+                                    <mat-error *ngIf="item.controls['name'].errors?.required">
+                                        Please enter coupon
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" class="ml-11">
+                                    <mat-label>quantity*</mat-label>
+                                    <input matInput type="text" formControlName="quantity" maxlength="100"
+                                        id="quantity" />
+                                    <mat-error *ngIf="item.controls['quantity'].errors?.required">
+                                        Please enter quantity
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-icon class="ml-11"
+                                    *ngIf="this.couponFormGroup.get('couponArr')['controls'].length==i+1"
+                                    (click)="onAddingNewCoupon()">add</mat-icon>
+                                <mat-icon class="ml-11 delete-icon" (click)="onDeleteNewCoupon(i)">delete</mat-icon>
+
+
+                            </section>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 mt-1 tournament-Edit ">
+                <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
+                <button type="button" class="btn btn-primary" [disabled]="!this.couponFormGroup.valid" (click)="onSaveCouponDetails()">Save</button>
+
+            </div>
+
+
+        </form>
+    </div>
+</div>
+
+
+<!-- ----------------------- section for Approval lsit ---------------------------------- -->
+
+
+<div *ngIf="this.data.sectionName=='approval'" class="p-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3" >
+                <button mat-stroked-button class="ml-3" (click)="getAcceptRejectPlayerList('1');approvalStatus=1;"> Accepted </button>
+                <button mat-stroked-button color="warn" class="ml-3 mr-2" (click)="getAcceptRejectPlayerList('0');approvalStatus=0;">Deny </button>
+                <button mat-stroked-button color="warn" class="ml-3 mr-2" (click)="getAcceptRejectPlayerList('2');approvalStatus=2;">Pending </button>
+            </div>
+        </div>
+        <div class="row">
+              <section>
+                    <form  >
+
+                        <div >
+                            <div >
+                                <div >
+    
+                                    <div class="row">
+                                        <div class="col-lg-4 col-xs-6 col-sm-4 col-md-4 listBox">
+                                   
+                                            
+                                            <mat-label *ngFor="let item of this.data.playerList;let i=index" class="list-field" >
+                                           <div > <mat-checkbox *ngIf="approvalStatus==1"     (change)="getInvitedPlayerStatus($event,item.playerID)"> &nbsp; {{item.playerName}} </mat-checkbox></div>
+                                          <div *ngIf="approvalStatus!=1" >{{item.playerName}}</div>
+                                             </mat-label>
+                                           
+                                           
+
+                                        <!-- <mat-form-field appearance="outline" class="ml-11">
+                                            <mat-label>Players*</mat-label>
+
+                                            <mat-select formControlName="players" id="players" multiple
+                                                (selectionChange)="getPlayerNames(item)">
+                                                <mat-option *ngFor="let item of this.data.playerList"
+                                                    [value]="item.pid">
+                                                    {{item.playerName}}
+                                                </mat-option>
+
+                                            </mat-select>
+                                            <mat-error *ngIf="item['players'].errors?.required">
+                                                Please select player
+                                            </mat-error>
+                                        </mat-form-field> -->
+                                       
+                                       
+
+
+                                
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            
+
+                        </div>
+
+
+                    </div>
+                   
+                    <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12 mt-1 tournament-Edit ">
+
+                        <div mat-dialog-actions class="text-right">
+                            <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
+                            <button type="button" class="btn btn-primary" (click)="saveApprovedPlayerList()"
+                          >Approve</button>
+
+                        </div>
+                    </div>
+
+            </form>
+            </section>
+
+         
+    
+
+    </div>
+</div>
+</div>

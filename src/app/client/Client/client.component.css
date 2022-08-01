@@ -1,0 +1,59 @@
+.login-container{
+    -ms-flex-align: center;
+ align-items: center;
+ padding-top: 40px;
+ padding-bottom: 40px;
+ height: 100vh;
+ overflow: hidden!important;
+}
+.form-signin{
+ width: 100%;
+ height: 100%;
+ max-width: 400px;
+ margin: auto;
+}
+.sideimage{
+     top:0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ padding: 0!important;
+ background-image: url('../../../assets/images/admin/admin-login.png');
+ background-repeat: no-repeat;
+ background-size: cover;
+ background-position: center center;
+}
+h6{
+ margin-top: 3rem!important;
+ font-weight: 700;
+}
+p{
+ color:#707070ab!important;
+}
+label{
+ color:#4F4A3F!important;
+ font-size: 14px;
+}
+.form-control .ng-touched{
+ border:1px solid #FE0000;
+ box-shadow: 0px 5px 20px #FE000026;
+}
+mat-icon{
+ color:#707070ab!important;
+}
+.example-container .mat-form-field + .mat-form-field {
+ margin-left: 8px;
+}
+
+.example-right-align {
+ text-align: right;
+}
+
+input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+ display: none;
+}
+
+input.example-right-align {
+ -moz-appearance: textfield;
+}

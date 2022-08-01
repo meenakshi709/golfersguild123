@@ -1,0 +1,360 @@
+.review{
+    background-color:#fff ;
+    border-radius: 20px;
+    padding: 20px;
+    color: #000;
+    text-align: left;
+    margin-top:6rem;
+    margin-bottom:2rem;
+    
+}
+
+
+.nav-tabs .nav-link{
+    margin-bottom: 10px!important;
+}
+
+hr{
+    width:10%;
+    height: 3px;
+    color: #fe0000!important;
+    opacity: 1;
+    margin-top: 0px!important;
+
+}
+.tab-content{
+    padding: 1.1rem!important;
+}
+.tabDates{
+    width:100%;
+    border-radius: 20px;
+    background:#e7e7e7;
+    padding:0.5rem 0.5rem;
+
+    margin-bottom: 1rem;
+}
+.tabDates p{
+    font-size: 0.8rem;
+    margin: 0px;
+    text-align: left;
+}
+.tabDates h2{
+ 
+   text-align: center;
+   color:#fe0000;
+   font-size: 2.2rem;
+}
+.active{color: #fff !important;;
+    background:#fe0000;    
+}
+.active h2{
+    color: #fff;
+}
+
+.subdata{display: block;}
+.float-right{
+
+float:right;
+
+}
+.float-left{
+ 
+    float:left; 
+}
+
+#lead{
+    background: url("../../../assets/images/background.png") no-repeat top center;
+    background-size: cover;
+    padding: 3rem 1rem 1rem 1rem;
+}
+.nav-tabs .nav-link{
+    background:rgba(0, 0, 0, 0.61)!important;
+    color:#fff!important;
+    border-radius: 20px!important;
+    margin-right: 1rem!important;
+    border:none!important;
+    
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
+    background:#fe0000!important;
+    color:#fff!important;
+}
+.nav-tabs{
+    border-bottom: none!important;
+
+}
+table{
+    border-radius:20px;
+    font-size: 0.8rem!important;
+    color: black;
+    width:100%!important;
+
+}
+tbody, td, tfoot, th, thead, tr{
+    border:none!important;
+    margin: 0px;
+    
+}
+
+
+tfoot tr:last-child {
+  border-bottom: none;
+  border-radius: 20px!important;
+  }
+
+  .holeboxBg{
+    border-top-left-radius:20px;
+    border-top-right-radius:20px;
+    background-color:#15181F;
+    color: #fff;
+
+
+  }
+  .holeboxBgFootL
+  {
+    border-bottom-left-radius:20px;
+   
+    background-color:#15181F;
+    color: #fff;
+    padding: 1px 10px;
+  }
+  .holeboxBgFootR
+  {
+  
+    border-bottom-right-radius:20px;
+    background-color:#15181F;
+    color: #fff;
+    padding: 1px 10px;
+  }
+  .holeboxBgFoot{
+    background-color:#15181F;
+    color: #fff;
+    padding: 1px 10px;
+  }
+
+  .holebox{
+      border-top-left-radius:20px;
+      background-color: #15181F;   
+      color:#fff;
+      vertical-align: middle;   
+  }
+  .holeboxBg img{ 
+      float: left;
+      width:15px;
+      margin-right: 10px;
+      margin-left: 5px;
+      margin-top: 2px;
+
+  }
+  .holebox2{
+  
+    background-color: #15181F;   
+    color:#fff;
+    vertical-align: middle;
+    border: none    ;
+    text-align: left;
+
+}
+.holebox2:last-child{
+  
+    background-color: #15181F;   
+    color:#fff;
+ 
+    border: none    ;
+
+}
+.holeboxR{
+    border-top-right-radius:20px;
+    background-color: #15181F;   
+    color:#fff;
+ 
+}
+.starbg{
+background: url(../../../assets/images/avtar.png) no-repeat center #15181F;
+background-size: 25px 25px;
+color: #fe0000;
+vertical-align: middle!important;
+}
+
+.bgRed{
+    background-color: #f7e0e4;
+    border-bottom: 1px solid #fac5ce;
+}
+
+
+
+
+#leadertable{
+    width: 75em;
+    overflow-x: auto;
+    white-space: nowrap;
+    margin: auto;
+}
+.div-static {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    margin: auto;
+}
+.div-scroll{
+     width: 75em;
+}
+
+@media screen and (max-width:600px) {
+    #leadertable{
+            width: 75em;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+}
+.dblcircle
+{
+    border-radius: 50%;
+    border:1px solid #2ebd03;
+    box-shadow: 0 0 0 .5px rgb(157, 255, 0), 0 0 0 1.5px white, 0 0 0 2px rgb(50, 163, 5);
+    padding: 3px;
+
+}
+.circle{
+    border-radius: 50%;
+    border:1px solid #fe0000;
+    padding: 3px;
+}
+.rect1{
+    border:1px solid #90979f;
+    padding: 3px;
+
+}
+.rect2{
+    border:1px double #b5dae2 ;
+    outline: 1px solid #b5dae2 ;
+    outline-offset: 1px;
+    padding: 3px;
+}
+.rect3{
+    border:1px solid #f8c7a0 ;
+    outline: 1px solid #f8c7a0 ;
+    outline-offset: 1px;
+    padding: 3px;
+
+}
+.equal{
+border:none;
+padding: 3px;
+
+}
+table.dataTable thead th, table.dataTable thead td{
+    padding:3px 5px!important;
+    vertical-align: middle;
+}
+.cornerCard{
+    background-color: #fff;
+    box-shadow: 0px 5px 20px #4E4C4C29;
+    border-radius: 0!important;
+    margin: 0px!important;
+    padding: 0px!important;
+}
+.cornerCard p{
+    font-size: 11px;     
+    text-align: left;
+    font-weight: 600;
+    vertical-align: bottom;
+    padding-top: 0px;
+    box-sizing: border-box;
+   
+
+}
+.cornerCard td{
+    vertical-align: top;
+    margin: 0px!important;
+   
+}
+.cornerCard h5{
+    font-size: 16px;
+   
+  
+    text-align: center;
+    font-weight: 600;
+  
+}
+
+.gross{
+    background-color: #e9ba4d;
+    border-radius: 5px;
+    padding: 2px 5px;
+    font-weight: 700;
+   
+    font-size: 11px;  
+    width: 50px!important;
+    margin-top: -12px;
+    color:#fff;
+}
+.net{
+    background-color: #239BCC;
+    border-radius: 5px;
+    padding: 2px 12px;
+    font-weight: 700;
+    margin-top: -12px;
+    font-size: 11px;  
+    width: 50px!important; 
+    color:#fff;
+}
+.birdie{
+    background-color: #FF6381;
+    border-radius: 5px;
+    padding: 2px 5px;
+    font-weight: 700;
+    margin-top: -12px;
+    font-size: 11px;  
+    width: 50px!important;
+    color:#fff;
+}
+
+
+    h6{
+        padding-top: 5px;
+    }
+    th span{
+  
+        float: left!important;
+        text-align: center!important;
+        width: 31px;
+        margin-right: 2px;
+        margin-left: 2px;
+        
+    }
+    td span{
+      
+        float: left!important;
+        font-weight:400;
+        text-align: center!important;
+        width: 31px;
+        margin-right: 2px;
+        margin-left: 2px;
+      
+    
+    }
+    .birdiBox{
+        width: 50px!important;
+    }
+    .p-0{
+        padding: 0px!important;
+    }
+    .m-0{
+        margin: 0px!important;
+    }
+    
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  } 

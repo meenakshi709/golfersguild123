@@ -1,0 +1,64 @@
+<div class="container" id="smlltable">
+  <div class="row">
+    <div class="col-12 col-lg-12 col-sm-12 col-md-12 col-xs-12">
+      <h5 class="bg-white " style="text-align:center;margin:auto;margin-bottom: 5px;color:#002855">
+       <span style="color:#002855;padding: 2px;margin-right:5px;font-size:14px;"> Media Coverage Partner </span>  <img src="../../../assets/images/GolfPlusLogo.jpg" width="100"></h5>
+     
+    
+       <div   class="div-static" >
+        <div class="div-scroll" >
+            <table class="table bg-light table-responsive" width="100%" datatable [dtOptions]="dataOption" *ngIf="combinedplayerData.length > 0">
+              <thead>
+              <tr >
+               
+                <th scope="col" class="text-left">Players</th>
+                <!-- <th scope="col">Par</th> -->
+                <!-- <th scope="col">R1</th>
+                <th scope="col">R2</th>
+                <th scope="col">R3</th> -->
+              
+                <!-- <span *ngFor="let rounds of combinedplayerData[0].round">
+                  <th scope="col" style="min-width:50px;text-align: center;">{{rounds.round}}</th>
+                </span> -->
+                <th scope="col"  *ngFor="let rounds of combinedplayerData[0].round">
+                  <span style="min-width:30px;text-align: left;">
+                    {{rounds.round}}
+                  </span>                           
+                </th>
+
+              
+                <th scope="col" sortable="gross" >Gross</th>
+                <th scope="col" sortable="net">NET</th>
+                <th scope="col" sortable="birdie" >Birdies</th>
+                
+                
+              </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let score of combinedplayerData; let i=index " style="background-color: #fff;">
+                       
+                    
+                                
+                                  <td class="text-left">{{score?.playerName}}</td>
+                                   <td *ngFor="let round of score.round">
+                                     <span style="min-width:50px;text-align: left;">                              
+                                         {{round?.score}}  </span>
+                                    </td>
+                                  <!-- <td>{{score|json}}</td>
+                                  <td>{{0}}</td> -->
+                              
+                                  <td>{{score?.TotalGross}}</td>
+                                  <td>{{score?.TotalNet}}</td>
+                                  <td>{{score?.TotalBirdie}}</td>
+                             
+                   
+
+                  </tr>
+              </tbody>
+            </table> 
+          </div>
+          </div> 
+      
+    </div>
+  </div>
+ </div>

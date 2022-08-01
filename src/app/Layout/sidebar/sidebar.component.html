@@ -1,0 +1,109 @@
+
+  
+ 
+ <div class="container-fluid boxBody">
+  <div class="row ">
+    <div class="col-lg-2 col-sm-2 col-xs-2 col-md-2 bgclass">
+          <div class="sidebar">
+              <p class="navbar-brand text-center mb-2" [routerLink]="['']"><img src="../../assets/images/golfer-logo.png" width="160"></p>
+
+         
+                <!-- <p class="text-center pb-3 pt-2">
+                    <img src="https://github.com/mdo.png" alt="" width="80" height="80" class="rounded-circle">
+                    <br><span class="text-center "> Gaurav Gandhi<br> Admin</span>
+                </p> -->
+               
+               
+           
+
+              <ul class="nav nav-pills flex-column mb-sm-auto mt-4 mb-0 align-items-center align-items-sm-start" id="menu">
+                  <li class="nav-item">
+                      <a [routerLink]="['/dashboard']" routerLinkActive="router-link-active" class="nav-link align-middle ">
+                          <span class="ms-1 d-none d-sm-inline">
+                           <img src="../../../assets/images/dashboard.svg" class="imgWidth"> Dashboard</span>
+                      </a>
+                  </li>
+                  <li>
+                    <a [routerLink]="['/tournament']" routerLinkActive="router-link-active" class="nav-link  align-middle">
+                        <span class="ms-1 d-none d-sm-inline">
+                          <img src="../../../assets/images/tournamentIcon.svg" class="imgWidth"> Tournament</span></a>
+                </li>
+                  <li>
+                    <a [routerLink]="['/courses']" routerLinkActive="router-link-active" class="nav-link  align-middle">
+                        <span class="ms-1 d-none d-sm-inline">
+                            <img src="../../../assets/images/course.svg" class="imgWidth"> Course</span></a>
+                </li>
+                <li>
+                    <a [routerLink]="['/player']" routerLinkActive="router-link-active" class="nav-link  align-middle">
+                        <span class="ms-1 d-none d-sm-inline">
+                          <img src="../../../assets/images/player.svg" class="imgWidth"> Player</span></a>
+                </li>
+                  <li class="nav-item">
+                    <a [routerLink]="['/leaderboardList']" routerLinkActive="router-link-active" class="nav-link align-middle ">
+                        <span class="ms-1 d-none d-sm-inline">
+                            <img src="../../../assets/images/leaderboard.svg" class="imgWidth"> Leaderboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a [routerLink]="['/winners']" routerLinkActive="router-link-active" class="nav-link align-middle ">
+                        <span class="ms-1 d-none d-sm-inline">
+                            <img src="../../../assets/images/leaderboard.svg" class="imgWidth"> Winner</span>
+                    </a>
+                </li>
+             
+               
+               
+             
+           
+  <!--
+                  <li>
+                      <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                          <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Bootstrap</span></a>
+                      <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                          <li class="w-100">
+                              <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1</a>
+                          </li>
+                          <li>
+                              <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                      <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                          <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Products</span> </a>
+                          <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                          <li class="w-100">
+                              <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 1</a>
+                          </li>
+                          <li>
+                              <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 2</a>
+                          </li>
+                          <li>
+                              <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 3</a>
+                          </li>
+                          <li>
+                              <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 4</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
+                      <a href="#" class="nav-link px-0 align-middle">
+                          <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Customers</span> </a>
+                  </li>-->
+              </ul>
+              <hr>
+              
+          </div>
+      </div>
+      <div class="col-lg-10 col-sm-10 col-xs-10 col-md-10 sidebox">
+        <div class="largeBox">
+            
+                     <router-outlet></router-outlet>
+                
+                </div>
+
+
+    </div>
+  </div>
+</div>
+

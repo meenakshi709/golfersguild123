@@ -1,0 +1,53 @@
+.carousel-item span{
+display: none!important;
+}
+*{
+margin: 0!important;
+padding: 0!important; 
+line-height: 1.3!important;
+}
+.picsum-img-wrapper{
+    padding: 0!important; 
+    margin: auto!important; 
+  
+}
+.bookbtn{
+    background-color: #FE0000!important;
+    border-radius: 20px;
+    padding: 7px 20px!important;
+    font-weight: 500;
+    margin-top: 1.3rem!important;
+}
+hr{
+    background-color: #FE0000!important;
+    color:#FE0000;
+    height:5px;
+    width:30%;
+    opacity: 1; 
+    margin-top: 10px!important;
+}
+#golferbanner{
+    position: relative!important;
+}
+
+h4{
+    margin: 10px!important;
+}
+.carousel-inner .sr-only, .carousel-item .sr-only {
+    display: none!important;
+ }
+@media screen and (max-width:600px) {
+   
+.bookbtn{
+    margin-top: 0px;
+}
+
+#golferbanner {
+    height:310px;
+}  
+#golferbanner img{
+    height:320px;
+    object-fit: cover;
+}
+
+}

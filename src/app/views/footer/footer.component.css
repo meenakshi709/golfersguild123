@@ -1,0 +1,29 @@
+footer{
+    background-color:#15181f;
+}
+footer h5{
+    border-bottom: 2px solid #fe0000;
+    display: inline;
+    padding-bottom: 5px;
+    margin-bottom: 20px!important;
+    color: rgba(255, 255, 255, 0.753);
+}
+footer p{
+    font-style: italic;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.753);
+}
+footer a{
+    color: rgba(255, 255, 255, 0.753);
+    text-decoration: none;
+}
+#quickLink img{
+    width: 30px !important;
+}
+@media (max-width: 575.98px) { 
+    #quickLink img{
+        width: 30px !important;
+        float: right;
+    }
+ }

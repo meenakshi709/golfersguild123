@@ -1,0 +1,11 @@
+{
+"connectionLimit":86400,
+"connectTimeout":30000,
+"acquireTimeout":3600000,
+"timeout":3600000,
+"host":"localhost",
+"user":"root",
+"password":"",
+"database":"golfersguild"
+}
+

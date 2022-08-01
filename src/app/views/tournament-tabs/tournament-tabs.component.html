@@ -1,0 +1,90 @@
+<div class="review">
+
+
+  <a class="btn   mr-2 mb-4" *ngFor="let item of yearData?.result;"
+    [ngClass]="{'btn-white': item?.year !=this.selectedYear,'selectedYear':item?.year==this.selectedYear}"
+    (click)="getMonthDetails(item?.year);this.selectedYear=item?.year">
+    {{item?.year}}</a>
+
+
+  <div class="div-static borderLine mt-3">
+    <a class=" mr-2 mb-4 text-center " *ngFor="let mnth of monthData?.result;let ij=index;"
+      (click)="getMonthWiseTour(mnth?.year,mnth?.monthNum);this.selectedMonth=mnth?.month"
+      [ngClass]="{'btn-white': mnth?.month !=this.selectedMonth,'redBtn':mnth?.month==this.selectedMonth}">{{mnth?.month}}</a>
+
+  </div>
+
+  <div class="container text-left mt-4">
+
+    <div class="row">
+
+      <div class="col-lg-4 col-sm-4 col-xs-12 col-md-4 ">
+        <div class="box-tabs">
+          <div *ngFor="let tourData of respnseData;let ij=index"
+            (click)="getRoundDetailByID(tourData?.tourID);this.selectedTournament=ij">
+            <div class="row bgColorClass" >
+              <div class="col-lg-9 col-sm-9 col-xs-9 col-md-9 ">
+                <h5 class="text-red">{{tourData?.tournamentName}}</h5>
+                <p>Event Type - {{tourData?.eventType}}</p>
+              </div>
+              <div class="col-lg-3 col-sm-3 col-xs-3 col-md-3 text-center">
+                <p><span class="small-box text-center">{{tourData?.numRounds}}</span><br><b>Rounds</b></p>
+              </div>
+            </div>
+            <div class="row" *ngIf="this.selectedTournament==ij">
+              <div class="col-lg-12 col-sm-12 col-xs-12 col-md-12 ">
+                <div class="roundBox">
+                  <mat-vertical-stepper>
+                    <mat-step label="Round" *ngFor="let rdData of RoundData;let i=index">
+                      <h6>{{rdData?.TournamentDate}}</h6>
+                      <p>{{rdData?.cname}}
+                    </mat-step>
+                  </mat-vertical-stepper>
+                  <!-- <div class="row">
+              <div class="col-lg-2 col-sm-2 col-xs-2 col-md-2 text-center">
+                <p >    <span class="small-box text-center" >{{i+1}}</span><br><b>Rounds</b>
+                </p>
+                </div>
+                <div class="col-lg-10 col-sm-10 col-xs-10 col-md-10 ">
+                  <h6>{{rdData?.TournamentDate}}</h6>
+                  <p>{{rdData?.cname}}
+</p>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12 col-sm-12 col-xs-12 col-md-12 text-center">
+                <div class="dottedBox" *ngif="i.length">&nbsp;</div>
+                </div>
+                </div> -->
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8 col-sm-8 col-xs-12 col-md-8 box-tabs text-left">
+        <div class="">
+          <div class="col-lg-12 col-sm-12 col-xs-12 col-md-12 " *ngIf="tourWebDetails.length > 0">
+
+            <div *ngFor="let dt of tourWebDetails">
+
+              <h5> {{dt?.messageType}}</h5>
+              <hr>
+              <p class="text-justify">{{dt?.message }}</p>
+              <h5>{{dt?.sponsor }} </h5>
+              <hr> <img src='{{dt?.sponsor_Logo }}' width="150">
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+</div>

@@ -1,0 +1,17 @@
+#sponsr{
+    background: url('../../../assets/images/spnosorbg.svg') repeat-y center;
+    background-size: 100% ;
+   
+    box-sizing: border-box;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    height: auto;
+    width: 100%;
+}
+#sponsr img{
+    width: 100%;
+}
+.main{
+    height: 130px !important;;
+}
+

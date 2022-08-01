@@ -1,0 +1,390 @@
+/* You can add global styles to this file, and also import other style files */
+
+@font-face {
+    font-family: poppins-Regular;
+    src: url(../src/assets/fonts/Poppins-Regular.ttf);
+}
+@font-face {
+    font-family: Poppins-Medium;
+    src: url(../src/assets/fonts/Poppins-Medium.ttf);
+  }
+
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color:#15181f;
+    color:#fff;
+    font-size: 1rem;
+    font-family:  poppins-Regular!important;
+}
+*{
+    margin: 0;
+    padding: 0; 
+}
+p{
+    font-size: 1rem;
+
+}
+.text-danger{
+    color: #FE0000!important;
+}
+.btn-danger{
+    background-color: #FE0000!important;
+    border-radius: 5px;
+    padding: 6px 20px;
+    font-weight: 500;
+    border: 1px solid #FE0000!important;
+}
+.btn-red{
+background-color: #FE0000!important;
+color:#fff;
+border-radius: 20px;
+padding: 5px 20px;
+font-weight: 500;
+font-size: 15px;
+margin-left: 20px;
+}
+.btn-success{
+    background-color: #fff!important;
+    color: #FE0000;
+    border-radius: 30px;
+    padding: 10px 60px;
+    font-weight: 500;
+    border:2px solid #fff ;
+}
+.btn-success:hover{
+    border:2px solid #fff ;
+    box-shadow: 0 0px 20px rgb(224, 169, 169);
+    color:#FE0000;
+}
+.text-red{
+   color:#FE0000;
+}
+.text-right{
+    float: right!important;
+}
+.text-center{
+   
+    margin: auto!important;
+}
+.text-left{
+   
+    text-align: left!important;
+}
+a, a:hover{
+    cursor: pointer!important;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  } 
+  .sr-only{
+      display: none;
+  }
+  .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate{
+      font-size: 12px;
+      color:#1266FB!important;
+  }
+  .dataTables_wrapper .dataTables_length select{
+      border: none!important;
+      border-bottom:1px solid #1266FB!important;
+      border-radius: 0!important;
+  }
+  .dataTables_wrapper .dataTables_filter input{
+    border: none!important;
+    border-bottom:1px solid #1266FB!important;
+    border-radius: 0!important;
+    margin-bottom: 10px;
+    color:#1266FB!important;
+  }
+  .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover
+  {
+    background-color: transparent!important;
+    color:#1266FB!important;  
+  }
+  .dataTables_info{
+    color:#1266FB!important;   
+  }
+  .dataTables_length label{
+      display: none;
+  }
+  .form-control{
+    background: #ffffff50!important;
+    margin-bottom: 1rem!important;
+   
+  
+}
+.form-control .ng-dirty .ng-valid .ng-touched{
+    color:#fff;
+
+}
+.dataTables_empty{
+    display: none;
+}
+.text-justify{
+    text-align: justify!important;
+}
+
+.ng-image-slider .ng-image-slider-container .main .main-inner .img-div img, .ng-image-slider .ng-image-slider-container .main .main-inner .img-div video{
+    height: auto!important;
+    border-radius: 20px!important;
+}
+.ng-image-slider-container, .ng-image-slider-container .main, .ng-image-slider {
+
+    height: 140px!important;
+}
+
+.ng-image-slider .ng-image-slider-container .main .prev{
+    left:0!important;
+}
+a{
+    color: #1266FB;
+}
+a:hover{
+    color: #004acd;
+}
+.gallery{
+    background: url(../src/assets/images/gallerybg.png) no-repeat top center;
+    background-size: 100% 100%;
+}
+.ng-image-slider .ng-image-slider-container .main .next.disable, .ng-image-slider .ng-image-slider-container .main .prev.disable{
+    opacity: 0!important;
+}
+.btn-block{
+    border-radius: 10px!important;
+    box-shadow: 0px 12px 36px #1266FB66;
+    width: 100%;
+
+}
+.alert-danger{
+    color:#fe0000!important;
+    background-color: transparent!important;
+    border-color: transparent!important;
+    font-size: 10px!important;
+}
+.alert{
+    padding: 0!important ;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;height:100vh; }
+
+/*course */
+.largeBox{
+    /* background-color: #ffffff;
+    box-shadow: 0px 12px 24px #0000001A; */
+    color:#000;
+    border-radius: 20px;
+    padding: 15px 0px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    margin-top: 1rem;
+    height: 100%!important;
+    bottom:0;
+
+}
+.redbtn{
+    background-color: #FE0000;
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 12px 24px #FE000038;
+    font-size: 0.8rem!important;
+
+}
+.modal-title {
+    margin-bottom: 0;
+    line-height: 1.5;
+    color: #1266FB!important;
+    font-size: 1.2rem;
+}
+
+
+.modal-header .close {
+  padding: 1rem;
+  margin: -1rem -1rem -1rem auto;
+  background-color: transparent;
+  color: #1266FB;
+  border:none;
+}
+.modal-body p{
+    color:#15181f;
+}
+.btn-light{
+border-radius: 30px!important;
+background-color: #ecedee!important;
+}
+/* data table css */
+table.mat-table{
+    width: 100%!important;
+}
+table.mat-table p{
+    margin-bottom: 0px!important;
+    font-size: 0.7rem;
+    color: #00215A;
+}
+
+tr.mat-header-row{
+    background: #DBE8FE;
+    height: 50px!important;
+    border-top-left-radius: 9px!important;
+    border-top-right-radius: 9px!important;
+    color:#1266FB!important;
+    border-bottom: 5px solid #F3F8FF!important;
+
+}
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell{
+    border: 0px!important;
+}
+/* material css */
+.mat-paginator-page-size-label{
+    font-size: 0.7rem!important;
+}
+.mat-sort-header-container{
+    min-width: 70px!important;
+    width: auto!important;
+}
+.mat-elevation-z8{
+    box-shadow:none!important;
+    
+      }
+      /* #Edit{
+        color: green !important;
+    } */
+
+    .mat-form-field{
+        font-size: 12px!important;
+        line-height: 1!important;
+      }
+      .mat-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button{
+    
+        color: #00215A!important;
+      }
+      .mat-datepicker-toggle-default-icon{
+        color: #1266FB !important;
+    
+    }
+    .mat-radio-outer-circle {
+        border-color: #c9c9c9ad!important;
+    }
+    .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-accent .mat-radio-inner-circle, .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple{
+        background-color: #00215A!important;
+        }
+
+        .mat-stroked-button {
+            border: 2px solid #1266FB!important;
+            padding: 0 15px!important;
+            line-height: 36px!important;
+            color: #1266FB!important;
+            margin-right: 0.7rem!important;
+        }
+      
+        .mat-dialog-container{
+            padding: 0px!important;
+            overflow-x: hidden!important;
+        }
+
+        /* dialog box header section */
+     
+        .headerBox{
+            background-color: #1266FB26!important;
+            color: #1266FB !important;
+            padding: 0px 1rem!important;
+            margin-bottom: 1rem!important;
+            border-bottom: 1px solid #1266FB !important;
+          }
+          .headerBox button{
+            background-color: #1266FB26!important;
+            border: none!important;
+            color:#1266FB!important;
+            margin-top: 0.9rem!important;
+            font-weight: 900!important;
+          }
+          .headerBox button:focus{
+            background-color: transparent;
+            border: none!important;
+          }
+          .mat-form-field-appearance-outline .mat-form-field-infix{
+             padding: 0.8em 0!important;
+          }
+          .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick{
+            color:#1266FB!important;
+          }
+
+          mat-label{
+            font-size: 14px!important;
+            color:#1D3D41!important;
+          }
+          #mat-calendar-button-0{
+            color:#1266FB!important;
+        }
+        #mat-calendar-button-0{
+            color:#1266FB!important;
+        }
+        .mat-datepicker-content .mat-calendar-next-button, .mat-datepicker-content .mat-calendar-previous-button, .mat-datepicker-toggle{
+            color:#1266FB!important;
+        }
+        .cdk-keyboard-focused .mat-calendar-body-active>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical), .cdk-program-focused .mat-calendar-body-active>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical), .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical){
+            background-color: #1266FB!important;
+            color:#fff!important;
+        }
+        .mat-tab-label-active{
+            color: #1266FB!important;
+            border-bottom: #1266FB 2px solid!important;
+
+        }
+        .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
+            background-color: #1266FB!important;
+        }
+        .mat-icon{
+            width: auto!important;
+            height: auto!important;
+        }
+        .mat-step-header .mat-step-icon-selected, .mat-step-header .mat-step-icon-state-done, .mat-step-header .mat-step-icon-state-edit {
+            background-color: #1266FB!important;
+            color: #fff!important;
+        }
+
+        .mat-form-field-appearance-outline:not(.mat-form-field-disabled) .mat-form-field-flex:hover .mat-form-field-outline-thick{
+            color:#1266FB!important;
+            background-color: #fff;
+            box-shadow: 0px 12px 24px #1266FB0D;
+          }
+        .text-darkBlue{
+            color: #00215A!important;
+            font-weight: 600;
+        }
+        .btn-primary{
+            background-color: #1266FB!important;
+            color: #fff!important;
+            box-shadow: 0px 12px 24px #1266FB0D;
+
+        }
+
+        .mat-form-field-appearance-outline .mat-form-field-outline{
+            background-color: #fff;
+            box-shadow: 0px 12px 24px #1266FB0D;
+        }
+
+        .mat-form-field:not(.mat-form-field-appearance-legacy) .mat-form-field-prefix .mat-icon, .mat-form-field:not(.mat-form-field-appearance-legacy) .mat-form-field-suffix .mat-icon{
+            color:#00215A!important;
+        }
+        .mat-paginator{
+border-radius: 0px 0px 9px 9px;
+        }
+        .mat-table{
+            background-color: #fff!important;
+            box-shadow: 0px 12px 24px #1266FB0D!important;
+        }
+
+    
+     

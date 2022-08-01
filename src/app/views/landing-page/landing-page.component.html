@@ -1,0 +1,175 @@
+<div class="container-fluid p-0">
+  <app-navigation></app-navigation>
+   <!-- banner div -->
+ <app-carousel-navigation></app-carousel-navigation>
+ <!--below banner div 
+   <section class="container-fluid bg-dark" id="clubsitem">
+     <div class="container ">
+        <div class="row">
+              <div class="col-3 col-sm-3 col-xs-12 col-lg-3 col-md-3" *ngFor="let club of clubs">
+                  <div class="box">
+                    <img src="{{club.image}}" alt="Golfersguild">
+                    <h4>{{club.name}}</h4>
+                  </div>
+              </div>
+         </div>
+       </div>
+    </section>-->
+
+    <section id="about">
+      <div class="container ">
+        <div class="row">
+              <div class="col-12 col-sm-6 col-xs-12 col-lg-6 col-md-6" >
+                  <h2>Welcome to <span class="text-red">GOLFERS' GUIL​D</span></h2>
+                  <p>Golfer’s Guild is a professional golfing platform that combines best of both worlds – the real and the digital – that helps serious golfers improve their game. </p>
+                    <p>It has been created with a vision to host strategic golf tournaments aiming to provide an interactive platform that bridges the gap between the players and the audience with a live scoreboard, event recaps, picture gallery, etc. 
+                    Strike when it counts: Get in on the ground level of the most exciting club in golf and experience the game you never thought was possible.</p>
+                  
+                 <!-- <p><i><span class="text-red bold itacli">>></span> Matches at the best courses around the world</i></p>
+                   <p><i><span class="text-red bold">>></span> Officially verified Handicaps only</i></p>
+                   <p><i><span class="text-red bold">>></span> Structured and globally accepted formats</i></p>
+                   <p><i><span class="text-red bold">>></span> Leaderboard with live scoring</i></p>
+                   <p><i><span class="text-red bold">>></span> Regular Tournaments</i></p>
+                   <p><i><span class="text-red bold">>></span> Award Ceremony & Celebration party</i></p>--> 
+                 
+                  <img src="../../assets/images/gg-white.png" width="250" class="" >
+              </div>
+              <div class="col-12 col-sm-6 col-xs-12 col-lg-6 col-md-6 text-center" >
+                  <img src="../../assets/images/about-Golfers.png" width="80%" class="text-center" >
+              </div>
+         </div>
+       </div>
+
+    </section>
+
+    <section id="tournament">
+          <div class="container ">
+              <div class="row">
+                  <div class="col-12 col-sm-12 col-xs-12 col-lg-12 col-md-12 text-center" >
+                      <h2>Golfers' Guild <span class="text-red">TOURNAMENTS</span></h2>
+                      
+              </div>
+              </div>
+              <div class="row">
+                <div class="col-12 col-sm-12 col-xs-12 col-lg-12 col-md-12 text-center" >
+                      <app-tournament-tabs></app-tournament-tabs>
+                </div>
+               </div>
+        </div>
+    </section>
+
+    <section id="glimpses ">
+              <div class="container ">
+      
+                    <div class="row pt-4 ">
+                      <div class="col-12 col-sm-6 col-xs-12 col-lg-6 col-md-6 text-center" >
+                          <h2 class="mb-4"> <span class="text-red">GLIMPSES</span></h2>
+                          <div class="glimpsesbg mt-5 pt-4">                         
+                             <iframe width="100%" height="300" class="responsive-iframe"
+                          src="https://www.youtube.com/embed/mgLeCarK5Tg?autoplay=0&mute=1">
+                          </iframe>
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-6 col-xs-12 col-lg-6 col-md-6 text-center pt-3" >
+                        <h2 class="mb-4"> <span class="text-red"> LEADERBOARD</span></h2>
+                            <app-leaderboard-table></app-leaderboard-table>
+                          <a routerLink="leaderboard" class="btn btn-danger mb-4"> VIEW DETAILS</a>
+                        
+                    </div>
+                  </div>
+
+            </div>   
+
+    </section>
+
+    <section>
+      <app-sponsors></app-sponsors>
+    </section>
+
+    <section id="gallery">
+      <div class="container pb-5">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-xs-12 col-lg-12 col-md-12 text-center" >
+                <h2>  <span class="text-red">PHOTOS</span></h2>
+            </div>
+         </div>
+         <div class="row">
+              <div class="col-12 col-sm-12 col-xs-12 col-lg-12 col-md-12 text-center" >
+                  <app-photos></app-photos>
+              </div>
+         </div>
+      </div>
+
+    </section>
+
+    
+    <section id="testimonial" class="container pb-5">
+       
+                <div class="row mb-4">
+                  <div class="col-12 col-sm-12 col-xs-12 col-lg-12 col-md-12 text-center" >
+                      <h2>  <span class="text-red">TESTIMONIALS</span></h2>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-12 col-sm-12 col-xs-12 col-lg-12 col-md-12 text-center" >
+                      <app-testimonial></app-testimonial>
+                  </div>
+              </div>  
+      
+    </section>
+
+
+    <section id="contact" class="container-fluid bg-dark pb-5" >
+      <div class="container ">
+          <div class="row pt-4">
+            <div class="col-12 col-sm-12 col-xs-12 col-lg-12 col-md-12 text-center" >
+              <h2>Contact  <span class="text-red">US</span></h2>
+          </div>
+          </div>
+        <div class="row pt-4 ">
+          <div class="col-12 col-sm-6 col-xs-12 col-lg-6 col-md-6 text-center" >
+                 <img src="../../assets/images/contact.png" width="80%">
+              
+          </div>
+          <div class="col-12 col-sm-6 col-xs-12 col-lg-6 col-md-6 " >
+            <div id="contactform"><app-contact></app-contact></div>
+            
+           
+            
+        </div>
+      </div>
+
+</div> 
+
+    </section>
+
+
+
+
+
+
+    <section class="container-fluid  pt-1 pb-3 pl-4 pr-4" id="sponser">
+        <div class="container">
+        
+            <div class="row mt-3">
+              <div class="col-lg-8 col-12 col-sm-12 col-md-8 col-sm-12 text-left">
+              
+              <h5>Get access to the</h5>
+              <h3> Elite Community of Golf !!</h3>
+            
+              
+            </div>
+             
+            <div class="col-lg-4 col-12 col-xs-12 col-md-4 col-sm-4  text-center">              
+              
+                  <button type="button" class="btn btn-success btn-block"  routerLink="contact" role="button">Contact Us</button>
+              
+            </div>
+          </div>
+      </div>
+    
+   
+    </section>
+
+<app-footer></app-footer>
+</div>

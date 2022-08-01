@@ -1,0 +1,10 @@
+.bgclass{
+background-color: #20232a!important;
+}
+h1{
+    font-size: 3rem!important;
+    line-height: 0.9!important;
+}
+.btn-danger{
+    border-radius: 20px!important;
+}
