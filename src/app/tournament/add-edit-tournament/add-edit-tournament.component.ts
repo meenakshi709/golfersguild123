@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -43,7 +44,8 @@ export class AddEditTournamentComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private service: CommonServiceService,
-    public route: Router) {
+    public route: Router,
+    public datePipe:DatePipe) {
 
 
     // this.addCheckboxesToForm();
@@ -412,16 +414,17 @@ export class AddEditTournamentComponent implements OnInit {
   }
 
   saveTournamentDetails() {
-    debugger;
+   
     const data = this.eventFormGroup.getRawValue();
 
     data.eventDetailsArr[0]?.roundsArray?.forEach((item: any, index: any) => {
       let eventDate:any;
-      debugger;
+      
       const dateNum = new Date(item.eventDate).getDate()+1;
       eventDate = new Date(item.eventDate);
       eventDate = new Date(eventDate.setDate(dateNum));
-
+      debugger
+      eventDate=this.datePipe.transform(eventDate,"dd/MM/yyyy HH:mm:ss");
 console.log("event date",eventDate)
       if (index == 0) {
         
@@ -434,6 +437,7 @@ console.log("event date",eventDate)
       }
     });
     const url = "/tournament/saveEventDetails";
+    debugger
     this.service.postAPIMethod(url, data).subscribe((response: any) => {
       if (response.error != 'X' && response.response.result.err != "X") {
         if (this.data.isTournamentAdd) {

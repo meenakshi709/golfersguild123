@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { AddEditTournamentComponent } from './add-edit-tournament/add-edit-tournament.component';
 import { TournamentListingComponent } from './tournament-listing/tournament-listing.component';
 import { SharedModule } from '../Shared/shared.module';
@@ -18,6 +18,7 @@ import { TournamentRoutingModule } from './tournament-routing.module';
     SharedModule,
     TournamentRoutingModule
   
-  ]
+  ],
+  providers:[DatePipe]
 })
 export class TournamentModule { }
