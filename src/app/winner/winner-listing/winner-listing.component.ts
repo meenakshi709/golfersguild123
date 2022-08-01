@@ -26,7 +26,7 @@ export class WinnerListingComponent implements OnInit {
 
   getTournamentList() {
     this.loader.start();
-    this.service.getAPIMethod("/getTournamentListing").subscribe((response) => {
+    this.service.getAPIMethod("/getTournamentListing").subscribe((response: any) => {
       this.loader.stop();
       const data: any = response;
 
