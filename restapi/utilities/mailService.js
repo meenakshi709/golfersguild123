@@ -28,15 +28,17 @@
              let transporter = nodemailer.createTransport({
                 // host: config.SMTP_HOST,
                  //port: config.SMTP_PORT,
-                 pool: true,
-                 secure: true,
-                 service:"gmail",
+                pool: true,
+                 secureConnection: false,
+                 service:"smtp.outlook365.com",
+                 port:587,
                  auth: {
                      user: "meenakshi@echelonedge.com",
-                     pass: "Aarav@1234"
+                     pass: "nvrfvrcjqvgwgvvv"
                  },
                  tls: {
-                     rejectUnauthorized: false
+                    // rejectUnauthorized: false
+                    ciphers:'SSLv3'
                  }
              });
              ejs.renderFile("views/" + options.template, options).then((resFile) => {

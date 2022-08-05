@@ -22,7 +22,7 @@ tourCtrl.saveEventDetails = (req, res) => {
         const data = req.body;
         if (data && data.eventDetailsArr.length > 0) {
             data.eventDetailsArr.filter((item, eventIndex) => {
-                let event = `call saveEventDetails("${item.tourID}","${item.tournamentName}","${item.eventType}","${item.numRounds}","${item.startDate}","${item.endDate}","${item.holes}")`;
+                let event = `call saveEventDetails("${item.tourID}","${item.tournamentName}","${item.eventType}","${item.numRounds}","${item.startDate}","${ item.endDate}","${item.holes}")`;
 
                 connection.query(event, function (error, results) {
 

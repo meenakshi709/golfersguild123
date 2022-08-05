@@ -22,9 +22,13 @@ usrCtrl.userlogin = (req, res) => {
             if (error) {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             } else {
-                const key = config.JWTSECRET;
-                let token = auth.generateJwt(results[0][0], key);
-                res.end(JSON.stringify({ "error": "", "response": { result: results[0], msg: results[1].msg, "token": token, "sessionKey": key } }));
+                if (results[0] && results[0][0].err == 'X') {
+                    res.end(JSON.stringify({ "error": "X", "response": {  msg: results[0][0].msg } }));
+                } else {
+                    const key = config.JWTSECRET;
+                    let token = auth.generateJwt(results[0][0], key);
+                    res.end(JSON.stringify({ "error": "", "response": { result: results[0], msg: results[1].msg, "token": token, "sessionKey": key } }));
+                }
             }
         });
     } catch (error) {
@@ -141,19 +145,18 @@ usrCtrl.verifyOTP = (req, res) => {
 // send password to reset
 
 
-usrCtrl.forgotPassword=(req, res) => {
+usrCtrl.forgotPassword = (req, res) => {
     try {
-         const data = req.body;
-    
+        const data = req.body;
 
-    let sql = `Call user_forgot_password("${data.email}")`;
-    connection.query(sql, function (error, results) {
-        releaseconnection();
-        if (error) {
-            res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-        } else  {
-                if(results[0][0].err=="")
-                {
+
+        let sql = `Call user_forgot_password("${data.email}")`;
+        connection.query(sql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            } else {
+                if (results[0][0].err == "") {
                     let option = {
                         template: "forgotpwd.ejs",
                         subject: "Reset Password",
@@ -161,20 +164,20 @@ usrCtrl.forgotPassword=(req, res) => {
                         otp: results[0][0].passCode
                     }
                     mail.sendEmail(results[0][0].emailAddress, option).then((response) => {
-                        res.end(JSON.stringify({ "err": "", "response":{"msg": "password has been sent successfully to your registered Email ID" }}));
+                        res.end(JSON.stringify({ "err": "", "response": { "msg": "password has been sent successfully to your registered Email ID" } }));
                     }).catch((error) => {
-                        res.end(JSON.stringify({ "err": "X", "response":{"msg": "Contact Developer " + error}  }));
+                        res.end(JSON.stringify({ "err": "X", "response": { "msg": "Contact Developer " + error } }));
                     });
-              }
-              else{
-                res.end(JSON.stringify({ "err": "X", "response":{"result":results[0][0] }  }));
-              }
-                
-        }
-    });
-} catch (error) {
-    res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
-}
+                }
+                else {
+                    res.end(JSON.stringify({ "err": "X", "response": { "result": results[0][0] } }));
+                }
+
+            }
+        });
+    } catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
 };
 
 
@@ -183,15 +186,15 @@ usrCtrl.forgotPassword=(req, res) => {
 
 // change password
 
-usrCtrl.changePassword= (req, res) => {
+usrCtrl.changePassword = (req, res) => {
     try {
-    const data = req.body;
+        const data = req.body;
 
-    let sql = `Call user_change_password("${data.email}","${data.passcode}","${data.newPassword}")`;
-    connection.query(sql, function (error, results) {
-        releaseconnection();
+        let sql = `Call user_change_password("${data.email}","${data.passcode}","${data.newPassword}")`;
+        connection.query(sql, function (error, results) {
+            releaseconnection();
 
-             if (error) {
+            if (error) {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             } else {
                 res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
@@ -208,7 +211,7 @@ usrCtrl.changePassword= (req, res) => {
 usrCtrl.getUserDetails = (req, res) => {
 
     try {
-      
+
         let sql = `call getUserDetails(${req.query.playerId})`;
         connection.query(sql, function (error, results) {
             releaseconnection();
@@ -250,22 +253,22 @@ usrCtrl.addUpdateProfilePic = (req, res) => {
 
 //get all players
 
-    usrCtrl.getPlayersList = (req, res) => {
-        try {
- 
-    let sql = "call getPlayerListing()";
-    connection.query(sql, function (error, results) {
-        releaseconnection();
-        if (error) {
-            res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-        } else {
-            res.end(JSON.stringify({ "error": "", "response": results[0] }));
-        }
-    });
-}  
-catch (error) {
-res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
-}
+usrCtrl.getPlayersList = (req, res) => {
+    try {
+
+        let sql = "call getPlayerListing()";
+        connection.query(sql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            } else {
+                res.end(JSON.stringify({ "error": "", "response": results[0] }));
+            }
+        });
+    }
+    catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
 };
 
 
@@ -276,18 +279,18 @@ usrCtrl.deletePlayer = (req, res) => {
     try {
 
         let sql = `call delete_player("${req.query.playerId}")`;
-connection.query(sql, function (error, results) {
-    releaseconnection();
-    if (error) {
-        res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-    } else {
-        res.end(JSON.stringify({ "error": "", "response": results[0][0] }));
+        connection.query(sql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            } else {
+                res.end(JSON.stringify({ "error": "", "response": results[0][0] }));
+            }
+        });
     }
-});
-}  
-catch (error) {
-res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
-}
+    catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
 };
 
 /**

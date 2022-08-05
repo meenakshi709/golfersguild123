@@ -11,6 +11,7 @@ const router = express.Router();
  const usrCtrl = require("../userController");
  const commonCtrl = require("../commonController");
  const tourCtrl = require("../tournamentController");
+ const courseCtrl=require("../courseController");
 /**
  * Utilites files.
  */
@@ -75,6 +76,7 @@ router.get("/tournament/getCouponRedeemStatus", tourCtrl.getCouponRedeemStatus);
 router.get("/players",  usrCtrl.getPlayersList); 
 router.get("/deletePlayer",  usrCtrl.deletePlayer); 
 router.post("/saveTournamentWinner", tourCtrl.saveTournamentWinner);
+router.get("course/getTeeColors",  courseCtrl.getTeeColors); 
 
 
 module.exports = router;

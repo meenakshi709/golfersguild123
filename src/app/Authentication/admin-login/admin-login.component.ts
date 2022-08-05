@@ -28,15 +28,16 @@ export class AdminLoginComponent implements OnInit {
   }
   userLoggedIn() {
     const data = this.loginForm.getRawValue();
-    this.service.postAPIMethod('/userLogin', data).subscribe(APIresponse => {
-      debugger
-     
+    this.service.postAPIMethod('/userLogin', data).subscribe(APIresponse => { 
       if (APIresponse.response.result[0].err == "X" ) {
         this.sweetAlertMsg("error", APIresponse.error ? APIresponse.error : APIresponse.response.result[0].msg);
        
       }
       else {
-        const tokenKey = APIresponse.response.token;
+        debugger;
+        const tokenKey = APIresponse.response.token ;
+        sessionStorage.setItem('access-token',tokenKey);
+        localStorage.setItem('userDetails',JSON.stringify(APIresponse.response.result[0]));
         this.route.navigateByUrl("/dashboard");
       }
     });

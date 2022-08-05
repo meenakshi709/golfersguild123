@@ -416,25 +416,24 @@ export class AddEditTournamentComponent implements OnInit {
   saveTournamentDetails() {
    
     const data = this.eventFormGroup.getRawValue();
-
+debugger;
     data.eventDetailsArr[0]?.roundsArray?.forEach((item: any, index: any) => {
       let eventDate:any;
       
-      const dateNum = new Date(item.eventDate).getDate()+1;
-      eventDate = new Date(item.eventDate);
-      eventDate = new Date(eventDate.setDate(dateNum));
+     // const dateNum = new Date(item.eventDate).getDate()+1;
+      //eventDate = new Date(item.eventDate);
+      //eventDate = new Date(eventDate.setDate(dateNum));
       debugger
-      eventDate=this.datePipe.transform(eventDate,"dd/MM/yyyy HH:mm:ss");
-console.log("event date",eventDate)
+      eventDate=this.datePipe.transform(item.eventDate,"yyyy-MM-dd HH:mm:ss");
+
       if (index == 0) {
-        
-        data.eventDetailsArr[0].startDate = eventDate
-   
+        data.eventDetailsArr[0].startDate = eventDate   
       }
       if (data.eventDetailsArr[0]?.roundsArray?.length == (index + 1)) {
         data.eventDetailsArr[0].endDate = eventDate
       
       }
+      item['eventDate']=this.datePipe.transform(item.eventDate,"yyyy-MM-dd HH:mm:ss");
     });
     const url = "/tournament/saveEventDetails";
     debugger

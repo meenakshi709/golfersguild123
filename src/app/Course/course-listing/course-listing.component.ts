@@ -60,6 +60,8 @@ this.loader.start();
 
 
   saveCourseDetails(clickedRecordDetails:any) {
+   // const courseRating=this.service.
+    
     const dialogRef = this.dialog.open(AddEditCourseComponent, {
       data: clickedRecordDetails,
       width: '80%',
