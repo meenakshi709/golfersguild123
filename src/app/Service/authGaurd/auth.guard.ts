@@ -27,8 +27,10 @@ export class AuthGuard implements CanActivate {
     const userDetails = localStorage.getItem('userDetails');
     if (accessToken && userDetails) {
       return true;
+
     } else {
       this.router.navigate(['/admin-login']);
+      return false;
     }
     // this.service.getAPIMethod('/permission/getModuleListByRole?roleId=' + role_id).subscribe((result) => {
     //   if (result.error === 'X') {
@@ -45,7 +47,7 @@ export class AuthGuard implements CanActivate {
     //   this.router.navigateByUrl('');
     //   return false;
     // }
-    return true;
+  
 
   }
   canDeactivate(

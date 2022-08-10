@@ -11,6 +11,8 @@ import Swal from 'sweetalert2';
   styleUrls: ['./add-edit-course.component.css']
 })
 export class AddEditCourseComponent implements OnInit {
+  colorsList:any=[];
+  
   courseForm: FormGroup = new FormGroup({
     cid: new FormControl('', []),
     c_code: new FormControl('', []),
@@ -54,7 +56,11 @@ export class AddEditCourseComponent implements OnInit {
     hdcp15: new FormControl('', [Validators.required]),
     hdcp16: new FormControl('', [Validators.required]),
     hdcp17: new FormControl('', [Validators.required]),
-    hdcp18: new FormControl('', [Validators.required])
+    hdcp18: new FormControl('', [Validators.required]),
+    colorId: new FormControl('', [Validators.required]),
+    courseRating:new FormControl('', [Validators.required]),
+    slopeRating:new FormControl('', [Validators.required])
+
 
 
   })
@@ -83,6 +89,7 @@ export class AddEditCourseComponent implements OnInit {
       this.setCourseDetails();
 
     }
+    this.getTeeColorsList();
     this.courseForm.controls.pinn.disable();
     this.courseForm.controls.pout.disable();
 
@@ -107,16 +114,18 @@ export class AddEditCourseComponent implements OnInit {
   }
 
   saveCourseDetails() {
+ 
     const data = this.courseForm.getRawValue();
-    this.service.postAPIMethod('/dataApi/addCourse', data).subscribe(response => {
+    this.service.postAPIMethod('/course/addCourse', data).subscribe(response => {
       // console.log("final",response);
-      if (response.result.err != "X") {
+      debugger
+      if (response.response.result.err != "X") {
         //  this.route.navigateByUrl("/course");
         this.dialogRef.close(true);
-        this.sweetAlertMsg('success',response.result.msg);
+        this.sweetAlertMsg('success',response.response.result.msg);
       }
       else {
-        this.sweetAlertMsg('error',response.result.msg);
+        this.sweetAlertMsg('error',response.response.result.msg);
       }
     });
 
@@ -167,6 +176,23 @@ export class AddEditCourseComponent implements OnInit {
 
 
   }
+
+   //get tee details 
+   getTeeColorsList() {
+
+    this.service.getAPIMethod('/course/getTeeColors').subscribe(apliResponse => {
+      debugger;
+     // const apliResponse:any=response.response;
+      console.log("country",apliResponse)
+      if (apliResponse.error != 'X' && apliResponse.response.result.err != "X") {
+          {
+            this.colorsList=apliResponse.response.result;
+          }
+
+    }
+  });
+   }
+
 
   validateAllFields(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach((field) => {

@@ -76,7 +76,9 @@ router.get("/tournament/getCouponRedeemStatus", tourCtrl.getCouponRedeemStatus);
 router.get("/players",  usrCtrl.getPlayersList); 
 router.get("/deletePlayer",  usrCtrl.deletePlayer); 
 router.post("/saveTournamentWinner", tourCtrl.saveTournamentWinner);
-router.get("course/getTeeColors",  courseCtrl.getTeeColors); 
+router.get("/course/getTeeColors",  courseCtrl.getTeeColors); 
+router.post("/course/addCourse",  courseCtrl.addCourse); 
+router.get("/course/deleteCourse",   courseCtrl.deleteCourse); 
 
 
 module.exports = router;
