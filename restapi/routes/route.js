@@ -33,7 +33,7 @@ router.get("/course", commonCtrl.course);
 router.get("/score",commonCtrl.score);
 router.post("/tournament/saveEventDetails",tourCtrl.saveEventDetails);
 router.post("/tournamentInvitation",tourCtrl.tournamentInvitation);
-router.get("/getTournamentListing",tourCtrl.getTournamentListing);
+router.get("/getTournamentListing", auth.verifyAuthToken,tourCtrl.getTournamentListing);
 router.get("/tournament/invitedTournamentListById",tourCtrl.invitedTournamentListById);
 router.post("/tournament/invitationAcceptDenyById",tourCtrl.invitationAcceptDenyById);
 router.get("/tournament/tournamentScoreById",tourCtrl.tournamentScoreById);

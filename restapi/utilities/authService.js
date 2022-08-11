@@ -1,9 +1,3 @@
-/**
- * Project Name: FIDS.
- * Date: 22/01/2021
- * Contact: Echelon Edge FIDS Development Team.
- * Copyright: Echelon Edge Pvt. Ltd.
- */
 
 "use strict";
 
@@ -22,10 +16,6 @@ const auth = {};
 
 
 
-/**
- * Generate JWT here.
- * @Developer Shubham
- */
 auth.generateJwt = (option,key) => {
     return jwt.sign({
         id: option.p_id,
@@ -36,16 +26,12 @@ auth.generateJwt = (option,key) => {
     }, config.JWTSECRET, { expiresIn: "24h" });
 }
 
-/**
- * Verify JWT here
- *  @Developer Shubham
- */
 auth.verifyAuthToken = (req, res, next) => {
     try {
         let token = req.headers.authorization;
-        let secret = req.headers.sessionkey;
+        let secret = config.JWTSECRET;
         if (typeof token !== 'undefined') {
-            token = token.split(" ")[0];
+            token = token.split(" ")[1];
             let decoded = jwt.verify(token, config.JWTSECRET);
             if (decoded.secret && decoded.secret === secret) {
                 req.payload = decoded;
@@ -66,10 +52,7 @@ auth.verifyAuthToken = (req, res, next) => {
     }
 }
 
-/**
- * Logout function for session logout
- * @Developer Shubham, Avinash
- */
+
 function logoutFn(req) {
     let token = req.headers.authorization;
     token = token.split(" ")[0];

@@ -28,18 +28,12 @@ export class RootInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    // add auth header with jwt if user is logged in and request is to the api url
-    const userDetails:any = localStorage.getItem('userDetails')
     let token = sessionStorage.getItem('access-token');
-    debugger;
     const isLoggedIn=true;
     if (isLoggedIn) {
-     
-
       request = request.clone({
         setHeaders: {
           Authorization: 'Bearer ' + token,
-          //role_id: userDetails['roleId'] ? userDetails.roleId : '',
           "Access-Control-Allow-Methods": "GET, POST,PUT,DELETE",
           'Content-Type': 'application/json'
         },
@@ -50,14 +44,10 @@ export class RootInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
-          // console.log("hgfghfhgf", event.body.data)
           let code = event.status ? event.status : 0;
-          // debugger;
-          if (code == 401 && event.body.error == 'X') {
-            // this.sessionExpired();
+          if (code == 401 && event.body.error == 'X') {      
             this.logout();
-          }
-         
+          }       
         }
         return event;
       }),
