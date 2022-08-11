@@ -2,7 +2,7 @@
 
     <div class="row headerBox">
         <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6 pt-3">
-            <h4 class="text-red " mat-dialog-title>{{!this.data?'Add Course':'Edit Course'}}</h4>
+            <h4 class="text-darkBlue" mat-dialog-title>{{!this.data?'Add Course':'Edit Course'}}</h4>
         </div>
         <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6  pt-2">
             <button class="text-right" (click)="closeDialogClick()">X</button>
@@ -415,11 +415,71 @@
                 </mat-form-field>
             </div>
             </div>
+            <div class="row">
+                <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1">
+                
+                 </div>
+             </div>
+            <div class="row">
+                <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                    <mat-form-field  appearance="outline">
+                        <mat-label>Tee* </mat-label>              
+                       
+                          <mat-select  formControlName="colorId" id="colorId">
+                            <mat-option *ngFor="let colors of colorsList" [value]="colors.colorId">
+                              {{colors.colorName}}
+                            </mat-option>
+                          </mat-select>
+                       
+                          <mat-error *ngIf="courseForm.controls['colorId'].errors?.required">
+                            Please select Tee color
+                         </mat-error>
+                    </mat-form-field>
+             </div>
+    
+             <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                    <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                        <mat-label>Course Rating* </mat-label>    
+                        <input matInput type="text" (keypress)="keyPress($event)" placeholder="Course Rating" formControlName="courseRating"  
+                        id="courseRating"/>
+    
+                        <mat-error *ngIf="courseForm.controls['courseRating'].errors?.required">
+                            Please input course rating
+                         </mat-error>
+                                        
+                        </mat-form-field>
+                    </div>
+    
+                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                    <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+                        <mat-label>Slope Rating* </mat-label>    
+                            <input matInput type="text" (keypress)="keyPress($event)" placeholder="Slope Rating" formControlName="slopeRating"  
+                            id="slopeRating"/>
+    
+                            <mat-error *ngIf="courseForm.controls['slopeRating'].errors?.required">
+                                Please enter slope rating
+                             </mat-error>
+                                            
+                            </mat-form-field>
+                        </div>
+    
+  
+    
+            
+    
+   
+            
+    
+          
+                </div>
+
+
+
             <div class="row text-right">
                 <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
                         <div mat-dialog-actions >
                             <button mat-stroked-button  (click)="closeDialogClick()"  >Cancel</button>
-                            <button type="submit" class="btn btn-danger" [disabled]="!this.courseForm.valid"
+                            <button type="submit" class="btn btn-primary" [disabled]="!this.courseForm.valid"
                             (click)="saveCourseDetails()">{{!this.data?'Add ':'Update'}}</button>
                         </div>
                     </div>

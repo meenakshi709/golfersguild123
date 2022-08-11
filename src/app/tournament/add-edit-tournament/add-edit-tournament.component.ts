@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -43,7 +44,8 @@ export class AddEditTournamentComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private service: CommonServiceService,
-    public route: Router) {
+    public route: Router,
+    public datePipe:DatePipe) {
 
 
     // this.addCheckboxesToForm();
@@ -412,28 +414,29 @@ export class AddEditTournamentComponent implements OnInit {
   }
 
   saveTournamentDetails() {
-    debugger;
+   
     const data = this.eventFormGroup.getRawValue();
-
+debugger;
     data.eventDetailsArr[0]?.roundsArray?.forEach((item: any, index: any) => {
       let eventDate:any;
-      debugger;
-      const dateNum = new Date(item.eventDate).getDate()+1;
-      eventDate = new Date(item.eventDate);
-      eventDate = new Date(eventDate.setDate(dateNum));
+      
+     // const dateNum = new Date(item.eventDate).getDate()+1;
+      //eventDate = new Date(item.eventDate);
+      //eventDate = new Date(eventDate.setDate(dateNum));
+      debugger
+      eventDate=this.datePipe.transform(item.eventDate,"yyyy-MM-dd HH:mm:ss");
 
-console.log("event date",eventDate)
       if (index == 0) {
-        
-        data.eventDetailsArr[0].startDate = eventDate
-   
+        data.eventDetailsArr[0].startDate = eventDate   
       }
       if (data.eventDetailsArr[0]?.roundsArray?.length == (index + 1)) {
         data.eventDetailsArr[0].endDate = eventDate
       
       }
+      item['eventDate']=this.datePipe.transform(item.eventDate,"yyyy-MM-dd HH:mm:ss");
     });
     const url = "/tournament/saveEventDetails";
+    debugger
     this.service.postAPIMethod(url, data).subscribe((response: any) => {
       if (response.error != 'X' && response.response.result.err != "X") {
         if (this.data.isTournamentAdd) {

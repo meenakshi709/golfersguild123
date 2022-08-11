@@ -13,7 +13,7 @@ import { TournamentTabsComponent } from './views/tournament-tabs/tournament-tabs
 import { LeaderboardTableComponent } from './views/leaderboard-table/leaderboard-table.component';
 import { ContactComponent } from './views/contact/contact.component';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule} from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {DataTablesModule} from 'angular-datatables';
 import { PageNotFoundComponent } from './views/page-not-found/page-not-found.component';
 import { SponsorsComponent } from './views/sponsors/sponsors.component';
@@ -35,6 +35,9 @@ import { SharedModule } from './Shared/shared.module';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { ThankyouComponent } from './views/thankyou/thankyou.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { RootInterceptor } from './Service/authGaurd/rootInterceptor';
+import { ErrorInterceptor } from './Service/authGaurd/errorInterceptor';
+import { AuthgaurdService } from './Service/authGaurd/authGuard.service';
 
 
 
@@ -88,7 +91,12 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
     
     
   ],
-  providers: [CommonServiceService],
+    providers: [
+
+    { provide: HTTP_INTERCEPTORS, useClass: RootInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    AuthgaurdService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

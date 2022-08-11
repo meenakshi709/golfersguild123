@@ -33,7 +33,7 @@ auth.generateJwt = (option,key) => {
         contactNumber: option.contactNumber,
         role: option.roleId,
         secret: key
-    }, config.JWTSECRET, { expiresIn: "30m" });
+    }, config.JWTSECRET, { expiresIn: "24h" });
 }
 
 /**

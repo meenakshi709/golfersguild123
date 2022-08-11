@@ -15,6 +15,8 @@ import { AdminLoginComponent } from './Authentication/admin-login/admin-login.co
 import { ThankyouComponent } from './views/thankyou/thankyou.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { ClientComponent } from './client/Client/client.component';
+import { AuthGuard } from './Service/authGaurd/auth.guard';
+
 
 
 
@@ -39,44 +41,44 @@ const routes: Routes = [
 
   {
     path: 'courses',
-    // canActivate: [AuthGuard],
+     canActivate: [AuthGuard],
     loadChildren: () => import('./Course/course.module').then(m => m.CourseModule),
    component:SidebarComponent
   },
   {
     path: 'dashboard',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     loadChildren: () => import('./Dashboard/dashboard.module').then(m => m.DashboardModule),
    component:SidebarComponent
   },
   {
     path: 'player',
-    // canActivate: [AuthGuard],
+   canActivate: [AuthGuard],
     loadChildren: () => import('./Player/player.module').then(m => m.PlayerModule),
    component:SidebarComponent
   },
   {
     path: 'tournament',
-    // canActivate: [AuthGuard],
+     canActivate: [AuthGuard],
     loadChildren: () => import('./tournament/tournament.module').then(m => m.TournamentModule),
     component:SidebarComponent
   },
   {
     path: 'leaderboardList',
-    // canActivate: [AuthGuard],
+     canActivate: [AuthGuard],
     loadChildren: () => import('./Leaderboard/leaderboard.module').then(m => m.LeaderboardModule),
    component:SidebarComponent
   },
 
   {
     path: 'client-signup',
-    // canActivate: [AuthGuard],
+     canActivate: [AuthGuard],
     loadChildren: () => import('./client/client.module').then(m => m.ClientModule),
   // component:SidebarComponent
   },
   {
     path: 'winners',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     loadChildren: () => import('./winner/winner.module').then(m => m.WinnerModule),
    component:SidebarComponent
   },
