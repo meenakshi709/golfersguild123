@@ -420,6 +420,7 @@
                 
                  </div>
              </div>
+             
             <div class="row">
                 <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
                     <mat-form-field  appearance="outline">
@@ -440,7 +441,7 @@
              <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
                     <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
                         <mat-label>Course Rating* </mat-label>    
-                        <input matInput type="text" (keypress)="keyPress($event)" placeholder="Course Rating" formControlName="courseRating"  
+                        <input matInput type="text" numbersWithDecimal placeholder="Course Rating" formControlName="courseRating"  
                         id="courseRating"/>
     
                         <mat-error *ngIf="courseForm.controls['courseRating'].errors?.required">
@@ -453,7 +454,7 @@
                     <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
                     <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
                         <mat-label>Slope Rating* </mat-label>    
-                            <input matInput type="text" (keypress)="keyPress($event)" placeholder="Slope Rating" formControlName="slopeRating"  
+                            <input matInput type="text" numbersWithDecimal placeholder="Slope Rating" formControlName="slopeRating"  
                             id="slopeRating"/>
     
                             <mat-error *ngIf="courseForm.controls['slopeRating'].errors?.required">

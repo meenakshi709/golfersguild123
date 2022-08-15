@@ -1,6 +1,6 @@
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonServiceService } from 'src/app/Service/common-service.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -11,8 +11,12 @@ import Swal from 'sweetalert2';
   styleUrls: ['./add-edit-course.component.css']
 })
 export class AddEditCourseComponent implements OnInit {
-  colorsList:any=[];
-  
+  teeForm: FormGroup = new FormGroup({
+    tee: new FormControl('', []),
+    courseRating: new FormControl('', []),
+    slopeRating: new FormControl('', []),
+  });
+  colorsList: any = [];
   courseForm: FormGroup = new FormGroup({
     cid: new FormControl('', []),
     c_code: new FormControl('', []),
@@ -58,11 +62,9 @@ export class AddEditCourseComponent implements OnInit {
     hdcp17: new FormControl('', [Validators.required]),
     hdcp18: new FormControl('', [Validators.required]),
     colorId: new FormControl('', [Validators.required]),
-    courseRating:new FormControl('', [Validators.required]),
-    slopeRating:new FormControl('', [Validators.required])
-
-
-
+    courseRating: new FormControl('', [Validators.required]),
+    slopeRating: new FormControl('', [Validators.required]),
+    teeFormArray: this.formBuilder.array([])
   })
 
   constructor(
@@ -72,16 +74,16 @@ export class AddEditCourseComponent implements OnInit {
     private service: CommonServiceService,
     public route: Router) { }
 
-    //only number input
-    keyPress(event: any) {
-      const pattern = /[0-9\+\-\ ]/;
-   
-      let inputChar = String.fromCharCode(event.charCode);
-      if (event.keyCode != 8 && !pattern.test(inputChar)) {
-        event.preventDefault();
-      }
+  //only number input
+  keyPress(event: any) {
+    const pattern = /^\d*\.?\d*$/;
+
+    let inputChar = String.fromCharCode(event.charCode);
+    if (event.keyCode != 8 && !pattern.test(inputChar)) {
+      event.preventDefault();
     }
-    
+  }
+
   ngOnInit(): void {
     console.log("data=", this.data);
     if (this.data) {
@@ -96,9 +98,6 @@ export class AddEditCourseComponent implements OnInit {
 
   }
   ngAfterViewInit(): void {
-    //Called after ngOnInit when the component's or directive's content has been initialized.
-    //Add 'implements AfterContentInit' to the class.
-
 
   }
 
@@ -114,7 +113,7 @@ export class AddEditCourseComponent implements OnInit {
   }
 
   saveCourseDetails() {
- 
+
     const data = this.courseForm.getRawValue();
     this.service.postAPIMethod('/course/addCourse', data).subscribe(response => {
       // console.log("final",response);
@@ -122,10 +121,10 @@ export class AddEditCourseComponent implements OnInit {
       if (response.response.result.err != "X") {
         //  this.route.navigateByUrl("/course");
         this.dialogRef.close(true);
-        this.sweetAlertMsg('success',response.response.result.msg);
+        this.sweetAlertMsg('success', response.response.result.msg);
       }
       else {
-        this.sweetAlertMsg('error',response.response.result.msg);
+        this.sweetAlertMsg('error', response.response.result.msg);
       }
     });
 
@@ -177,21 +176,21 @@ export class AddEditCourseComponent implements OnInit {
 
   }
 
-   //get tee details 
-   getTeeColorsList() {
+  //get tee details 
+  getTeeColorsList() {
 
     this.service.getAPIMethod('/course/getTeeColors').subscribe(apliResponse => {
       debugger;
-     // const apliResponse:any=response.response;
-      console.log("country",apliResponse)
+      // const apliResponse:any=response.response;
+      console.log("country", apliResponse)
       if (apliResponse.error != 'X' && apliResponse.response.result.err != "X") {
-          {
-            this.colorsList=apliResponse.response.result;
-          }
+        {
+          this.colorsList = apliResponse.response.result;
+        }
 
-    }
-  });
-   }
+      }
+    });
+  }
 
 
   validateAllFields(formGroup: FormGroup) {
