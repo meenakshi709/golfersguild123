@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.3
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 10, 2022 at 02:30 PM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.2.34
+-- Generation Time: Aug 16, 2022 at 08:04 AM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 8.1.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -492,6 +492,10 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getWebTourDetails` (IN `param_tourID` VARCHAR(100))  BEGIN
 select * from event_details where tourID=param_tourID;
 
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_courseRating_by_CourseId` (IN `param_courseId` VARCHAR(50))  BEGIN
+select * from course_rating where courseId=param_courseId;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_invited_tournament_ListById` (IN `param_userId` INT)  select round_details.round_name,DATE_FORMAT(round_details.event_Date, '%Y-%m-%d') as eventDate,tournamentName,events.tourId as tournamentId,playerId,eventType as tournamentType from tournament_player_list inner join events on events.tourID=tournament_player_list.tourID inner JOIN round_details on events.tourID=round_details.tourID where isInvited=1 and playerID=param_userId and is_Deleted=0 and isPlay=0 and round_details.event_Date>=CURRENT_DATE()  ORDER by round_details.event_Date$$
@@ -1342,7 +1346,24 @@ INSERT INTO `courses` (`cid`, `c_code`, `cname`, `caddress`, `par1`, `par2`, `pa
 (2, '', 'CLASSIC GOLF RESORT | RIDGE/VALLEY', ' P.O. Hasanpur, Tauru, Haryana 122105', 4, 3, 5, 4, 3, 4, 4, 4, 5, 4, 3, 4, 4, 5, 4, 4, 3, 5, 36, 36, 13, 15, 3, 7, 17, 11, 5, 1, 9, 6, 14, 16, 4, 12, 8, 2, 18, 10, 0, NULL),
 (3, '', 'Qutab Golf Course', ' 249/5 B, Sri Aurobindo Marg, Lado Sarai Extension, Lado Sarai, New Delhi, Delhi 110030', 4, 4, 4, 4, 4, 3, 4, 5, 4, 3, 4, 4, 3, 3, 4, 5, 4, 4, 34, 36, 1, 17, 11, 15, 7, 13, 3, 5, 9, 18, 12, 10, 14, 6, 8, 4, 2, 16, 0, NULL),
 (29, 'course29', 'CLASSIC GOLF RESORT | CANYON/RIDGE', 'P.O. Hasanpur, Tauru, Haryana 122105', 3, 5, 3, 4, 4, 4, 4, 5, 4, 4, 3, 5, 4, 3, 4, 4, 4, 5, 36, 36, 17, 1, 15, 13, 11, 9, 5, 3, 7, 14, 16, 4, 8, 18, 12, 6, 2, 10, 0, NULL),
-(42, 'course42', 'laar', 'ssss', 5, 5, 4, 4, 3, 2, 2, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 31, 36, 6, 7, 78, 7, 6, 5, 5, 5, 4, 3, 3, 3, 3, 4, 4, 4, 5, 5, 0, '34');
+(42, 'course42', 'laar', 'ssss', 5, 5, 4, 4, 3, 2, 2, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 31, 36, 6, 7, 78, 7, 6, 5, 5, 5, 4, 3, 3, 3, 3, 4, 4, 4, 5, 5, 0, '34'),
+(43, 'course43', 'sdsd', 'sdsd', 4, 4, 4, 4, 3, 3, 2, 2, 7, 2, 1, 2, 2, 2, 3, 4, 2, 9, 33, 27, 2, 2, 2, 1, 1, 5, 5, 4, 3, 3, 3, 3, 3, 2, 1, 11, 12, 10, 0, '0'),
+(44, 'course44', 'test', 'test1', 4, 4, 4, 4, 3, 3, 2, 2, 21, 2, 1, 2, 2, 2, 3, 4, 2, 21, 47, 39, 2, 2, 2, 1, 1, 5, 5, 4, 3, 3, 3, 3, 3, 2, 1, 11, 12, 10, 0, '0'),
+(45, 'course45', 'test1', 'testr', 4, 4, 3, 4, 3, 3, 2, 2, 2, 2, 1, 1, 2, 2, 3, 4, 2, 2, 27, 19, 2, 2, 2, 1, 1, 5, 5, 4, 3, 3, 3, 3, 3, 2, 1, 11, 12, 10, 0, '0');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `course_rating`
+--
+
+CREATE TABLE `course_rating` (
+  `cRatingId` int(11) NOT NULL,
+  `courseId` int(11) NOT NULL,
+  `colorName` varchar(50) NOT NULL,
+  `rating` varchar(255) NOT NULL,
+  `slopeRating` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1378,26 +1399,6 @@ INSERT INTO `course_tee` (`tee_Id`, `tee_Name`) VALUES
 (18, 'Tee 16'),
 (19, 'Tee 17'),
 (20, 'Tee 18');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cousrerating`
---
-
-CREATE TABLE `cousrerating` (
-  `ratingId` int(11) NOT NULL,
-  `colorId` int(20) NOT NULL,
-  `courseRating` varchar(255) NOT NULL,
-  `courseId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `cousrerating`
---
-
-INSERT INTO `cousrerating` (`ratingId`, `colorId`, `courseRating`, `courseId`) VALUES
-(7, 7, '111', 42);
 
 -- --------------------------------------------------------
 
@@ -2704,16 +2705,16 @@ ALTER TABLE `courses`
   ADD UNIQUE KEY `cname` (`cname`);
 
 --
+-- Indexes for table `course_rating`
+--
+ALTER TABLE `course_rating`
+  ADD PRIMARY KEY (`cRatingId`);
+
+--
 -- Indexes for table `course_tee`
 --
 ALTER TABLE `course_tee`
   ADD PRIMARY KEY (`tee_Id`);
-
---
--- Indexes for table `cousrerating`
---
-ALTER TABLE `cousrerating`
-  ADD PRIMARY KEY (`ratingId`);
 
 --
 -- Indexes for table `employment`
@@ -2900,19 +2901,19 @@ ALTER TABLE `country`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+
+--
+-- AUTO_INCREMENT for table `course_rating`
+--
+ALTER TABLE `course_rating`
+  MODIFY `cRatingId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `course_tee`
 --
 ALTER TABLE `course_tee`
   MODIFY `tee_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
-
---
--- AUTO_INCREMENT for table `cousrerating`
---
-ALTER TABLE `cousrerating`
-  MODIFY `ratingId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `employment`

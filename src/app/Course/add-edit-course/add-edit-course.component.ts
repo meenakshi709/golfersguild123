@@ -11,62 +11,54 @@ import Swal from 'sweetalert2';
   styleUrls: ['./add-edit-course.component.css']
 })
 export class AddEditCourseComponent implements OnInit {
-  teeForm: FormGroup = new FormGroup({
-    tee: new FormControl('', []),
-    courseRating: new FormControl('', []),
-    slopeRating: new FormControl('', []),
-  });
+
   colorsList: any = [];
   courseForm: FormGroup = new FormGroup({
     cid: new FormControl('', []),
     c_code: new FormControl('', []),
     cname: new FormControl('', [Validators.required]),
     caddress: new FormControl('', [Validators.required]),
-    // courseLoc: new FormControl('', [Validators.required]),
-    par1: new FormControl('', [Validators.required]),
-    par2: new FormControl('', [Validators.required]),
-    par3: new FormControl('', [Validators.required]),
-    par4: new FormControl('', [Validators.required]),
-    par5: new FormControl('', [Validators.required]),
-    par6: new FormControl('', [Validators.required]),
-    par7: new FormControl('', [Validators.required]),
-    par8: new FormControl('', [Validators.required]),
-    par9: new FormControl('', [Validators.required]),
-    par10: new FormControl('', [Validators.required]),
-    par11: new FormControl('', [Validators.required]),
-    par12: new FormControl('', [Validators.required]),
-    par13: new FormControl('', [Validators.required]),
-    par14: new FormControl('', [Validators.required]),
-    par15: new FormControl('', [Validators.required]),
-    par16: new FormControl('', [Validators.required]),
-    par17: new FormControl('', [Validators.required]),
-    par18: new FormControl('', [Validators.required]),
+    par1: new FormControl('4', [Validators.required]),
+    par2: new FormControl('4', [Validators.required]),
+    par3: new FormControl('4', [Validators.required]),
+    par4: new FormControl('4', [Validators.required]),
+    par5: new FormControl('3', [Validators.required]),
+    par6: new FormControl('3', [Validators.required]),
+    par7: new FormControl('2', [Validators.required]),
+    par8: new FormControl('2', [Validators.required]),
+    par9: new FormControl('2', [Validators.required]),
+    par10: new FormControl('2', [Validators.required]),
+    par11: new FormControl('1', [Validators.required]),
+    par12: new FormControl('2', [Validators.required]),
+    par13: new FormControl('2', [Validators.required]),
+    par14: new FormControl('2', [Validators.required]),
+    par15: new FormControl('3', [Validators.required]),
+    par16: new FormControl('4', [Validators.required]),
+    par17: new FormControl('2', [Validators.required]),
+    par18: new FormControl('2', [Validators.required]),
     pinn: new FormControl('', []),
     pout: new FormControl('', []),
-    hdcp1: new FormControl('', [Validators.required]),
-    hdcp2: new FormControl('', [Validators.required]),
-    hdcp3: new FormControl('', [Validators.required]),
-    hdcp4: new FormControl('', [Validators.required]),
-    hdcp5: new FormControl('', [Validators.required]),
-    hdcp6: new FormControl('', [Validators.required]),
-    hdcp7: new FormControl('', [Validators.required]),
-    hdcp8: new FormControl('', [Validators.required]),
-    hdcp9: new FormControl('', [Validators.required]),
-    hdcp10: new FormControl('', [Validators.required]),
-    hdcp11: new FormControl('', [Validators.required]),
-    hdcp12: new FormControl('', [Validators.required]),
-    hdcp13: new FormControl('', [Validators.required]),
-    hdcp14: new FormControl('', [Validators.required]),
-    hdcp15: new FormControl('', [Validators.required]),
-    hdcp16: new FormControl('', [Validators.required]),
-    hdcp17: new FormControl('', [Validators.required]),
-    hdcp18: new FormControl('', [Validators.required]),
-    colorId: new FormControl('', [Validators.required]),
-    courseRating: new FormControl('', [Validators.required]),
-    slopeRating: new FormControl('', [Validators.required]),
-    teeFormArray: this.formBuilder.array([])
+    hdcp1: new FormControl('2', [Validators.required]),
+    hdcp2: new FormControl('2', [Validators.required]),
+    hdcp3: new FormControl('2', [Validators.required]),
+    hdcp4: new FormControl('1', [Validators.required]),
+    hdcp5: new FormControl('1', [Validators.required]),
+    hdcp6: new FormControl('5', [Validators.required]),
+    hdcp7: new FormControl('5', [Validators.required]),
+    hdcp8: new FormControl('4', [Validators.required]),
+    hdcp9: new FormControl('3', [Validators.required]),
+    hdcp10: new FormControl('3', [Validators.required]),
+    hdcp11: new FormControl('3', [Validators.required]),
+    hdcp12: new FormControl('3', [Validators.required]),
+    hdcp13: new FormControl('3', [Validators.required]),
+    hdcp14: new FormControl('2', [Validators.required]),
+    hdcp15: new FormControl('1', [Validators.required]),
+    hdcp16: new FormControl('11', [Validators.required]),
+    hdcp17: new FormControl('12', [Validators.required]),
+    hdcp18: new FormControl('10', [Validators.required]),
+    teeFormArray: new FormArray([]),
   })
-
+  teeFormArray: FormArray = new FormArray([]);
   constructor(
     public dialogRef: MatDialogRef<AddEditCourseComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -90,17 +82,36 @@ export class AddEditCourseComponent implements OnInit {
       this.courseForm.controls.cname.disable();
       this.setCourseDetails();
 
+
+
     }
+    this.addTeeName();
+
     this.getTeeColorsList();
     this.courseForm.controls.pinn.disable();
     this.courseForm.controls.pout.disable();
 
 
   }
+  get getTeeFormArray() {
+
+    return this.courseForm.get('teeFormArray') as FormArray
+  }
   ngAfterViewInit(): void {
 
   }
-
+  addTeeName() {
+    const teeForm = new FormGroup({
+      teeName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]),
+      courseRating: new FormControl('', [Validators.required]),
+      slopeRating: new FormControl('', [Validators.required]),
+    });
+    (this.courseForm.get('teeFormArray') as FormArray).push(teeForm);
+  }
+  deleteTeeName(i: any) {
+    const formControl = (this.courseForm.get('teeFormArray') as FormArray);
+    formControl.controls.splice(i, 1);
+  }
 
   setCourseDetails() {
     const keys = Object.keys(this.data);
@@ -114,7 +125,14 @@ export class AddEditCourseComponent implements OnInit {
 
   saveCourseDetails() {
 
+    debugger;
     const data = this.courseForm.getRawValue();
+    const teeNameArr: any = [];
+    data.teeFormArray.forEach((itemDetails: any) => {
+      const payload = itemDetails.teeName + '-' + itemDetails.courseRating + '-' + itemDetails.slopeRating;
+      teeNameArr.push(payload);
+    });
+    data.teeNameArr = teeNameArr.join(',');
     this.service.postAPIMethod('/course/addCourse', data).subscribe(response => {
       // console.log("final",response);
       debugger
