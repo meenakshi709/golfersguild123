@@ -79,6 +79,8 @@ router.post("/saveTournamentWinner", tourCtrl.saveTournamentWinner);
 router.get("/course/getTeeColors",  courseCtrl.getTeeColors); 
 router.post("/course/addCourse",  courseCtrl.addCourse); 
 router.get("/course/deleteCourse",   courseCtrl.deleteCourse); 
+router.get("/course/getCourseTeeList",   courseCtrl.getCourseTeeList); 
+
 
 
 module.exports = router;

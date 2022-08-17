@@ -20,7 +20,9 @@ export class AddEditLeaderboardComponent implements OnInit {
   roundList: any = [];
   groupList: any = [];
   selectedCourse: any;
+  teeNameList: any = [];
   holeCount: any = 0;
+  selectedTeeName: any;
   constructor(
     public dialogRef: MatDialogRef<AddEditLeaderboardComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -49,6 +51,7 @@ export class AddEditLeaderboardComponent implements OnInit {
     p_id: new FormControl('', [Validators.required]),
     hdcp: new FormControl('', [Validators.required]),
     holeNum: new FormControl('18', [Validators.required]),
+    teeName: new FormControl('', [Validators.required]),
     score1: new FormControl('', []),
     score2: new FormControl('', []),
     score3: new FormControl('', []),
@@ -100,7 +103,7 @@ export class AddEditLeaderboardComponent implements OnInit {
     const data1 = this.summaryForm.getRawValue();
     data1.grossTotal = this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value;
     data1.netTotal = (this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value) - (this.scoreForm.controls.hdcp.value);
-   
+
     let enteredHoleCount = 0;
     for (let i = 1; i < data.holeNum; i++) {
       const controlName = 'score' + i;
@@ -111,11 +114,11 @@ export class AddEditLeaderboardComponent implements OnInit {
       }
       data.enteredHoleCount = enteredHoleCount;
       console.log("hole count", data.enteredHoleCount)
-    
+
     }
-debugger
-console.log("finalData", data)
-let finalData = { ...data, ...data1 };
+    debugger
+    console.log("finalData", data)
+    let finalData = { ...data, ...data1 };
     this.service.postAPIMethod('/tournament/savetournamentScore', finalData).subscribe(APIresponse => {
       // console.log("final",response);
 
@@ -471,6 +474,16 @@ let finalData = { ...data, ...data1 };
 
   }
 
+  onCourseChange(event: any) {
+   
+    this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + event.value).subscribe((APIResponse: any) => {
+      if (APIResponse.error == '') {
+        this.teeNameList = APIResponse.response.result;
+      } else {
+
+      }
+    });
+  }
 
 }
 
