@@ -77,17 +77,14 @@ export class AddEditCourseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("data=", this.data);
+    debugger;
     if (this.data) {
       this.courseForm.controls.cname.disable();
       this.setCourseDetails();
-
-
-
+    }else
+    {
+      this.addTeeName('');
     }
-    this.addTeeName();
-
-    this.getTeeColorsList();
     this.courseForm.controls.pinn.disable();
     this.courseForm.controls.pout.disable();
 
@@ -100,11 +97,11 @@ export class AddEditCourseComponent implements OnInit {
   ngAfterViewInit(): void {
 
   }
-  addTeeName() {
+  addTeeName(data: any) {
     const teeForm = new FormGroup({
-      teeName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]),
-      courseRating: new FormControl('', [Validators.required]),
-      slopeRating: new FormControl('', [Validators.required]),
+      teeName: new FormControl(data ? data.teeName : '', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]),
+      courseRating: new FormControl(data ? data.courseRating : '', [Validators.required]),
+      slopeRating: new FormControl(data ? data.slopeRating : '',[Validators.required]),
     });
     (this.courseForm.get('teeFormArray') as FormArray).push(teeForm);
   }
@@ -119,7 +116,14 @@ export class AddEditCourseComponent implements OnInit {
     console.log(keys);
     for (let i = 0; i < keys.length; i++) {
       const keyName = keys[i];
-      formGroup[keyName].setValue(this.data[keyName])
+      if (keyName !== 'teeArray' && keyName !='is_deleted') {
+        formGroup[keyName].setValue(this.data[keyName])
+      }
+    }
+    if (this.data.teeArray.length > 0) {
+      this.data.teeArray.forEach((record: any) => {
+        this.addTeeName(record);
+      });
     }
   }
 
@@ -194,21 +198,21 @@ export class AddEditCourseComponent implements OnInit {
 
   }
 
-  //get tee details 
-  getTeeColorsList() {
+  // //get tee details 
+  // getTeeColorsList() {
 
-    this.service.getAPIMethod('/course/getTeeColors').subscribe(apliResponse => {
-      debugger;
-      // const apliResponse:any=response.response;
-      console.log("country", apliResponse)
-      if (apliResponse.error != 'X' && apliResponse.response.result.err != "X") {
-        {
-          this.colorsList = apliResponse.response.result;
-        }
+  //   this.service.getAPIMethod('/course/getTeeColors').subscribe(apliResponse => {
+  //     debugger;
+  //     // const apliResponse:any=response.response;
+  //     console.log("country", apliResponse)
+  //     if (apliResponse.error != 'X' && apliResponse.response.result.err != "X") {
+  //       {
+  //         this.colorsList = apliResponse.response.result;
+  //       }
 
-      }
-    });
-  }
+  //     }
+  //   });
+  // }
 
 
   validateAllFields(formGroup: FormGroup) {

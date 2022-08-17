@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 16, 2022 at 08:04 AM
+-- Generation Time: Aug 17, 2022 at 06:45 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -233,6 +233,10 @@ set err="X";
 set msg="Course not found";
 end if;
 select err,msg from dual;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCourseTeeList` (IN `param_courseId` VARCHAR(50))  BEGIN
+select * from course_rating where courseId=param_courseId;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getEventDetails` (IN `param_tourID` INT)  BEGIN
@@ -494,10 +498,6 @@ select * from event_details where tourID=param_tourID;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_courseRating_by_CourseId` (IN `param_courseId` VARCHAR(50))  BEGIN
-select * from course_rating where courseId=param_courseId;
-END$$
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_invited_tournament_ListById` (IN `param_userId` INT)  select round_details.round_name,DATE_FORMAT(round_details.event_Date, '%Y-%m-%d') as eventDate,tournamentName,events.tourId as tournamentId,playerId,eventType as tournamentType from tournament_player_list inner join events on events.tourID=tournament_player_list.tourID inner JOIN round_details on events.tourID=round_details.tourID where isInvited=1 and playerID=param_userId and is_Deleted=0 and isPlay=0 and round_details.event_Date>=CURRENT_DATE()  ORDER by round_details.event_Date$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_tee_list` ()  BEGIN
@@ -624,13 +624,14 @@ INSERT INTO contact (gname, gemail, phone, subject, msg) VALUES (param_name,para
  
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `saveCourseDetails` (IN `param_cid` VARCHAR(10), IN `param_cname` VARCHAR(200), IN `param_caddress` VARCHAR(250), IN `param_par1` INT, IN `param_par2` INT, IN `param_par3` INT, IN `param_par4` INT, IN `param_par5` INT, IN `param_par6` INT, IN `param_par7` INT, IN `param_par8` INT, IN `param_par9` INT, IN `param_par10` INT, IN `param_par11` INT, IN `param_par12` INT, IN `param_par13` INT, IN `param_par14` INT, IN `param_par15` INT, IN `param_par16` INT, IN `param_par17` INT, IN `param_par18` INT, IN `param_pinn` INT, IN `param_pout` INT, IN `param_hdcp1` INT, IN `param_hdcp2` INT, IN `param_hdcp3` INT, IN `param_hdcp4` INT, IN `param_hdcp5` INT, IN `param_hdcp6` INT, IN `param_hdcp7` INT, IN `param_hdcp8` INT, IN `param_hdcp9` INT, IN `param_hdcp10` INT, IN `param_hdcp11` INT, IN `param_hdcp12` INT, IN `param_hdcp13` INT, IN `param_hdcp14` INT, IN `param_hdcp15` INT, IN `param_hdcp16` INT, IN `param_hdcp17` INT, IN `param_hdcp18` INT, IN `param_slopeRating` INT, IN `param_courseRating` DECIMAL, IN `param_colorId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `saveCourseDetails` (IN `param_cid` VARCHAR(10), IN `param_cname` VARCHAR(200), IN `param_caddress` VARCHAR(250), IN `param_par1` INT, IN `param_par2` INT, IN `param_par3` INT, IN `param_par4` INT, IN `param_par5` INT, IN `param_par6` INT, IN `param_par7` INT, IN `param_par8` INT, IN `param_par9` INT, IN `param_par10` INT, IN `param_par11` INT, IN `param_par12` INT, IN `param_par13` INT, IN `param_par14` INT, IN `param_par15` INT, IN `param_par16` INT, IN `param_par17` INT, IN `param_par18` INT, IN `param_pinn` INT, IN `param_pout` INT, IN `param_hdcp1` INT, IN `param_hdcp2` INT, IN `param_hdcp3` INT, IN `param_hdcp4` INT, IN `param_hdcp5` INT, IN `param_hdcp6` INT, IN `param_hdcp7` INT, IN `param_hdcp8` INT, IN `param_hdcp9` INT, IN `param_hdcp10` INT, IN `param_hdcp11` INT, IN `param_hdcp12` INT, IN `param_hdcp13` INT, IN `param_hdcp14` INT, IN `param_hdcp15` INT, IN `param_hdcp16` INT, IN `param_hdcp17` INT, IN `param_hdcp18` INT, IN `param_teeNameArr` LONGTEXT)  BEGIN
  Declare isRecordExit int;
  Declare isCnameExist int;
  Declare statusCode int;
  Declare msg varchar(100);
  Declare err varchar(2);
  DECLARE num_rows int;
+Declare newCId int;
  DECLARE courseId varchar(100);
  select count(*)into isRecordExit from courses where cid=param_cid and is_deleted=0;
  select count(*)into isCnameExist from courses where cname=param_cname and is_deleted=0 limit 1;
@@ -639,15 +640,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `saveCourseDetails` (IN `param_cid` 
  BEGIN
   IF(isCnameExist<1) Then
  	Select cid into num_rows from courses ORDER BY cid DESC limit 1;
- 	INSERT INTO courses (c_code,cname,caddress,par1,par2,par3,par4,par5,par6,par7,par8,par9,par10,par11,par12,par13,par14,par15,par16,     par17, par18,pinn,pout, hdcp1,hdcp2,hdcp3,hdcp4,hdcp5,hdcp6,hdcp7,hdcp8,hdcp9,hdcp10,hdcp11,hdcp12,hdcp13,hdcp14,hdcp15,hdcp16,hdcp17,hdcp18,slopeRating) 
-    VALUES (concat('course',num_rows+1),param_cname,param_caddress,param_par1,param_par2,param_par3,param_par4,param_par5, param_par6,     param_par7,param_par8, param_par9, param_par10,param_par11, param_par12,param_par13, param_par14,param_par15,param_par16,           param_par17,param_par18,param_pinn,param_pout,param_hdcp1,param_hdcp2,param_hdcp3,param_hdcp4,param_hdcp5,param_hdcp6,param_hdcp7,   param_hdcp8,param_hdcp9,param_hdcp10,param_hdcp11,param_hdcp12,param_hdcp13,param_hdcp14,param_hdcp15,param_hdcp16,param_hdcp17,       param_hdcp18,param_slopeRating);
-    select cid into courseId from courses order by cid desc limit 1; 
-   INSERT INTO cousrerating(colorId,courseRating,courseId)
-   VALUES (param_colorId,param_courseRating,courseId);
-   
+ 	INSERT INTO courses (c_code,cname,caddress,par1,par2,par3,par4,par5,par6,par7,par8,par9,par10,par11,par12,par13,par14,par15,par16,     par17, par18,pinn,pout, hdcp1,hdcp2,hdcp3,hdcp4,hdcp5,hdcp6,hdcp7,hdcp8,hdcp9,hdcp10,hdcp11,hdcp12,hdcp13,hdcp14,hdcp15,hdcp16,hdcp17,hdcp18) 
+    VALUES (concat('course',num_rows+1),param_cname,param_caddress,param_par1,param_par2,param_par3,param_par4,param_par5, param_par6,     param_par7,param_par8, param_par9, param_par10,param_par11, param_par12,param_par13, param_par14,param_par15,param_par16,           param_par17,param_par18,param_pinn,param_pout,param_hdcp1,param_hdcp2,param_hdcp3,param_hdcp4,param_hdcp5,param_hdcp6,param_hdcp7,   param_hdcp8,param_hdcp9,param_hdcp10,param_hdcp11,param_hdcp12,param_hdcp13,param_hdcp14,param_hdcp15,param_hdcp16,param_hdcp17,       param_hdcp18);
+    
    set statusCode=200;
     set msg="Course save successfully";
     set err="";
+   
+    select LAST_INSERT_ID() into courseId ;
+    call saveCourseTeeRating(courseId,1,param_teeNameArr);
     ELSE
     set statusCode=409;
     set msg="Course already exist with same name";
@@ -656,6 +657,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `saveCourseDetails` (IN `param_cid` 
 END;
 ELSE
 
+  call saveCourseTeeRating(param_cid,0,param_teeNameArr);
 UPDATE courses set cname=param_cname ,
  caddress=param_caddress,par1=param_par1,par2=param_par2,par3=param_par3,par4=param_par4, par5=param_par5,par6=param_par6,par7=param_par7,par8=param_par8,par9=param_par9,par10=param_par10,par11=param_par11,par12=param_par12,
  par13=param_par13,par14=param_par14,par15=param_par15,par16=param_par16,par17=param_par17,par18=param_par18,pinn=param_pinn,pout=param_pout,hdcp1=param_hdcp1,hdcp2=param_hdcp2,hdcp3=param_hdcp3,hdcp4=param_hdcp4,hdcp5=param_hdcp5,hdcp6=param_hdcp6,hdcp7=param_hdcp7,hdcp8=param_hdcp8,hdcp9=param_hdcp9,hdcp10=param_hdcp10,hdcp11=param_hdcp11,hdcp12=param_hdcp12,hdcp13=param_hdcp13,hdcp14=param_hdcp14,hdcp15=param_hdcp15,hdcp16=param_hdcp16,
@@ -664,7 +666,35 @@ UPDATE courses set cname=param_cname ,
     set msg="Course update successfully";
     set err="";
   END IF;  
-  Select statusCode,msg,err;
+  Select statusCode,msg,err,newCId;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `saveCourseTeeRating` (`param_course_Id` VARCHAR(5), `param_InsertUpdate` INT, `param_teeDetails` LONGTEXT)  BEGIN
+   DECLARE teeDetails varchar(150);
+   DECLARE strIDs varchar(150) ;
+   Declare teeName varchar(200);
+   Declare slopeRating varchar(200);
+   Declare courseRating varchar(200);
+   Declare element varchar(500);
+   set strIDs=param_teeDetails;
+   if(param_InsertUpdate=0)THEN
+   delete from course_rating where courseId=param_course_Id;
+   END IF;
+    WHILE strIDs != '' DO
+    set element='';
+    SET element = SUBSTRING_INDEX(strIDs, ',', 1);      
+  	 select SPLIT_STR(element, '-', 1) into teeName;
+   	 select SPLIT_STR(element, '-', 2) into courseRating;
+     select SPLIT_STR(element, '-', 3) into slopeRating;
+     
+     insert into course_rating(courseId,teeName,courseRating,slopeRating) values(param_course_Id,teeName,courseRating,slopeRating);
+    IF LOCATE(',', strIDs) > 0 THEN
+      SET strIDs = SUBSTRING(strIDs, LOCATE(',', strIDs) + 1);
+    ELSE
+      SET strIDs = '';
+    END IF;
+
+  END WHILE;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `saveEventDetails` (IN `param_tourId` INT, IN `param_tourName` VARCHAR(200), IN `param_eventType` VARCHAR(100), IN `param_numRounds` INT, IN `param_startDate` VARCHAR(255), IN `param_endDate` VARCHAR(255), IN `param_holes` INT)  BEGIN
@@ -845,13 +875,13 @@ END IF;
 Select err,msg,group_Id from DUAL;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `saveTournamentGroupPlayerDetails` (IN `param_tourId` VARCHAR(50), IN `param_groupName` VARCHAR(200), IN `param_playerId` VARCHAR(100), IN `param_teeTime` VARCHAR(100))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `saveTournamentGroupPlayerDetails` (IN `param_tourId` VARCHAR(50), IN `param_groupName` VARCHAR(200), IN `param_playerId` VARCHAR(100), IN `param_teeTime` VARCHAR(100), IN `param_roundId` VARCHAR(50))  BEGIN
 DECLARE isGroupExist int;
 Declare err varchar(10);
 Declare msg varchar(100);
 Select Count(*)into isGroupExist  from tournament_group_details where tourId=param_tourId and groupName=param_groupName ;
 if(isGroupExist>0) then
-Insert into tournament_group_player_details(tournamentId,groupName,playerId,tee_time,isPlay) values(param_tourId,param_groupName,param_playerId,param_teeTime,0);
+Insert into tournament_group_player_details(tournamentId,groupName,playerId,tee_time,isPlay,roundId) values(param_tourId,param_groupName,param_playerId,param_teeTime,0,param_roundId);
 set err="";
 set msg="Player details save successfully";
 else
@@ -1066,28 +1096,29 @@ if (isRecordExist>=1)THEN
 
   END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `tournament_Play_or_withdraw` (IN `param_tournamentId` VARCHAR(50), IN `param_isPlay` INT, IN `param_isWithdraw` INT, IN `param_playerId` VARCHAR(50))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `tournament_Play_or_withdraw` (`param_tournamentId` VARCHAR(50), `param_isPlay` INT, `param_isWithdraw` INT, `param_playerId` VARCHAR(50), `param_roundId` INT)  BEGIN
 Declare err varchar(2);
-Declare  msg varchar(100);
-DECLARE isRecordExist int;
 
-SELECT count(*) into isRecordExist from tournament_group_player_details WHERE tournamentId=param_tournamentId and playerId=param_playerId;
+DECLARE isRecordExist int;
+DECLARE msg varchar(200);
+SELECT count(*) into isRecordExist from tournament_group_player_details WHERE tournamentId=param_tournamentId and playerId=param_playerId and roundId=param_roundId;
 if(isRecordExist>0) THEN
-Update tournament_group_player_details set isPlay=param_isPlay, isWithdraw=param_isWithdraw where tournamentId=param_tournamentId and playerId=param_playerId;
-Update tournament_player_list set isPlay=param_isPlay, isWithdraw=param_isWithdraw where tourID=param_tournamentId and playerID=param_playerId;
+Update tournament_group_player_details set isPlay=param_isPlay, isWithdraw=param_isWithdraw where tournamentId=param_tournamentId and playerId=param_playerId and roundId=param_roundId;
+
 
 set err="";
- if( param_isPlay=1) then 
- set msg="Tournament Playing";
- else
+if( param_isPlay=1) then
+set msg="Tournament Playing";
+else
 
  set msg="Tournament withdrawl succesfully";
- end if ;
+end if ;
 ELSE
 set err="X";
 set msg="Record not found";
 END IF;
 select err,msg from dual;
+
 
 END$$
 
@@ -1212,6 +1243,13 @@ THEN
   
   END$$
 
+--
+-- Functions
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `SPLIT_STR` (`x` VARCHAR(255), `delim` VARCHAR(12), `pos` INT) RETURNS VARCHAR(255) CHARSET utf8mb4 RETURN REPLACE(SUBSTRING(SUBSTRING_INDEX(x, delim, pos),
+       LENGTH(SUBSTRING_INDEX(x, delim, pos -1)) + 1),
+       delim, '')$$
+
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -1333,23 +1371,21 @@ CREATE TABLE `courses` (
   `hdcp16` int(3) NOT NULL,
   `hdcp17` int(3) NOT NULL,
   `hdcp18` int(3) NOT NULL,
-  `is_deleted` int(11) DEFAULT 0,
-  `slopeRating` decimal(10,0) DEFAULT NULL
+  `is_deleted` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `courses`
 --
 
-INSERT INTO `courses` (`cid`, `c_code`, `cname`, `caddress`, `par1`, `par2`, `par3`, `par4`, `par5`, `par6`, `par7`, `par8`, `par9`, `par10`, `par11`, `par12`, `par13`, `par14`, `par15`, `par16`, `par17`, `par18`, `pinn`, `pout`, `hdcp1`, `hdcp2`, `hdcp3`, `hdcp4`, `hdcp5`, `hdcp6`, `hdcp7`, `hdcp8`, `hdcp9`, `hdcp10`, `hdcp11`, `hdcp12`, `hdcp13`, `hdcp14`, `hdcp15`, `hdcp16`, `hdcp17`, `hdcp18`, `is_deleted`, `slopeRating`) VALUES
-(1, '', 'GOLDEN GREENS GOLF & RESORTS', 'Sector 79, Village, Sakatpur Rd, Gurugram, Haryana 122002', 4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 5, 3, 4, 4, 4, 3, 4, 5, 36, 36, 15, 3, 11, 17, 7, 9, 1, 13, 5, 14, 8, 18, 2, 12, 6, 16, 4, 10, 0, NULL),
-(2, '', 'CLASSIC GOLF RESORT | RIDGE/VALLEY', ' P.O. Hasanpur, Tauru, Haryana 122105', 4, 3, 5, 4, 3, 4, 4, 4, 5, 4, 3, 4, 4, 5, 4, 4, 3, 5, 36, 36, 13, 15, 3, 7, 17, 11, 5, 1, 9, 6, 14, 16, 4, 12, 8, 2, 18, 10, 0, NULL),
-(3, '', 'Qutab Golf Course', ' 249/5 B, Sri Aurobindo Marg, Lado Sarai Extension, Lado Sarai, New Delhi, Delhi 110030', 4, 4, 4, 4, 4, 3, 4, 5, 4, 3, 4, 4, 3, 3, 4, 5, 4, 4, 34, 36, 1, 17, 11, 15, 7, 13, 3, 5, 9, 18, 12, 10, 14, 6, 8, 4, 2, 16, 0, NULL),
-(29, 'course29', 'CLASSIC GOLF RESORT | CANYON/RIDGE', 'P.O. Hasanpur, Tauru, Haryana 122105', 3, 5, 3, 4, 4, 4, 4, 5, 4, 4, 3, 5, 4, 3, 4, 4, 4, 5, 36, 36, 17, 1, 15, 13, 11, 9, 5, 3, 7, 14, 16, 4, 8, 18, 12, 6, 2, 10, 0, NULL),
-(42, 'course42', 'laar', 'ssss', 5, 5, 4, 4, 3, 2, 2, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 31, 36, 6, 7, 78, 7, 6, 5, 5, 5, 4, 3, 3, 3, 3, 4, 4, 4, 5, 5, 0, '34'),
-(43, 'course43', 'sdsd', 'sdsd', 4, 4, 4, 4, 3, 3, 2, 2, 7, 2, 1, 2, 2, 2, 3, 4, 2, 9, 33, 27, 2, 2, 2, 1, 1, 5, 5, 4, 3, 3, 3, 3, 3, 2, 1, 11, 12, 10, 0, '0'),
-(44, 'course44', 'test', 'test1', 4, 4, 4, 4, 3, 3, 2, 2, 21, 2, 1, 2, 2, 2, 3, 4, 2, 21, 47, 39, 2, 2, 2, 1, 1, 5, 5, 4, 3, 3, 3, 3, 3, 2, 1, 11, 12, 10, 0, '0'),
-(45, 'course45', 'test1', 'testr', 4, 4, 3, 4, 3, 3, 2, 2, 2, 2, 1, 1, 2, 2, 3, 4, 2, 2, 27, 19, 2, 2, 2, 1, 1, 5, 5, 4, 3, 3, 3, 3, 3, 2, 1, 11, 12, 10, 0, '0');
+INSERT INTO `courses` (`cid`, `c_code`, `cname`, `caddress`, `par1`, `par2`, `par3`, `par4`, `par5`, `par6`, `par7`, `par8`, `par9`, `par10`, `par11`, `par12`, `par13`, `par14`, `par15`, `par16`, `par17`, `par18`, `pinn`, `pout`, `hdcp1`, `hdcp2`, `hdcp3`, `hdcp4`, `hdcp5`, `hdcp6`, `hdcp7`, `hdcp8`, `hdcp9`, `hdcp10`, `hdcp11`, `hdcp12`, `hdcp13`, `hdcp14`, `hdcp15`, `hdcp16`, `hdcp17`, `hdcp18`, `is_deleted`) VALUES
+(1, '', 'GOLDEN GREENS GOLF & RESORTS', 'Sector 79, Village, Sakatpur Rd, Gurugram, Haryana 122002', 4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 5, 3, 4, 4, 4, 3, 4, 5, 36, 36, 15, 3, 11, 17, 7, 9, 1, 13, 5, 14, 8, 18, 2, 12, 6, 16, 4, 10, 0),
+(2, '', 'CLASSIC GOLF RESORT | RIDGE/VALLEY', ' P.O. Hasanpur, Tauru, Haryana 122105', 4, 3, 5, 4, 3, 4, 4, 4, 5, 4, 3, 4, 4, 5, 4, 4, 3, 5, 36, 36, 13, 15, 3, 7, 17, 11, 5, 1, 9, 6, 14, 16, 4, 12, 8, 2, 18, 10, 0),
+(3, '', 'Qutab Golf Course', ' 249/5 B, Sri Aurobindo Marg, Lado Sarai Extension, Lado Sarai, New Delhi, Delhi 110030', 4, 4, 4, 4, 4, 3, 4, 5, 4, 3, 4, 4, 3, 3, 4, 5, 4, 4, 34, 36, 1, 17, 11, 15, 7, 13, 3, 5, 9, 18, 12, 10, 14, 6, 8, 4, 2, 16, 0),
+(29, 'course29', 'CLASSIC GOLF RESORT | CANYON/RIDGE', 'P.O. Hasanpur, Tauru, Haryana 122105', 3, 5, 3, 4, 4, 4, 4, 5, 4, 4, 3, 5, 4, 3, 4, 4, 4, 5, 36, 36, 17, 1, 15, 13, 11, 9, 5, 3, 7, 14, 16, 4, 8, 18, 12, 6, 2, 10, 0),
+(42, 'course42', 'laar', 'ssss', 5, 5, 4, 4, 3, 2, 2, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 31, 36, 6, 7, 78, 7, 6, 5, 5, 5, 4, 3, 3, 3, 3, 4, 4, 4, 5, 5, 0),
+(43, 'course43', 'sdsd', 'sdsd', 4, 4, 4, 4, 3, 3, 2, 2, 7, 2, 1, 2, 2, 2, 3, 4, 2, 9, 33, 27, 2, 2, 2, 1, 1, 5, 5, 4, 3, 3, 3, 3, 3, 2, 1, 11, 12, 10, 0),
+(50, 'course44', 'golfClub', 'chandigarh', 4, 4, 4, 4, 3, 3, 2, 2, 4, 2, 1, 2, 2, 2, 3, 4, 2, 4, 30, 22, 2, 2, 2, 1, 1, 5, 5, 4, 3, 3, 3, 3, 3, 2, 1, 11, 12, 10, 0);
 
 -- --------------------------------------------------------
 
@@ -1360,10 +1396,18 @@ INSERT INTO `courses` (`cid`, `c_code`, `cname`, `caddress`, `par1`, `par2`, `pa
 CREATE TABLE `course_rating` (
   `cRatingId` int(11) NOT NULL,
   `courseId` int(11) NOT NULL,
-  `colorName` varchar(50) NOT NULL,
-  `rating` varchar(255) NOT NULL,
+  `teeName` varchar(50) NOT NULL,
+  `courseRating` varchar(255) NOT NULL,
   `slopeRating` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `course_rating`
+--
+
+INSERT INTO `course_rating` (`cRatingId`, `courseId`, `teeName`, `courseRating`, `slopeRating`) VALUES
+(9, 50, 'Gold', '12.5', '12.2'),
+(10, 50, 'Silver', '13', '12.9');
 
 -- --------------------------------------------------------
 
@@ -2245,22 +2289,23 @@ CREATE TABLE `tournament_group_player_details` (
   `playerId` int(11) NOT NULL,
   `tee_time` varchar(50) NOT NULL,
   `isPlay` int(11) NOT NULL,
-  `isWithdraw` int(10) NOT NULL DEFAULT 0
+  `isWithdraw` int(10) NOT NULL DEFAULT 0,
+  `roundId` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tournament_group_player_details`
 --
 
-INSERT INTO `tournament_group_player_details` (`t_player_Id`, `tournamentId`, `groupName`, `playerId`, `tee_time`, `isPlay`, `isWithdraw`) VALUES
-(48, 74, 'Group1', 6, '10:10', 1, 0),
-(57, 75, 'Group2', 19, '12:00', 0, 0),
-(58, 75, 'Group2', 39, '12:10', 0, 0),
-(59, 75, 'Group1', 6, '10:10', 0, 0),
-(60, 75, 'Group1', 38, '10:20', 0, 0),
-(62, 70, 'Group1', 6, '12:00', 0, 0),
-(64, 77, 'Group1', 6, '12:45', 0, 0),
-(67, 93, 'Group1', 6, '12:01', 0, 0);
+INSERT INTO `tournament_group_player_details` (`t_player_Id`, `tournamentId`, `groupName`, `playerId`, `tee_time`, `isPlay`, `isWithdraw`, `roundId`) VALUES
+(48, 74, 'Group1', 6, '10:10', 1, 0, ''),
+(57, 75, 'Group2', 19, '12:00', 0, 0, ''),
+(58, 75, 'Group2', 39, '12:10', 0, 0, ''),
+(59, 75, 'Group1', 6, '10:10', 0, 0, ''),
+(60, 75, 'Group1', 38, '10:20', 0, 0, ''),
+(62, 70, 'Group1', 6, '12:00', 0, 0, ''),
+(64, 77, 'Group1', 6, '12:45', 0, 0, ''),
+(67, 93, 'Group1', 6, '12:01', 0, 0, '');
 
 -- --------------------------------------------------------
 
@@ -2901,13 +2946,13 @@ ALTER TABLE `country`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `course_rating`
 --
 ALTER TABLE `course_rating`
-  MODIFY `cRatingId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cRatingId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `course_tee`
