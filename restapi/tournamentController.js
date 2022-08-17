@@ -151,7 +151,7 @@ tourCtrl.invitationAcceptDenyById = (req, res) => {
 
 tourCtrl.tournamnetPlayWithdrawById = (req, res) => {
     try {
-        let sql = `call tournament_Play_or_withdraw("${req.body.tournamentId}","${req.body.isPlay}","${req.body.isWithdraw}","${req.body.playerId}")`;
+        let sql = `call tournament_Play_or_withdraw("${req.body.tournamentId}","${req.body.isPlay}","${req.body.isWithdraw}","${req.body.playerId}","${req.body.roundId}")`;
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {
@@ -378,7 +378,7 @@ tourCtrl.saveTournamentGroupDetails = (req, res) => {
                             } else {
                                 item.playerDetails.filter((playerDetail, index) => {
 
-                                    let round = `call saveTournamentGroupPlayerDetails("${data.tourId}","${item.group}","${playerDetail.id}","${playerDetail.teeTime}")`;
+                                    let round = `call saveTournamentGroupPlayerDetails("${data.tourId}","${item.group}","${playerDetail.id}","${playerDetail.teeTime}","${data.roundId}")`;
                                     connection.query(round, function (error, eventDetails) {
                                         if (error) {
                                             res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
