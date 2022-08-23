@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.0.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 17, 2022 at 06:45 AM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 8.1.2
+-- Generation Time: Aug 23, 2022 at 09:06 AM
+-- Server version: 10.4.14-MariaDB
+-- PHP Version: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -149,7 +149,7 @@ Declare msg varchar(100);
  Select Count(*)into isGroupExist  from tournament_group_details where tourId=param_tourId;
 if(isGroupExist>0) then
  Delete from tournament_group_details where tourId=param_tourId;
- Delete from tournament_group_player_details where tournamentId=param_tourId;
+ -- Delete from tournament_group_player_details where tournamentId=param_tourId;
 set err="";
 set msg="Group deleted successfully";
 else
@@ -403,11 +403,11 @@ set msg="Empty";
 ELSE
 
 select user_details.p_id as playerId,playerName, tournament_group_player_details.tee_time, tournament_group_player_details.isPlay, tournament_group_player_details.isWithdraw,  tournament_group_details.groupId as groupId, tournament_group_player_details.groupName FROM tournament_group_details 
-inner join tournament_group_player_details  on tournament_group_player_details.groupName =tournament_group_details.groupName 
+inner join tournament_group_player_details on tournament_group_player_details.groupName =tournament_group_details.groupName and tournament_group_player_details.roundId=tournament_group_details.round_Id
 inner JOIN user_details  on user_details.p_id=tournament_group_player_details.playerId
 WHERE tournament_group_player_details.tournamentId=param_tourId AND round_Id=param_roundId and isWithdraw=0 ORDER by user_details.p_id DESC;
  
- Select distinct tournament_group_player_details.groupName, groupId from tournament_group_player_details INNER JOIN tournament_group_details on tournament_group_details.groupName=tournament_group_player_details.groupName where tourID=param_tourId AND round_Id=param_roundId;
+ Select distinct tournament_group_player_details.groupName, groupId from tournament_group_player_details inner JOIN tournament_group_details on tournament_group_details.groupName=tournament_group_player_details.groupName where tourID=param_tourId AND round_Id=param_roundId;
  END IF;
 ELSE
 
@@ -415,11 +415,11 @@ SELECT count(*) into isExist from tournament_group_details_archive WHERE round_I
 if(isExist>0)
 then 
 select user_details.p_id as playerId,playerName, tournament_group_player_details.tee_time, tournament_group_player_details.isPlay, tournament_group_player_details.isWithdraw,  tournament_group_details_archive.groupId as groupId, tournament_group_player_details.groupName FROM tournament_group_details_archive 
-inner join tournament_group_player_details  on tournament_group_player_details.groupName =tournament_group_details_archive.groupName 
-inner JOIN user_details  on user_details.p_id=tournament_group_player_details.playerId
+inner join tournament_group_player_details  on tournament_group_player_details.groupName =tournament_group_details_archive.groupName and tournament_group_player_details.roundId=tournament_group_details_archive.round_Id 
+inner JOIN user_details  on user_details.p_id=tournament_group_player_details.playerId 
 WHERE tournament_group_player_details.tournamentId=param_tourId AND round_Id=param_roundId and isWithdraw=0 ORDER by user_details.p_id DESC;
  
- Select distinct tournament_group_player_details.groupName, groupId from tournament_group_player_details INNER JOIN tournament_group_details_archive on tournament_group_details_archive.groupName=tournament_group_player_details.groupName where tourID=param_tourId AND round_Id=param_roundId;
+ Select distinct tournament_group_player_details.groupName, groupId from tournament_group_player_details inner JOIN tournament_group_details_archive on tournament_group_details_archive.groupName=tournament_group_player_details.groupName where tourID=param_tourId AND round_Id=param_roundId;
  ELSE
 set err="X";
 set msg="Record not found";
@@ -1382,10 +1382,7 @@ INSERT INTO `courses` (`cid`, `c_code`, `cname`, `caddress`, `par1`, `par2`, `pa
 (1, '', 'GOLDEN GREENS GOLF & RESORTS', 'Sector 79, Village, Sakatpur Rd, Gurugram, Haryana 122002', 4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 5, 3, 4, 4, 4, 3, 4, 5, 36, 36, 15, 3, 11, 17, 7, 9, 1, 13, 5, 14, 8, 18, 2, 12, 6, 16, 4, 10, 0),
 (2, '', 'CLASSIC GOLF RESORT | RIDGE/VALLEY', ' P.O. Hasanpur, Tauru, Haryana 122105', 4, 3, 5, 4, 3, 4, 4, 4, 5, 4, 3, 4, 4, 5, 4, 4, 3, 5, 36, 36, 13, 15, 3, 7, 17, 11, 5, 1, 9, 6, 14, 16, 4, 12, 8, 2, 18, 10, 0),
 (3, '', 'Qutab Golf Course', ' 249/5 B, Sri Aurobindo Marg, Lado Sarai Extension, Lado Sarai, New Delhi, Delhi 110030', 4, 4, 4, 4, 4, 3, 4, 5, 4, 3, 4, 4, 3, 3, 4, 5, 4, 4, 34, 36, 1, 17, 11, 15, 7, 13, 3, 5, 9, 18, 12, 10, 14, 6, 8, 4, 2, 16, 0),
-(29, 'course29', 'CLASSIC GOLF RESORT | CANYON/RIDGE', 'P.O. Hasanpur, Tauru, Haryana 122105', 3, 5, 3, 4, 4, 4, 4, 5, 4, 4, 3, 5, 4, 3, 4, 4, 4, 5, 36, 36, 17, 1, 15, 13, 11, 9, 5, 3, 7, 14, 16, 4, 8, 18, 12, 6, 2, 10, 0),
-(42, 'course42', 'laar', 'ssss', 5, 5, 4, 4, 3, 2, 2, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 31, 36, 6, 7, 78, 7, 6, 5, 5, 5, 4, 3, 3, 3, 3, 4, 4, 4, 5, 5, 0),
-(43, 'course43', 'sdsd', 'sdsd', 4, 4, 4, 4, 3, 3, 2, 2, 7, 2, 1, 2, 2, 2, 3, 4, 2, 9, 33, 27, 2, 2, 2, 1, 1, 5, 5, 4, 3, 3, 3, 3, 3, 2, 1, 11, 12, 10, 0),
-(50, 'course44', 'golfClub', 'chandigarh', 4, 4, 4, 4, 3, 3, 2, 2, 4, 2, 1, 2, 2, 2, 3, 4, 2, 4, 30, 22, 2, 2, 2, 1, 1, 5, 5, 4, 3, 3, 3, 3, 3, 2, 1, 11, 12, 10, 0);
+(29, 'course29', 'CLASSIC GOLF RESORT | CANYON/RIDGE', 'P.O. Hasanpur, Tauru, Haryana 122105', 3, 5, 3, 4, 4, 4, 4, 5, 4, 4, 3, 5, 4, 3, 4, 4, 4, 5, 36, 36, 17, 1, 15, 13, 11, 9, 5, 3, 7, 14, 16, 4, 8, 18, 12, 6, 2, 10, 0);
 
 -- --------------------------------------------------------
 
@@ -1406,8 +1403,10 @@ CREATE TABLE `course_rating` (
 --
 
 INSERT INTO `course_rating` (`cRatingId`, `courseId`, `teeName`, `courseRating`, `slopeRating`) VALUES
-(9, 50, 'Gold', '12.5', '12.2'),
-(10, 50, 'Silver', '13', '12.9');
+(9, 1, 'Gold', '12.5', '12.2'),
+(10, 2, 'Silver', '13', '12.9'),
+(11, 3, 'red', '32', '111'),
+(12, 29, 'blue', '34', '112');
 
 -- --------------------------------------------------------
 
@@ -1491,34 +1490,10 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`tourID`, `tournamentName`, `eventType`, `numRounds`, `is_Deleted`, `startDate`, `endDate`, `created_Date`, `modified_Date`, `created_By`, `modified_By`, `flag`, `holes`) VALUES
-(91, 'test tt', 'Stroke Play', 2, 1, '2022-06-11 13:00:00', '2022-06-13 13:00:00', '2022-06-03 06:56:08', '2022-06-10 11:51:43', '', '', NULL, NULL),
-(92, 'new test', 'Stroke Play', 3, 1, '2022-06-14 13:00:00', '2022-06-21 13:00:00', '2022-06-13 07:20:55', '2022-06-13 07:20:55', '', '', NULL, NULL),
-(93, 'arjun tour', 'Stroke Play', 3, 1, '2022-06-18 13:00:00', '2022-06-21 13:00:00', '2022-06-17 06:20:23', '2022-06-17 06:20:23', '', '', 0, NULL),
-(94, 'teeeeet', 'Stroke Play', 1, 1, '2022-07-29 13:00:00', '2022-07-29 13:00:00', '2022-07-04 11:42:44', '2022-07-04 11:42:44', '', '', 0, NULL),
-(95, 'teeeeerrrt', 'Stroke Play', 1, 1, '2022-07-05 13:00:00', '2022-07-05 13:00:00', '2022-07-04 11:50:55', '2022-07-04 11:50:55', '', '', 0, NULL),
-(96, 'ddd', 'Stroke Play', 2, 1, '2022-07-13 13:00:00', '2022-07-14 13:00:00', '2022-07-12 06:18:50', '2022-07-12 06:18:50', '', '', 0, NULL),
-(97, 'abc', 'Stroke Play', 2, 1, '2022-07-15 13:00:00', '2022-07-16 13:00:00', '2022-07-15 07:01:15', '2022-07-15 07:01:15', '', '', 0, NULL),
-(98, 'teeeeet ffff', 'Stroke Play', 2, 1, '2022-07-23 13:00:00', '2022-07-30 13:00:00', '2022-07-15 10:25:25', '2022-07-15 10:25:25', '', '', 0, NULL),
-(99, 'test', 'Stroke Play', 2, 1, '2022-07-20 13:00:00', '2022-07-28 13:00:00', '2022-07-18 10:34:31', '2022-07-18 10:34:31', '', '', 0, NULL),
-(100, 'teeeeetd', 'Stroke Play', 1, 1, '2022-07-23 13:00:00', '2022-07-23 13:00:00', '2022-07-18 10:36:50', '2022-07-18 10:36:50', '', '', 0, NULL),
-(101, 'foresome', 'Stroke Play', 1, 0, '2022-07-19 13:00:00', '2022-07-19 13:00:00', '2022-07-18 10:43:57', '2022-07-18 10:43:57', '', '', 0, 18),
-(102, 'abhi ', 'Stroke Play', 1, 1, '2022-07-27 13:00:00', '2022-07-27 13:00:00', '2022-07-27 05:51:49', '2022-07-27 05:51:49', '', '', 0, 18),
-(103, 'test4', 'Stroke Play', 2, 1, '2022-07-26 13:00:00', '2022-07-27 13:00:00', '2022-07-27 06:16:57', '2022-07-27 06:16:57', '', '', 0, 18),
-(104, 'test1234', 'Stroke Play', 1, 1, '2022-07-28 13:00:00', '2022-07-28 13:00:00', '2022-07-27 06:19:32', '2022-07-27 06:19:32', '', '', 0, 18),
-(105, 'test141', 'Stroke Play', 1, 1, '2022-07-27 13:00:00', '2022-07-27 13:00:00', '2022-07-27 06:25:31', '2022-07-27 06:25:31', '', '', 0, 18),
-(106, 'tes123', 'Stroke Play', 2, 1, '2022-07-27 13:00:00', '2022-07-28 13:00:00', '2022-07-27 06:39:55', '2022-07-27 06:39:55', '', '', 0, 18),
-(107, 'test 3344', 'Stroke Play', 2, 1, '2022-08-01 13:00:00', '2022-08-02 13:00:00', '2022-08-01 06:04:42', '2022-08-01 06:04:42', '', '', 0, 18),
-(108, 'test 2233', 'Stroke Play', 2, 1, '2022-08-04 13:00:00', '2022-08-05 13:00:00', '2022-08-01 06:16:27', '2022-08-01 06:16:27', '', '', 0, 18),
-(109, 'tre345', 'Stroke Play', 2, 1, '2022-08-04 13:00:00', '2022-08-05 13:00:00', '2022-08-01 06:23:14', '2022-08-01 06:23:14', '', '', 0, 18),
-(110, 'test 11', 'Stroke Play', 2, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2022-08-01 06:34:53', '2022-08-01 06:34:53', '', '', 0, 18),
-(111, 'eee', 'Stroke Play', 2, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2022-08-01 06:56:20', '2022-08-01 06:56:20', '', '', 0, 18),
-(112, 'test 22', 'Stroke Play', 3, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2022-08-01 07:00:21', '2022-08-01 07:00:21', '', '', 0, 18),
-(113, 'golfClub', 'Stroke Play', 2, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2022-08-01 07:06:02', '2022-08-01 07:06:02', '', '', 0, 18),
-(114, 'qwer', 'Stroke Play', 2, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2022-08-01 07:14:14', '2022-08-01 07:14:14', '', '', 0, 18),
-(115, 'golfClub', 'Stroke Play', 2, 1, '2022-08-03 18:30:00', '2022-08-04 18:30:00', '2022-08-01 07:18:20', '2022-08-01 07:18:20', '', '', 0, 18),
-(116, 'golfClub', 'Stroke Play', 2, 0, '2022-08-03 18:30:00', '2022-08-04 18:30:00', '2022-08-01 07:20:10', '2022-08-01 07:20:10', '', '', 0, 18),
-(117, 'test', 'Stroke Play', 2, 0, '2022-08-02 18:30:00', '2022-08-03 18:30:00', '2022-08-03 11:37:30', '2022-08-03 11:37:30', '', '', 0, 18),
-(118, 'test tournament', 'Stroke Play', 2, 0, '2022-08-02 18:30:00', '2022-08-03 18:30:00', '2022-08-03 12:07:29', '2022-08-03 12:07:29', '', '', 0, 18);
+(120, 'echelon golf', 'Stroke Play', 3, 0, '2022-08-16 18:30:00', '2022-08-18 18:30:00', '2022-08-17 11:29:25', '2022-08-17 11:29:25', '', '', 0, 18),
+(121, 'golf club', 'Stroke Play', 3, 1, '2022-08-17 18:30:00', '2022-08-19 18:30:00', '2022-08-18 06:24:40', '2022-08-18 06:24:40', '', '', 0, 18),
+(122, 'golfClub', 'Stroke Play', 3, 0, '2022-08-17 18:30:00', '2022-08-26 18:30:00', '2022-08-18 06:28:41', '2022-08-18 06:28:41', '', '', 0, 18),
+(123, 'test 2233', 'Stroke Play', 3, 0, '2022-08-17 18:30:00', '2022-08-19 18:30:00', '2022-08-18 10:11:04', '2022-08-18 10:11:04', '', '', 0, 18);
 
 -- --------------------------------------------------------
 
@@ -1898,7 +1873,22 @@ INSERT INTO `round_details` (`round_Id`, `event_Date`, `cid`, `tourID`, `created
 (254, '2022-08-03', 1, 0, '2022-08-03 12:07:35', '2022-08-03 12:07:35', 'Round1'),
 (255, '2022-08-04', 29, 0, '2022-08-03 12:07:35', '2022-08-03 12:07:35', 'Round2'),
 (256, '2022-08-04', 29, 0, '2022-08-03 12:07:35', '2022-08-03 12:07:35', 'Round2'),
-(257, '2022-08-04', 29, 0, '2022-08-03 12:07:35', '2022-08-03 12:07:35', 'Round2');
+(257, '2022-08-04', 29, 0, '2022-08-03 12:07:35', '2022-08-03 12:07:35', 'Round2'),
+(258, '2022-08-17', 29, 119, '2022-08-17 09:23:08', '2022-08-17 09:23:08', 'Round1'),
+(259, '2022-08-18', 3, 119, '2022-08-17 09:23:08', '2022-08-17 09:23:08', 'Round2'),
+(260, '2022-08-19', 2, 119, '2022-08-17 09:23:08', '2022-08-17 09:23:08', 'Round3'),
+(261, '2022-08-17', 29, 120, '2022-08-17 11:29:25', '2022-08-17 11:29:25', 'Round1'),
+(262, '2022-08-18', 29, 120, '2022-08-17 11:29:25', '2022-08-17 11:29:25', 'Round2'),
+(263, '2022-08-19', 2, 120, '2022-08-17 11:29:25', '2022-08-17 11:29:25', 'Round3'),
+(264, '2022-08-18', 29, 121, '2022-08-18 06:24:40', '2022-08-18 06:24:40', 'Round1'),
+(265, '2022-08-19', 2, 121, '2022-08-18 06:24:40', '2022-08-18 06:24:40', 'Round2'),
+(266, '2022-08-20', 1, 121, '2022-08-18 06:24:40', '2022-08-18 06:24:40', 'Round3'),
+(267, '2022-08-18', 2, 122, '2022-08-18 06:28:41', '2022-08-18 06:28:41', 'Round1'),
+(268, '2022-08-20', 2, 122, '2022-08-18 06:28:41', '2022-08-18 06:28:41', 'Round2'),
+(269, '2022-08-27', 3, 122, '2022-08-18 06:28:41', '2022-08-18 06:28:41', 'Round3'),
+(270, '2022-08-19', 2, 123, '2022-08-18 10:13:27', '2022-08-18 10:13:27', 'Round2'),
+(271, '2022-08-18', 29, 123, '2022-08-18 10:13:27', '2022-08-18 10:13:27', 'Round1'),
+(272, '2022-08-20', 1, 123, '2022-08-18 10:13:27', '2022-08-18 10:13:27', 'Round3');
 
 -- --------------------------------------------------------
 
@@ -2231,23 +2221,16 @@ CREATE TABLE `tournament_group_details` (
 --
 
 INSERT INTO `tournament_group_details` (`groupId`, `groupName`, `tee_Number`, `tee_Time`, `tourID`, `round_Id`) VALUES
-(38, 'group 1', 1, '12:00', 1, 2),
-(39, 'Group1', 1, '10:10', 74, 149),
-(44, 'Group1', 1, '10:10', 75, 156),
-(45, 'Group2', 2, '12:00', 75, 156),
-(47, 'Group1', 2, '12:00', 70, 137),
-(49, 'Group1', 2, '12:45', 77, 160),
-(52, 'Group1', 2, '12:01', 93, 205);
+(3, 'Group1', 1, '10:10', 120, 262),
+(6, 'Group1', 1, '11:11', 122, 268),
+(7, 'Group2', 2, '12:00', 122, 268);
 
 --
 -- Triggers `tournament_group_details`
 --
 DELIMITER $$
-CREATE TRIGGER `add_tournament_gropu_details` BEFORE DELETE ON `tournament_group_details` FOR EACH ROW BEGIN
-Insert into tournament_group_details_archive (groupId ,groupName,tee_Number,tee_Time,tourID,round_Id)
-  	values(old.groupId,old.groupName,old.tee_Number,old.tee_Time,old.tourID,old.round_Id);
-     	
-  END
+CREATE TRIGGER `addUpdateTournamentGroupDetails` BEFORE DELETE ON `tournament_group_details` FOR EACH ROW BEGIN Insert into tournament_group_details_archive (groupId ,groupName,tee_Number,tee_Time,tourID,round_Id) values(old.groupId,old.groupName,old.tee_Number,old.tee_Time,old.tourID,old.round_Id); 
+END
 $$
 DELIMITER ;
 
@@ -2271,10 +2254,9 @@ CREATE TABLE `tournament_group_details_archive` (
 --
 
 INSERT INTO `tournament_group_details_archive` (`groupId`, `groupName`, `tee_Number`, `tee_Time`, `tourID`, `round_Id`) VALUES
-(46, 'Group1', 1, '10:10', 70, 136),
-(48, 'Group1', 1, '12:00', 77, 159),
-(50, 'Group1', 1, '12:12', 93, 201),
-(51, 'Group1', 2, '12:12', 93, 203);
+(1, 'Group1', 9, '22:10', 120, 261),
+(4, 'Group1', 1, '12:12', 122, 267),
+(5, 'Group2', 2, '22:10', 122, 267);
 
 -- --------------------------------------------------------
 
@@ -2298,29 +2280,12 @@ CREATE TABLE `tournament_group_player_details` (
 --
 
 INSERT INTO `tournament_group_player_details` (`t_player_Id`, `tournamentId`, `groupName`, `playerId`, `tee_time`, `isPlay`, `isWithdraw`, `roundId`) VALUES
-(48, 74, 'Group1', 6, '10:10', 1, 0, ''),
-(57, 75, 'Group2', 19, '12:00', 0, 0, ''),
-(58, 75, 'Group2', 39, '12:10', 0, 0, ''),
-(59, 75, 'Group1', 6, '10:10', 0, 0, ''),
-(60, 75, 'Group1', 38, '10:20', 0, 0, ''),
-(62, 70, 'Group1', 6, '12:00', 0, 0, ''),
-(64, 77, 'Group1', 6, '12:45', 0, 0, ''),
-(67, 93, 'Group1', 6, '12:01', 0, 0, '');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tournament_player_details`
---
-
-CREATE TABLE `tournament_player_details` (
-  `t_player_Id` int(11) NOT NULL,
-  `tournamentId` int(11) NOT NULL,
-  `groupId` int(11) NOT NULL,
-  `playerId` int(11) NOT NULL,
-  `tee_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `isPlay` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+(1, 120, 'Group1', 6, '22:10', 1, 0, '261'),
+(2, 120, 'Group1', 6, '11:00', 0, 0, '262'),
+(4, 122, 'Group1', 6, '12:12', 1, 0, '267'),
+(5, 122, 'Group2', 19, '22:10', 1, 0, '267'),
+(6, 122, 'Group1', 6, '11:11', 0, 0, '268'),
+(7, 122, 'Group2', 19, '12:00', 0, 0, '268');
 
 -- --------------------------------------------------------
 
@@ -2346,128 +2311,13 @@ CREATE TABLE `tournament_player_list` (
 --
 
 INSERT INTO `tournament_player_list` (`tour_player_id`, `tourID`, `playerID`, `isPlay`, `isInvited`, `isAccepted`, `isApproved`, `isRejected`, `isWithdraw`, `created_Date`) VALUES
-(1, 48, 5, 0, 1, 1, 1, 0, 1, '2022-02-02'),
-(2, 48, 6, 0, 1, 1, 1, 0, 0, '2022-02-02'),
-(3, 48, 7, 1, 1, 0, 1, 0, 0, '2022-02-02'),
-(4, 49, 5, 0, 1, 0, 0, 1, 0, '2022-02-02'),
-(5, 49, 6, 0, 1, 1, 0, 0, 0, '2022-02-02'),
-(6, 49, 7, 0, 1, 0, 1, 1, 0, '2022-02-02'),
-(7, 50, 7, 0, 1, 0, 0, 0, 0, '2022-02-02'),
-(8, 50, 6, 1, 1, 0, 0, 0, 0, '2022-02-02'),
-(9, 51, 6, 0, 1, 0, 0, 0, 0, '2022-02-03'),
-(10, 51, 6, 0, 1, 0, 0, 1, 0, '2022-02-03'),
-(11, 52, 6, 0, 1, 0, 1, 0, 0, '2022-02-04'),
-(12, 52, 7, 0, 1, 0, 1, 0, 0, '2022-02-04'),
-(15, 53, 6, 0, 1, 0, 0, 0, 0, '2022-02-04'),
-(16, 54, 6, 0, 1, 0, 0, 0, 0, '2022-02-04'),
-(17, 55, 7, 0, 1, 0, 0, 0, 0, '2022-02-04'),
-(18, 56, 6, 0, 1, 0, 0, 0, 0, '2022-02-04'),
-(19, 57, 5, 0, 1, 1, 1, 0, 0, '2022-02-16'),
-(20, 57, 6, 0, 1, 1, 1, 0, 0, '2022-02-16'),
-(21, 57, 7, 0, 1, 1, 1, 0, 0, '2022-02-16'),
-(22, 59, 6, 0, 1, 0, 0, 0, 0, '2022-02-23'),
-(23, 60, 6, 0, 1, 0, 0, 0, 0, '2022-02-23'),
-(24, 60, 5, 0, 1, 0, 0, 0, 0, '2022-02-23'),
-(25, 61, 5, 0, 1, 1, 1, 0, 0, '2022-02-26'),
-(26, 61, 6, 0, 1, 1, 1, 0, 0, '2022-02-26'),
-(27, 62, 10, 0, 1, 0, 0, 0, 0, '2022-02-26'),
-(28, 62, 11, 0, 1, 0, 0, 0, 0, '2022-02-26'),
-(29, 63, 6, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(30, 63, 30, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(31, 63, 18, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(32, 63, 27, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(33, 63, 22, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(34, 63, 17, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(35, 63, 23, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(36, 63, 16, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(37, 63, 26, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(38, 63, 10, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(39, 63, 32, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(40, 63, 15, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(41, 63, 11, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(42, 63, 13, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(43, 64, 6, 0, 1, 0, 0, 0, 0, '2022-03-02'),
-(44, 64, 38, 0, 1, 1, 1, 0, 0, '2022-03-02'),
-(45, 65, 39, 1, 1, 1, 1, 0, 0, '2022-04-05'),
-(46, 65, 6, 0, 1, 0, 0, 0, 0, '2022-04-05'),
-(47, 66, 36, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(48, 66, 12, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(49, 66, 25, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(50, 66, 37, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(51, 66, 13, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(52, 66, 20, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(53, 66, 10, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(54, 66, 11, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(55, 66, 23, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(56, 66, 17, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(57, 66, 32, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(58, 66, 19, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(59, 66, 24, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(60, 66, 33, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(61, 66, 35, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(62, 66, 18, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(63, 66, 30, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(64, 66, 21, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(65, 66, 16, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(66, 66, 31, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(67, 66, 22, 1, 1, 1, 1, 0, 0, '2022-04-07'),
-(68, 67, 36, 0, 1, 0, 0, 0, 0, '2022-04-26'),
-(69, 67, 6, 0, 1, 0, 0, 0, 0, '2022-04-26'),
-(70, 68, 30, 0, 1, 0, 0, 0, 0, '2022-04-27'),
-(71, 68, 16, 0, 1, 0, 0, 0, 0, '2022-04-27'),
-(72, 68, 6, 0, 1, 0, 0, 0, 0, '2022-04-27'),
-(73, 68, 14, 0, 1, 0, 0, 0, 0, '2022-04-27'),
-(74, 68, 26, 0, 1, 0, 0, 0, 0, '2022-04-27'),
-(75, 68, 35, 0, 1, 0, 0, 0, 0, '2022-04-27'),
-(76, 68, 39, 0, 1, 0, 0, 0, 0, '2022-04-27'),
-(77, 68, 10, 0, 1, 0, 0, 0, 0, '2022-04-27'),
-(78, 66, 19, 1, 1, 1, 1, 0, 0, '2022-05-10'),
-(79, 48, 16, 1, 1, 1, 1, 0, 0, '2022-05-11'),
-(80, 66, 19, 1, 1, 1, 1, 0, 0, '2022-05-11'),
-(81, 70, 6, 1, 1, 1, 1, 0, 0, '2022-05-13'),
-(82, 71, 6, 0, 1, 0, 0, 0, 0, '2022-05-24'),
-(83, 72, 6, 0, 1, 0, 0, 0, 0, '2022-05-24'),
-(84, 73, 6, 0, 1, 0, 0, 0, 0, '2022-05-26'),
-(85, 74, 6, 1, 1, 1, 1, 0, 0, '2022-05-30'),
-(86, 75, 39, 1, 1, 1, 1, 0, 0, '2022-06-01'),
-(87, 75, 19, 1, 1, 1, 1, 0, 0, '2022-06-01'),
-(88, 75, 38, 1, 1, 1, 1, 0, 0, '2022-06-01'),
-(89, 75, 6, 1, 1, 1, 1, 0, 0, '2022-06-01'),
-(90, 76, 6, 0, 1, 0, 0, 0, 0, '2022-06-01'),
-(91, 76, 6, 0, 1, 0, 0, 0, 0, '2022-06-01'),
-(92, 76, 6, 0, 1, 0, 0, 0, 0, '2022-06-01'),
-(93, 76, 6, 0, 1, 0, 0, 0, 0, '2022-06-01'),
-(94, 76, 6, 0, 1, 0, 0, 0, 0, '2022-06-01'),
-(95, 48, 19, 0, 1, 0, 0, 0, 0, '2022-06-01'),
-(96, 76, 19, 0, 1, 0, 0, 0, 0, '2022-06-01'),
-(97, 76, 10, 0, 1, 0, 0, 0, 0, '2022-06-01'),
-(98, 76, 10, 0, 1, 0, 0, 0, 0, '2022-06-01'),
-(99, 77, 6, 1, 1, 1, 1, 0, 0, '2022-06-01'),
-(100, 78, 6, 0, 1, 0, 0, 0, 0, '2022-06-06'),
-(101, 78, 6, 0, 1, 0, 0, 0, 0, '2022-06-06'),
-(102, 79, 6, 0, 1, 0, 0, 0, 0, '2022-06-06'),
-(103, 79, 6, 0, 1, 0, 0, 0, 0, '2022-06-06'),
-(104, 80, 6, 0, 1, 0, 0, 0, 0, '2022-06-06'),
-(105, 81, 6, 0, 1, 0, 0, 0, 0, '2022-06-06'),
-(106, 82, 6, 0, 1, 0, 0, 0, 0, '2022-06-06'),
-(107, 83, 6, 0, 1, 0, 0, 0, 0, '2022-06-06'),
-(108, 84, 6, 0, 1, 0, 0, 0, 0, '2022-06-07'),
-(109, 85, 6, 0, 1, 0, 0, 0, 0, '2022-06-07'),
-(110, 87, 6, 0, 1, 0, 0, 0, 0, '2022-06-07'),
-(111, 88, 6, 0, 1, 0, 0, 0, 0, '2022-06-07'),
-(112, 92, 6, 0, 1, 1, 1, 0, 0, '2022-06-13'),
-(113, 93, 6, 1, 1, 1, 1, 0, 0, '2022-06-17'),
-(114, 94, 6, 0, 1, 0, 0, 0, 0, '2022-07-04'),
-(115, 94, 6, 0, 1, 0, 0, 0, 0, '2022-07-04'),
-(116, 95, 6, 0, 1, 0, 0, 0, 0, '2022-07-04'),
-(117, 97, 6, 0, 1, 0, 0, 0, 0, '2022-07-15'),
-(118, 98, 6, 0, 1, 0, 0, 0, 0, '2022-07-15'),
-(119, 101, 6, 0, 1, 0, 0, 0, 0, '2022-07-18'),
-(120, 103, 6, 0, 1, 0, 0, 0, 0, '2022-07-27'),
-(121, 111, 6, 0, 1, 0, 0, 0, 0, '2022-08-01'),
-(122, 116, 6, 0, 1, 0, 0, 0, 0, '2022-08-01'),
-(123, 117, 6, 0, 1, 0, 0, 0, 0, '2022-08-03'),
-(124, 118, 6, 0, 1, 0, 0, 0, 0, '2022-08-03');
+(125, 120, 6, 0, 1, 1, 1, 0, 0, '2022-08-17'),
+(126, 121, 6, 0, 1, 0, 0, 0, 0, '2022-08-18'),
+(127, 121, 19, 0, 1, 0, 0, 0, 0, '2022-08-18'),
+(128, 121, 6, 0, 1, 0, 0, 0, 0, '2022-08-18'),
+(129, 122, 19, 0, 1, 1, 1, 0, 0, '2022-08-18'),
+(130, 122, 6, 0, 1, 1, 1, 0, 0, '2022-08-18'),
+(131, 123, 6, 0, 1, 0, 0, 0, 0, '2022-08-18');
 
 -- --------------------------------------------------------
 
@@ -2515,19 +2365,9 @@ CREATE TABLE `tournament_score_details` (
 --
 
 INSERT INTO `tournament_score_details` (`tour_score_id`, `p_id`, `tour_id`, `score1`, `score2`, `score3`, `score4`, `score5`, `score6`, `score7`, `score8`, `score9`, `score10`, `score11`, `score12`, `score13`, `score14`, `score15`, `score16`, `score17`, `score18`, `round_Id`, `hdcp`, `inn`, `outt`, `gross`, `net`, `birdie`, `holeNum`, `cid`, `createdDate`, `isDeleted`) VALUES
-(19, 38, 75, 5, 3, 5, 4, 4, 6, 6, 5, 5, 5, 4, 4, 4, 7, 4, 5, 3, 6, 154, 9, 42, 43, 85, 76, 0, NULL, '2', '2022-06-02 11:25:13', 0),
-(20, 6, 75, 5, 3, 5, 4, 4, 6, 6, 5, 5, 5, 4, 4, 4, 7, 4, 5, 3, 6, 154, 9, 42, 43, 100, 76, 2, NULL, '2', '2022-06-02 11:28:21', 0),
-(21, 39, 75, 5, 3, 5, 4, 4, 6, 6, 5, 5, 5, 4, 4, 4, 7, 4, 5, 3, 6, 154, 9, 42, 43, 100, 76, 2, NULL, '2', '2022-06-02 11:30:13', 0),
-(22, 19, 75, 5, 3, 5, 4, 4, 6, 6, 5, 5, 5, 4, 4, 4, 7, 4, 5, 3, 6, 154, 9, 42, 43, 120, 76, 2, NULL, '2', '2022-06-02 11:33:19', 0),
-(23, 19, 75, 5, 3, 5, 4, 4, 6, 6, 5, 5, 5, 4, 4, 4, 7, 4, 5, 3, 6, 155, 9, 42, 43, 120, 76, 2, NULL, '2', '2022-06-02 11:42:09', 0),
-(24, 6, 75, 5, 3, 5, 4, 4, 6, 6, 5, 5, 5, 4, 4, 4, 7, 4, 5, 3, 6, 155, 9, 42, 43, 120, 76, 2, NULL, '2', '2022-06-02 11:42:16', 0),
-(25, 38, 75, 5, 3, 5, 4, 4, 6, 6, 5, 5, 5, 4, 4, 4, 7, 4, 5, 3, 6, 155, 9, 42, 43, 120, 76, 2, NULL, '2', '2022-06-02 11:42:25', 0),
-(26, 39, 75, 5, 3, 5, 4, 4, 6, 6, 5, 5, 5, 4, 4, 4, 7, 4, 5, 3, 6, 155, 9, 42, 43, 120, 76, 2, NULL, '2', '2022-06-02 11:42:30', 0),
-(27, 6, 70, 5, 3, 5, 4, 4, 6, 6, 5, 5, 5, 4, 4, 4, 7, 4, 5, 3, 6, 136, 9, 42, 43, 120, 76, 2, NULL, '2', '2022-06-02 12:13:23', 0),
-(28, 6, 77, 5, 3, 5, 4, 4, 6, 6, 5, 5, 5, 4, 4, 4, 7, 4, 5, 3, 6, 159, 9, 42, 43, 120, 76, 2, NULL, '2', '2022-06-02 12:28:20', 0),
-(29, 6, 93, 3, 4, 5, 4, 3, 4, 5, 6, 5, 6, 5, 6, 3, 4, 5, 6, 6, 4, 201, 12, 45, 39, 84, 72, 0, 10, '29', '2022-06-17 15:19:20', 0),
-(30, 6, 93, 5, 4, 4, 5, 6, 5, 6, 5, 6, 5, 6, 7, 6, 7, 2, 6, 6, 5, 203, 10, 50, 46, 96, 86, 0, 3, '1', '2022-06-17 17:23:00', 0),
-(31, 6, 93, 5, 6, 9, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 205, 6, 0, 22, 22, 16, 0, 4, '3', '2022-07-11 14:53:09', 0);
+(1, 6, 120, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 5, 5, 5, 5, 261, 5, 41, 45, 86, 81, 0, 17, '2', '2022-08-17 17:51:34', 0),
+(2, 6, 122, 4, 5, 6, 4, 5, 6, 4, 5, 6, 4, 5, 4, 4, 4, 4, 4, 5, 5, 267, 10, 39, 45, 84, 74, 0, 17, '2', '2022-08-18 12:04:12', 0),
+(3, 19, 122, 5, 6, 5, 6, 7, 7, 6, 5, 4, 5, 6, 6, 4, 3, 6, 6, 3, 2, 267, 7, 41, 51, 92, 85, 0, 17, '29', '2022-08-18 12:06:08', 0);
 
 -- --------------------------------------------------------
 
@@ -2879,12 +2719,6 @@ ALTER TABLE `tournament_group_player_details`
   ADD PRIMARY KEY (`t_player_Id`);
 
 --
--- Indexes for table `tournament_player_details`
---
-ALTER TABLE `tournament_player_details`
-  ADD PRIMARY KEY (`t_player_Id`);
-
---
 -- Indexes for table `tournament_player_list`
 --
 ALTER TABLE `tournament_player_list`
@@ -2946,13 +2780,13 @@ ALTER TABLE `country`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `course_rating`
 --
 ALTER TABLE `course_rating`
-  MODIFY `cRatingId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `cRatingId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `course_tee`
@@ -2970,7 +2804,7 @@ ALTER TABLE `employment`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
+  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
 
 --
 -- AUTO_INCREMENT for table `event_details`
@@ -3018,7 +2852,7 @@ ALTER TABLE `player_details`
 -- AUTO_INCREMENT for table `round_details`
 --
 ALTER TABLE `round_details`
-  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=258;
+  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=273;
 
 --
 -- AUTO_INCREMENT for table `score_details`
@@ -3060,31 +2894,25 @@ ALTER TABLE `tournament_details`
 -- AUTO_INCREMENT for table `tournament_group_details`
 --
 ALTER TABLE `tournament_group_details`
-  MODIFY `groupId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `groupId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tournament_group_player_details`
 --
 ALTER TABLE `tournament_group_player_details`
-  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
-
---
--- AUTO_INCREMENT for table `tournament_player_details`
---
-ALTER TABLE `tournament_player_details`
-  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tournament_player_list`
 --
 ALTER TABLE `tournament_player_list`
-  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
+  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
 
 --
 -- AUTO_INCREMENT for table `tournament_score_details`
 --
 ALTER TABLE `tournament_score_details`
-  MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tournament_winners`
