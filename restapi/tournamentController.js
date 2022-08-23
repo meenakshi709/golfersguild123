@@ -21,32 +21,28 @@ tourCtrl.saveEventDetails = (req, res) => {
     try {
         const data = req.body;
         if (data && data.eventDetailsArr.length > 0) {
+            let roundData = "";
+            data.eventDetailsArr[0].roundsArray.filter((roundeDetails, index) => {
+                const roundName = 'Round' + (index + 1);
+                if(index==0)
+                {
+                    roundData = `${roundeDetails.eventDate}/${roundeDetails.cname}/${roundName}`;
+                }else{
+                    roundData = roundData+','+` ${roundeDetails.eventDate}/${roundeDetails.cname}/${roundName}`;         
+                }
+            });
             data.eventDetailsArr.filter((item, eventIndex) => {
-                let event = `call saveEventDetails("${item.tourID}","${item.tournamentName}","${item.eventType}","${item.numRounds}","${item.startDate}","${ item.endDate}","${item.holes}")`;
+
+                let event = `call saveEventDetails("${item.tourID}","${item.tournamentName}","${item.eventType}","${item.numRounds}","${item.startDate}","${item.endDate}","${item.holes}","${roundData}")`;
 
                 connection.query(event, function (error, results) {
-
-
                     if (error) {
                         res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
                     } else {
-                        item.roundsArray.filter((roundeDetails, index) => {
-                            const roundName = 'Round' + (index + 1);
-                            let round = `call saveRoundDetails("${item.round_Id}","${results[0][0].tour_id}","${roundeDetails.eventDate}","${roundeDetails.cname}","${roundName}")`;
-                            connection.query(round, function (error, eventDetails) {
-
-                                if (error) {
-                                    res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-                                }
-                            });
-                        });
-                    }
-
-
-                    if (eventIndex == data.eventDetailsArr.length - 1) {
                         releaseconnection();
                         res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
                     }
+                  
                 });
 
             });
@@ -79,7 +75,7 @@ tourCtrl.tournamentInvitation = (req, res) => {
                                 subject: "Tournament Invitation",
                                 name: results[0][0].usrName,
                                 tourName: results[0][0].tourName,
-                                tourDate:results[0][0].tourDate
+                                tourDate: results[0][0].tourDate
                             }
                             mail.sendEmail(results[0][0].emailAddress, option).then((response) => {
                                 console.log(response)
@@ -108,9 +104,9 @@ tourCtrl.tournamentInvitation = (req, res) => {
 //    if(myDate!="" ){
 //    myDate=myDate.getDate()+ '/' +(myDate.getMonth() + 1)  + '/' + myDate.getFullYear();
 //    }
-  
+
 //   return myDate;
-    
+
 //   }
 
 tourCtrl.invitedTournamentListById = (req, res) => {
@@ -177,21 +173,21 @@ tourCtrl.tournamentScoreById = (req, res) => {
             if (error) {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             } else {
-              
-                if(results[0]){
+
+                if (results[0]) {
                     let tournamentData = {};
-              
-                if (req.query.playerId == 0) {
-                    tournamentData = getTournamentDetails(results[0]);
-                } else {
-                    tournamentData = getTournamentDetailsByPlayerId(results[0]);
+
+                    if (req.query.playerId == 0) {
+                        tournamentData = getTournamentDetails(results[0]);
+                    } else {
+                        tournamentData = getTournamentDetailsByPlayerId(results[0]);
+                    }
+                    res.send(JSON.stringify({ "error": "", "response": { result: tournamentData } }));
                 }
-                res.send(JSON.stringify({ "error": "", "response": { result: tournamentData } }));
+                else {
+                    res.send(JSON.stringify({ "error": "", "response": { result: [] } }));
+                }
             }
-            else{
-                res.send(JSON.stringify({ "error": "", "response": { result: [] } }));
-            }
-        }
         });
     } catch (error) {
         res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
@@ -200,7 +196,7 @@ tourCtrl.tournamentScoreById = (req, res) => {
 
 
 function getTournamentDetailsByPlayerId(results) {
-    const finalArr=[];
+    const finalArr = [];
     const data = {};
     if (results.length > 0) {
         const keyName = Object.keys(results[0]);
@@ -589,7 +585,7 @@ tourCtrl.getTournamentGroups = (req, res) => {
 
 function getGroupDetails(playerList, groupList) {
     const groupArray = [];
-    if (playerList && playerList.length > 0 && groupList && groupList.length>0) {
+    if (playerList && playerList.length > 0 && groupList && groupList.length > 0) {
 
         groupList.forEach(groupData => {
             const data = {
@@ -631,7 +627,7 @@ tourCtrl.getPlayerDetailForScore = (req, res) => {
                     let newIndex = results[0][recordIndex + 1] ? results[0][recordIndex + 1] : results[0][0];
                     res.send(JSON.stringify({ "error": "", "response": { result: newIndex } }));
                 } else {
-                    res.send(JSON.stringify({ "error": "X", "response": {msg:'No record found' } }));
+                    res.send(JSON.stringify({ "error": "X", "response": { msg: 'No record found' } }));
                 }
 
             }
@@ -661,8 +657,8 @@ tourCtrl.savetournamentScore = (req, res) => {
                 //         console.log("result- save data--->",result)
                 //     })
                 // }
-              
-                  
+
+
                 res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
             }
         });
@@ -739,7 +735,7 @@ tourCtrl.saveTournamentWinner = (req, res) => {
         const data = req.body;
         let sql = `call saveTournamentWinner("${data.tourId}","${data.playerId}","${data.category}","${data.score}")`;
         connection.query(sql, function (error, results) {
-       
+
             releaseconnection();
             if (error) {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
@@ -787,8 +783,8 @@ tourCtrl.getTourYearDetails = (req, res) => {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             }
             else {
-                    res.send(JSON.stringify({ "error": "", "response": { result: results[0] } }));                
-                 }
+                res.send(JSON.stringify({ "error": "", "response": { result: results[0] } }));
+            }
         });
     } catch (error) {
         res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
@@ -805,8 +801,8 @@ tourCtrl.getTourMonthDetails = (req, res) => {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             }
             else {
-                    res.send(JSON.stringify({ "error": "", "response": { result: results[0] } }));                
-                 }
+                res.send(JSON.stringify({ "error": "", "response": { result: results[0] } }));
+            }
         });
     } catch (error) {
         res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
@@ -824,8 +820,8 @@ tourCtrl.getTourDetails = (req, res) => {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             }
             else {
-                    res.send(JSON.stringify({ "error": "", "response": { result: results[0] } }));                
-                 }
+                res.send(JSON.stringify({ "error": "", "response": { result: results[0] } }));
+            }
         });
     } catch (error) {
         res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
