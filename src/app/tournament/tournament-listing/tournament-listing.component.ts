@@ -170,24 +170,25 @@ export class TournamentListingComponent implements OnInit {
 
   addEditGroupDetails(clickedRecordDetails: any) {
     this.loader.start();
-
-    const teeList = this.service.getAPIMethod('/tournament/getCourseTeeList');
+    debugger
+  
     const playerList = this.service.getAPIMethod('/tournament/getApprovedPlayerList?tourId=' + clickedRecordDetails.tourID);
     const roundList = this.service.getAPIMethod('/tournament/getTournamentRoundDetails?tourId=' + clickedRecordDetails.tourID);
 
-    forkJoin([teeList, playerList, roundList]).subscribe(response => {
+    
+    forkJoin([ playerList, roundList]).subscribe(response => {
       this.loader.stop();
-      if (response[0]['error'] != 'X' && response[1]['error'] != 'X' || response[2]['error'] != 'X') {
+      if (response[0]['error'] != 'X' && response[1]['error'] != 'X' ) {
         if (response[1].response.result.length > 0) {
           const dialogRef = this.dialog.open(AddEditTournamentComponent, {
             data: {
               title: 'Group Details',
               details: clickedRecordDetails,
               sectionName: 'group',
-              playerList: response[1].response.result,
-              teeList: response[0].response.result,
-              roundList: response[2].response.result,
-              previousRoundDetails: response[2].response.roundDetails,
+              playerList: response[0].response.result,
+              teeList: '',
+              roundList: response[1].response.result,
+              previousRoundDetails: response[1].response.roundDetails,
               groupList: []
             },
             width: '1000px',

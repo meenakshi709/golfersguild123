@@ -39,7 +39,7 @@ export class AddEditLeaderboardComponent implements OnInit {
       //  this.setScoreDetails();
 
     }
-    // this.scoreForm.controls.round_Id.disable();
+    // this.scoreForm.controls.round_Id.disable();teeDetails
     //  this.scoreForm.controls.cid.disable();
   }
 

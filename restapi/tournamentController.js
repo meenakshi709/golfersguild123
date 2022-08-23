@@ -393,8 +393,8 @@ tourCtrl.saveTournamentGroupDetails = (req, res) => {
                         });
 
                     });
-                }
-            });
+               }
+           });
         }
     } catch (error) {
         res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));

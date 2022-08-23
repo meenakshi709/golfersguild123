@@ -61,28 +61,39 @@ this.sweetAlertMsg('error',data.response.msg);
 
 
   saveCourseDetails(clickedRecordDetails: any) {
+if(clickedRecordDetails)
+{
+
+
     this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + clickedRecordDetails.cid).subscribe((APIResponse: any) => {
       if (APIResponse.error == '') {
         clickedRecordDetails.teeArray = APIResponse.response.result;
-        const dialogRef = this.dialog.open(AddEditCourseComponent, {
-          data: clickedRecordDetails,
-          width: '80%',
-          height: '600px',
-
-        });
-        dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-            this.getCourseList();
-          }
-        });
+        this.addEditCourseDialog(clickedRecordDetails);
       } else {
         this.sweetAlertMsg('error', APIResponse.msg);
       }
     });
-
+  }
+  else{
+    this.addEditCourseDialog(clickedRecordDetails);
+  }
   }
 
 
+
+addEditCourseDialog(clickedRecordDetails:any){
+  const dialogRef = this.dialog.open(AddEditCourseComponent, {
+    data: clickedRecordDetails,
+    width: '80%',
+    height: '600px',
+
+  });
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.getCourseList();
+    }
+  }); 
+}
   onCourseActionClick(clickedRecord: any) {
 
     if (clickedRecord.name == 'Edit') {

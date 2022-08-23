@@ -21,6 +21,7 @@ export class AddEditTournamentComponent implements OnInit {
   approvedPlayerList: any = [];
   tourID: any;
   playerList: any = [];
+  teeNameList:any=[];
   eventDetailsArr: any = new FormArray([]);
   eventFormGroup: any = new FormGroup({
     eventDetailsArr: new FormArray([]),
@@ -247,6 +248,17 @@ export class AddEditTournamentComponent implements OnInit {
         });
 
         this.groupFormGroup.controls.roundId.setValue(this.data.roundList[roundIndex].round_Id);
+        debugger
+  
+        this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + this.data.roundList[roundIndex].cid).subscribe((APIResponse: any) => {
+          if (APIResponse.error == '') {
+            this.teeNameList = APIResponse.response.result;
+          } else {
+    
+          }
+        });
+
+        
         this.groupFormGroup.controls.roundId.disable();
       }
 
@@ -516,6 +528,7 @@ debugger;
 
 
   groupTabDisplay() {
+debugger
     const groupList = this.service.getAPIMethod('/dataApi/getGroupList');
     const approvedPlayerList = this.service.getAPIMethod('/tournament/getApprovedPlayerList?tourId=' + 48);
     forkJoin([groupList, approvedPlayerList]).subscribe((response: any) => {
