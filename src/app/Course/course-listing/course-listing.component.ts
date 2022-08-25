@@ -121,7 +121,7 @@ addEditCourseDialog(clickedRecordDetails:any){
         this.loader.start();
         this.service.getAPIMethod('/course/deleteCourse?courseId=' + clickedrecord.cid).subscribe((success) => {
           this.loader.stop();
-          debugger
+          
           if (success.response.result.err === 'X') {
             this.sweetAlertMsg('error', success.response.result.msg);
             console.log(success.response.result.msg)

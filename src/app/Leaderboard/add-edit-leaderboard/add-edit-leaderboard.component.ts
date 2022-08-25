@@ -23,6 +23,9 @@ export class AddEditLeaderboardComponent implements OnInit {
   teeNameList: any = [];
   holeCount: any = 0;
   selectedTeeName: any;
+  scoreDiff: any = 0;
+  courseRate: any = 0;
+  slopeRate: any = 0;
   constructor(
     public dialogRef: MatDialogRef<AddEditLeaderboardComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -79,6 +82,7 @@ export class AddEditLeaderboardComponent implements OnInit {
     grossTotal: new FormControl(0, []),
     netTotal: new FormControl(0, []),
     birdieTotal: new FormControl(0, []),
+    scoreDiff: new FormControl(0, []),
   });
 
 
@@ -98,7 +102,9 @@ export class AddEditLeaderboardComponent implements OnInit {
   }
 
   saveScoreDetails() {
-    debugger
+    
+    this.calculateScoreDifferential();
+    
     const data = this.scoreForm.getRawValue();
     const data1 = this.summaryForm.getRawValue();
     data1.grossTotal = this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value;
@@ -116,13 +122,12 @@ export class AddEditLeaderboardComponent implements OnInit {
       console.log("hole count", data.enteredHoleCount)
 
     }
-    debugger
+    
     console.log("finalData", data)
     let finalData = { ...data, ...data1 };
     this.service.postAPIMethod('/tournament/savetournamentScore', finalData).subscribe(APIresponse => {
       // console.log("final",response);
-
-
+debugger
       if (APIresponse.error != 'X') {
         //  this.route.navigateByUrl("/course");
         this.closeDialogClick();
@@ -171,7 +176,7 @@ export class AddEditLeaderboardComponent implements OnInit {
                 // element.parkeyName=parkeyName;
                 parValue = element[parkeyName];
                 scoreValue = element[scoreName];
-                debugger
+                
                 if (scoreValue > 0) {
                   this.holeCount = this.holeCount + 1;
                 }
@@ -283,6 +288,7 @@ export class AddEditLeaderboardComponent implements OnInit {
     //  this.scoreForm.controls.pout.setValue(scoreOutValue);
 
     this.calculateBirdie(fieldName);
+    this.calculateScoreDifferential();
 
   }
   onChangeHoles() {
@@ -382,6 +388,7 @@ export class AddEditLeaderboardComponent implements OnInit {
     //  this.scoreForm.controls.pout.setValue(scoreOutValue);
 
     this.calculateBirdie(fieldName);
+    this.calculateScoreDifferential();
 
   }
   // Toaster msg function
@@ -423,14 +430,14 @@ export class AddEditLeaderboardComponent implements OnInit {
             // }
           });
         }
-        debugger
+        
         //   this.scoreForm.controls.round_Id.setValue(this.roundList[currentIndex].round_Id);
         //    this.scoreForm.controls.cid.setValue(this.roundList[currentIndex].cid);
 
         // this.data.courseListing.forEach((course: any) => {
 
         //   if (course.cid == this.roundList[currentIndex].cid) {
-        //     this.selectedCourse = course;
+        
         //   }
         // });
 
@@ -441,11 +448,27 @@ export class AddEditLeaderboardComponent implements OnInit {
 
   getGroupList() {
     this.roundList.forEach((round: any) => {
-      debugger;
       if (round.round_Id == this.scoreForm.controls.round_Id.value) {
         this.scoreForm.controls.cid.setValue(round.cid);
+        // this.onCourseChange(round.cid);
+          
+            this.data.courseListing.forEach((course: any) => {
+debugger
+                if (course.cid == round.cid) {
+                  this.selectedCourse = course;
+                }
+              });
+
+
+
+        this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + round.cid).subscribe((APIResponse: any) => {
+          if (APIResponse.error == '') {
+            this.teeNameList = APIResponse.response.result;
+          }
+        });
       }
     });
+
 
     this.service.getAPIMethod("/tournament/getTournamentGroups?tourId=" + this.scoreForm.controls.tour_id.value + "&roundId=" + this.scoreForm.controls.round_Id.value).subscribe((APIResponse) => {
       this.loader.stop();
@@ -455,6 +478,15 @@ export class AddEditLeaderboardComponent implements OnInit {
     });
   }
 
+  onChangeTeeName(event: any) {
+
+    this.teeNameList.forEach((item: any) => {
+      if (item.cRatingId == event.value) {
+        this.slopeRate = item.slopeRating;
+        this.courseRate = item.courseRating;
+      }
+    });
+  }
   getPlayerList() {
     this.service.getAPIMethod("/tournament/getTournamentGroupPlayerList?tourId=" + this.scoreForm.controls.tour_id.value + "&roundId=" + this.scoreForm.controls.round_Id.value + "&groupId=" + this.scoreForm.controls.groupId.value).subscribe((APIResponse) => {
       if (APIResponse.error != 'X') {
@@ -475,14 +507,22 @@ export class AddEditLeaderboardComponent implements OnInit {
   }
 
   onCourseChange(event: any) {
-   
-    this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + event.value).subscribe((APIResponse: any) => {
-      if (APIResponse.error == '') {
-        this.teeNameList = APIResponse.response.result;
-      } else {
 
-      }
-    });
+
+  }
+
+
+  calculateScoreDifferential() {
+    
+    var ags = (this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value);
+    var Diff1 = (ags - this.courseRate) * 113;
+    var socreAvg = Diff1 / this.slopeRate;
+    var rounded = Math.round(socreAvg * 10) / 10
+    console.log("differnece", Diff1);
+    console.log("after divide", socreAvg);
+
+    this.summaryForm.controls.scoreDiff.setValue(rounded);
+
   }
 
 }

@@ -3,9 +3,15 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
+<<<<<<< HEAD
 -- Generation Time: Aug 23, 2022 at 09:06 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
+=======
+-- Generation Time: Aug 23, 2022 at 02:19 PM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 8.1.2
+>>>>>>> 4b08fea541da79c76e3a6bd513c7d3cce4d7c309
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -697,7 +703,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `saveCourseTeeRating` (`param_course
   END WHILE;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `saveEventDetails` (IN `param_tourId` INT, IN `param_tourName` VARCHAR(200), IN `param_eventType` VARCHAR(100), IN `param_numRounds` INT, IN `param_startDate` VARCHAR(255), IN `param_endDate` VARCHAR(255), IN `param_holes` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `saveEventDetails` (IN `param_tourId` INT, IN `param_tourName` VARCHAR(200), IN `param_eventType` VARCHAR(100), IN `param_numRounds` INT, IN `param_startDate` VARCHAR(255), IN `param_endDate` VARCHAR(255), IN `param_holes` INT, IN `param_round_details` LONGTEXT)  BEGIN
 DECLARE num_rows int;
 DECLARE err varchar(100);
 DECLARE msg varchar(255);
@@ -713,6 +719,7 @@ INSERT INTO events (tournamentName,eventType,numRounds,startDate,endDate,holes)V
   set err="";
   set msg="Tournament Created Successfully";
   select tourID into tour_id from events order by created_Date desc limit 1; 
+ call saveRoundDetails(tour_id,1,param_round_details);
  ELSEIF(isTourNameExist>0)THEN
   set err="X";
   set msg="Tournament Already Exist";
@@ -725,6 +732,7 @@ INSERT INTO events (tournamentName,eventType,numRounds,startDate,endDate,holes)V
    set err="";
   set msg="Event updated successfully";
   set tour_id=param_tourId;
+   call saveRoundDetails(tour_id,0,param_round_details);
   END IF;
 
   SELECT err,msg,tour_id from DUAL;
@@ -780,28 +788,35 @@ INSERT INTO user_details (playerName,userName,firstName,lastName,email,contactNu
   SELECT err,msg from DUAL;
   END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `saveRoundDetails` (IN `param_round_Id` INT, IN `param_tour_Id` INT, IN `param_event_Date` DATE, IN `param_cid` INT, IN `param_roundName` VARCHAR(200))  BEGIN
-DECLARE num_rows int;
-DECLARE err varchar(100);
-DECLARE msg varchar(255);
-DECLARE isRecordExist int;
-SELECT count(*) into isRecordExist from round_details WHERE round_Id=param_round_Id;
-if (isRecordExist<1)THEN
-
-
-INSERT INTO round_details (event_Date,tourID,cid,round_name)VALUES (param_event_Date,param_tour_Id,param_cid,param_roundName);
-  set err="";
+CREATE DEFINER=`root`@`localhost` PROCEDURE `saveRoundDetails` (IN `param_tour_Id` INT, IN `param_InsertUpdate` INT, IN `param_round_details` LONGTEXT)  BEGIN
+	DECLARE num_rows int;
+	DECLARE err varchar(100);
+	DECLARE msg varchar(255);
+   DECLARE eventDate varchar(1500);
+   Declare cid varchar(200);
+   Declare round_name varchar(200);
+     Declare element varchar(1000);
+   DECLARE strIDs longtext;
+   set strIDs=param_round_details;
+   if(param_InsertUpdate=0)THEN
+   delete from round_details where tourID=param_course_Id;
+   END IF;
+    WHILE strIDs != '' DO
+    set element='';
+    SET element = SUBSTRING_INDEX(strIDs, ',', 1);      
+  	 select SPLIT_STR(element, '/', 1) into eventDate;
+   	 select SPLIT_STR(element, '/', 2) into cid;
+     select SPLIT_STR(element, '/', 3) into round_name;
+     
+     insert into round_details(event_Date,cid,tourID,round_name) values(eventDate,cid,param_tour_Id,round_name);
+    IF LOCATE(',', strIDs) > 0 THEN
+      SET strIDs = SUBSTRING(strIDs, LOCATE(',', strIDs) + 1);
+    ELSE
+      SET strIDs = '';
+    END IF;
+  END WHILE;
+    set err="";
   set msg="Round Created Successfully";
-
-
-  ELSE
-  UPDATE round_details set event_Date=param_event_Date,tourID=param_tour_Id,cid=param_cid,round_name=param_roundName,modified_Date=now() where round_Id=param_round_Id;
-   set err="";
-  set msg="Round updated successfully";
-  END IF;
-
-  SELECT err,msg from DUAL;
- 
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `saveTournamentCouponDetails` (IN `param_couponCode` VARCHAR(100), IN `param_couponCount` INT, IN `param_tourId` INT, IN `param_roundId` VARCHAR(100), IN `param_playerId` VARCHAR(100), IN `param_status` INT(2))  BEGIN
@@ -1490,10 +1505,14 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`tourID`, `tournamentName`, `eventType`, `numRounds`, `is_Deleted`, `startDate`, `endDate`, `created_Date`, `modified_Date`, `created_By`, `modified_By`, `flag`, `holes`) VALUES
+<<<<<<< HEAD
 (120, 'echelon golf', 'Stroke Play', 3, 0, '2022-08-16 18:30:00', '2022-08-18 18:30:00', '2022-08-17 11:29:25', '2022-08-17 11:29:25', '', '', 0, 18),
 (121, 'golf club', 'Stroke Play', 3, 1, '2022-08-17 18:30:00', '2022-08-19 18:30:00', '2022-08-18 06:24:40', '2022-08-18 06:24:40', '', '', 0, 18),
 (122, 'golfClub', 'Stroke Play', 3, 0, '2022-08-17 18:30:00', '2022-08-26 18:30:00', '2022-08-18 06:28:41', '2022-08-18 06:28:41', '', '', 0, 18),
 (123, 'test 2233', 'Stroke Play', 3, 0, '2022-08-17 18:30:00', '2022-08-19 18:30:00', '2022-08-18 10:11:04', '2022-08-18 10:11:04', '', '', 0, 18);
+=======
+(1, 'Testdata', 'Match Play', 4, 0, '2022-08-22 18:30:00', '2022-08-25 18:30:00', '2022-08-23 12:18:49', '2022-08-23 12:18:49', '', '', 0, 18);
+>>>>>>> 4b08fea541da79c76e3a6bd513c7d3cce4d7c309
 
 -- --------------------------------------------------------
 
@@ -1749,6 +1768,7 @@ CREATE TABLE `round_details` (
 --
 
 INSERT INTO `round_details` (`round_Id`, `event_Date`, `cid`, `tourID`, `created_Date`, `modified_Date`, `round_name`) VALUES
+<<<<<<< HEAD
 (126, '2022-02-25 00:00:00', 1, 66, '2022-04-07 06:55:40', '2022-04-07 06:55:40', 'Round1'),
 (127, '2022-02-26 00:00:00', 29, 66, '2022-04-07 06:55:40', '2022-04-07 06:55:40', 'Round2'),
 (128, '2022-03-02 00:00:00', 2, 66, '2022-04-07 06:55:40', '2022-04-07 06:55:40', 'Round3'),
@@ -1889,6 +1909,12 @@ INSERT INTO `round_details` (`round_Id`, `event_Date`, `cid`, `tourID`, `created
 (270, '2022-08-19', 2, 123, '2022-08-18 10:13:27', '2022-08-18 10:13:27', 'Round2'),
 (271, '2022-08-18', 29, 123, '2022-08-18 10:13:27', '2022-08-18 10:13:27', 'Round1'),
 (272, '2022-08-20', 1, 123, '2022-08-18 10:13:27', '2022-08-18 10:13:27', 'Round3');
+=======
+(1, '2022-08-23 00:00:00', 29, 1, '2022-08-23 12:18:49', '2022-08-23 12:18:49', 'Round1'),
+(2, ' 2022-08-24 00:00:00', 2, 1, '2022-08-23 12:18:49', '2022-08-23 12:18:49', 'Round2'),
+(3, ' 2022-08-25 00:00:00', 50, 1, '2022-08-23 12:18:49', '2022-08-23 12:18:49', 'Round3'),
+(4, ' 2022-08-26 00:00:00', 3, 1, '2022-08-23 12:18:49', '2022-08-23 12:18:49', 'Round4');
+>>>>>>> 4b08fea541da79c76e3a6bd513c7d3cce4d7c309
 
 -- --------------------------------------------------------
 
@@ -2804,7 +2830,11 @@ ALTER TABLE `employment`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
+<<<<<<< HEAD
   MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
+=======
+  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+>>>>>>> 4b08fea541da79c76e3a6bd513c7d3cce4d7c309
 
 --
 -- AUTO_INCREMENT for table `event_details`
@@ -2852,7 +2882,11 @@ ALTER TABLE `player_details`
 -- AUTO_INCREMENT for table `round_details`
 --
 ALTER TABLE `round_details`
+<<<<<<< HEAD
   MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=273;
+=======
+  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+>>>>>>> 4b08fea541da79c76e3a6bd513c7d3cce4d7c309
 
 --
 -- AUTO_INCREMENT for table `score_details`

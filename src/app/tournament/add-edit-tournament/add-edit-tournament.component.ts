@@ -46,7 +46,7 @@ export class AddEditTournamentComponent implements OnInit {
     private fb: FormBuilder,
     private service: CommonServiceService,
     public route: Router,
-    public datePipe:DatePipe) {
+    public datePipe: DatePipe) {
 
 
     // this.addCheckboxesToForm();
@@ -65,7 +65,7 @@ export class AddEditTournamentComponent implements OnInit {
         this.eventFormGroup.controls.eventDetailsArr.controls[0].controls.numRounds.disable();
         this.eventFormGroup.controls.eventDetailsArr.controls[0].controls.tournamentName.disable();
         this.eventFormGroup.controls.eventDetailsArr.controls[0].controls.eventType.disable();
-            this.eventFormGroup.controls.eventDetailsArr.controls[0].controls.holes.disable();
+        this.eventFormGroup.controls.eventDetailsArr.controls[0].controls.holes.disable();
         // this.eventFormGroup.controls.eventDetailsArr.controls[0].controls.cname.disable();
 
 
@@ -91,7 +91,7 @@ export class AddEditTournamentComponent implements OnInit {
       const keyName = keys[i];
       if (keyName == 'numRounds') {
         const numRoundString = this.data.details[keyName].toString();
-        formControl[keyName].setValue(numRoundString);  
+        formControl[keyName].setValue(numRoundString);
 
         this.onShownRounds(this.eventFormGroup.controls.eventDetailsArr.controls[0]);
 
@@ -144,7 +144,7 @@ export class AddEditTournamentComponent implements OnInit {
     for (let i = 0; i < selectedEvent.controls.numRounds.value; i++) {
 
       selectedEvent.controls.roundsArray.push(this.roundFormGroupInit(this.data.selectedRound[i]));
-      debugger;
+      ;
       if (this.data?.details) {
         const formControl = selectedEvent?.controls?.roundsArray?.controls[i].controls;
         // const getEventTime = formControl.eventDate.value.getTime();
@@ -248,7 +248,7 @@ export class AddEditTournamentComponent implements OnInit {
         });
 
         this.groupFormGroup.controls.roundId.setValue(this.data.roundList[roundIndex].round_Id);
-        debugger
+        
   
         this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + this.data.roundList[roundIndex].cid).subscribe((APIResponse: any) => {
           if (APIResponse.error == '') {
@@ -426,29 +426,21 @@ export class AddEditTournamentComponent implements OnInit {
   }
 
   saveTournamentDetails() {
-   
-    const data = this.eventFormGroup.getRawValue();
-debugger;
-    data.eventDetailsArr[0]?.roundsArray?.forEach((item: any, index: any) => {
-      let eventDate:any;
-      
-     // const dateNum = new Date(item.eventDate).getDate()+1;
-      //eventDate = new Date(item.eventDate);
-      //eventDate = new Date(eventDate.setDate(dateNum));
-      debugger
-      eventDate=this.datePipe.transform(item.eventDate,"yyyy-MM-dd HH:mm:ss");
 
+    const data = this.eventFormGroup.getRawValue();
+    data.eventDetailsArr[0]?.roundsArray?.forEach((item: any, index: any) => {
+      let eventDate: any;
+      eventDate = this.datePipe.transform(item.eventDate, "yyyy-MM-dd HH:mm:ss");
       if (index == 0) {
-        data.eventDetailsArr[0].startDate = eventDate   
+        data.eventDetailsArr[0].startDate = eventDate;
       }
       if (data.eventDetailsArr[0]?.roundsArray?.length == (index + 1)) {
-        data.eventDetailsArr[0].endDate = eventDate
-      
+        data.eventDetailsArr[0].endDate = eventDate;
       }
-      item['eventDate']=this.datePipe.transform(item.eventDate,"yyyy-MM-dd HH:mm:ss");
+      item['eventDate'] = this.datePipe.transform(item.eventDate, "yyyy-MM-dd HH:mm:ss");
     });
     const url = "/tournament/saveEventDetails";
-    debugger
+    
     this.service.postAPIMethod(url, data).subscribe((response: any) => {
       if (response.error != 'X' && response.response.result.err != "X") {
         if (this.data.isTournamentAdd) {
@@ -483,7 +475,7 @@ debugger;
           sectionName: 'tournament',
           details: '',
           eventType: ['Match Play', 'Stroke Play'],
-          roundsList: ['1', '2', '3', '4', '5', '6', '7','8','9','10'],
+          roundsList: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
           courseList: courseResponse.response.result,
           isTournamentAdd: true
         }
@@ -528,7 +520,7 @@ debugger;
 
 
   groupTabDisplay() {
-debugger
+
     const groupList = this.service.getAPIMethod('/dataApi/getGroupList');
     const approvedPlayerList = this.service.getAPIMethod('/tournament/getApprovedPlayerList?tourId=' + 48);
     forkJoin([groupList, approvedPlayerList]).subscribe((response: any) => {

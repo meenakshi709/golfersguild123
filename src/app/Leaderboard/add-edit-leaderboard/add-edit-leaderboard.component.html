@@ -59,6 +59,12 @@
                             <p>Birdie</p>
                         </div>
                     </div>
+                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
+                        <div class="smallBox">
+                            <h2>{{this.summaryForm.controls.scoreDiff.value}}</h2>
+                            <p>AGS</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -152,7 +158,7 @@
                     <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
                         <mat-form-field appearance="outline">
                             <mat-label>Tee Name* </mat-label>
-                            <mat-select formControlName="teeName" id="teeName" >
+                            <mat-select formControlName="teeName" id="teeName" (selectionChange)="onChangeTeeName($event)" >
                                 <option value="" selected></option>
                                 <mat-option *ngFor="let teeDetails of this.teeNameList" [value]="teeDetails.cRatingId">{{teeDetails.teeName}}
                                 </mat-option>
@@ -295,8 +301,8 @@
                     <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
                         <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
 
-                            <input matInput type="text" placeholder="Score 9" (change)="calculateScoreOut('score9')"
-                                formControlName="score9" maxlength="2" id="score9" />
+                            <input matInput type="text" placeholder="Score 9"  (change)="calculateScoreOut('score9')"
+                            formControlName="score9" maxlength="2" id="score9" />
 
                             <mat-error *ngIf="scoreForm.controls['score9'].errors?.required">
                                 Please enter score 9 value
@@ -390,7 +396,7 @@
 
 
                             <input matInput type="text" placeholder="Score 17" (change)="calculateScoreIn('score17')"
-                                formControlName="score17" maxlength="2" id="score17" />
+                            formControlName="score17" maxlength="2" id="score17" />
 
                             <mat-error *ngIf="scoreForm.controls['score17'].errors?.required">
                                 Please enter score 17 value
@@ -402,7 +408,7 @@
 
 
                             <input matInput type="text" placeholder="Score 18" (change)="calculateScoreIn('score18')"
-                                formControlName="score18" maxlength="2" id="score18" />
+                            formControlName="score18" maxlength="2" id="score18" />
 
                             <mat-error *ngIf="scoreForm.controls['score18'].errors?.required">
                                 Please enter score 18 value

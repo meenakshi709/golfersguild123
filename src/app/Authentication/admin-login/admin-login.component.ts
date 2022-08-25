@@ -34,7 +34,7 @@ export class AdminLoginComponent implements OnInit {
        
       }
       else {
-        debugger;
+        ;
         const tokenKey = APIresponse.response.token ;
         sessionStorage.setItem('access-token',tokenKey);
         localStorage.setItem('userDetails',JSON.stringify(APIresponse.response.result[0]));

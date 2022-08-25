@@ -33,7 +33,7 @@ export class WinnerListingComponent implements OnInit {
       if (data.error == '') {
         this.isLoadingDone = true;
         //  this.roleList.url = '/getRolesList';
-        debugger
+        
       //   var myDate = new Date(data.response.result.startDate);
       //  let startDate= myDate.getDate()+ '/' +(myDate.getMonth() + 1)  + '/' + myDate.getFullYear();
 
