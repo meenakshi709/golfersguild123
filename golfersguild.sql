@@ -3,15 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
-<<<<<<< HEAD
--- Generation Time: Aug 23, 2022 at 09:06 AM
+-- Generation Time: Aug 25, 2022 at 01:46 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
-=======
--- Generation Time: Aug 23, 2022 at 02:19 PM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 8.1.2
->>>>>>> 4b08fea541da79c76e3a6bd513c7d3cce4d7c309
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -960,7 +954,7 @@ INSERT INTO tournament_player_list (tourID,playerID,isPlay,isInvited,isAccepted,
   
  END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `saveTournamentScores` (IN `param_tourId` VARCHAR(50), IN `param_playerId` VARCHAR(50), IN `param_roundId` VARCHAR(50), IN `param_groupId` VARCHAR(50), IN `param_score1` INT(10), IN `param_score2` INT(50), IN `param_score3` INT(50), IN `param_score4` INT(50), IN `param_score5` INT(10), IN `param_score6` INT(10), IN `param_score7` INT(10), IN `param_score8` INT(10), IN `param_score9` INT(10), IN `param_outTotal` INT(10), IN `param_score10` INT(10), IN `param_score11` INT(10), IN `param_score12` INT(10), IN `param_score13` INT(10), IN `param_score14` INT(10), IN `param_score15` INT(10), IN `param_score16` INT(10), IN `param_score17` INT(10), IN `param_score18` INT(10), IN `param_inTotal` INT(10), IN `param_grossTotal` INT(10), IN `param_netTotal` INT(10), IN `param_birdieTotal` INT(10), IN `param_cid` VARCHAR(50), IN `param_hdcp` INT(50), IN `param_enteredHoleCount` INT(50))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `saveTournamentScores` (IN `param_tourId` VARCHAR(50), IN `param_playerId` VARCHAR(50), IN `param_roundId` VARCHAR(50), IN `param_groupId` VARCHAR(50), IN `param_score1` INT(10), IN `param_score2` INT(50), IN `param_score3` INT(50), IN `param_score4` INT(50), IN `param_score5` INT(10), IN `param_score6` INT(10), IN `param_score7` INT(10), IN `param_score8` INT(10), IN `param_score9` INT(10), IN `param_outTotal` INT(10), IN `param_score10` INT(10), IN `param_score11` INT(10), IN `param_score12` INT(10), IN `param_score13` INT(10), IN `param_score14` INT(10), IN `param_score15` INT(10), IN `param_score16` INT(10), IN `param_score17` INT(10), IN `param_score18` INT(10), IN `param_inTotal` INT(10), IN `param_grossTotal` INT(10), IN `param_netTotal` INT(10), IN `param_birdieTotal` INT(10), IN `param_cid` VARCHAR(50), IN `param_hdcp` INT(50), IN `param_enteredHoleCount` INT(50), IN `param_scoreDiff` VARCHAR(250))  BEGIN
 Declare err varchar(2);
 Declare  msg varchar(100);
 DECLARE isRecordExist int;
@@ -973,7 +967,7 @@ SELECT count(*) into isPlayerExist from tournament_score_details WHERE p_id=para
 	if(isPlayerExist=0) then
 
 
-insert into tournament_score_details (tour_id ,p_id ,round_Id  ,score1 ,score2 ,score3 ,score4 ,score5 ,score6 ,score7 ,score8 ,score9 ,outt ,score10 ,score11 ,score12 ,score13 ,score14 ,score15 ,score16 ,score17 ,score18,inn ,gross ,net ,birdie,cid,hdcp,createdDate,holeNum ) values ( `param_tourId` , `param_playerId` , `param_roundId` ,  `param_score1` , `param_score2` , `param_score3` , `param_score4` , `param_score5` , `param_score6` , `param_score7` , `param_score8` , `param_score9` , `param_outTotal` , `param_score10` , `param_score11` , `param_score12` , `param_score13` , `param_score14` , `param_score15` , `param_score16` , `param_score17` , `param_score18` , `param_inTotal` , `param_grossTotal` , `param_netTotal` , `param_birdieTotal`, `param_cid`,`param_hdcp`,now(),`param_enteredHoleCount`);
+insert into tournament_score_details (tour_id ,p_id ,round_Id  ,score1 ,score2 ,score3 ,score4 ,score5 ,score6 ,score7 ,score8 ,score9 ,outt ,score10 ,score11 ,score12 ,score13 ,score14 ,score15 ,score16 ,score17 ,score18,inn ,gross ,net ,birdie,cid,hdcp,createdDate,holeNum,scoreDifferential ) values ( `param_tourId` , `param_playerId` , `param_roundId` ,  `param_score1` , `param_score2` , `param_score3` , `param_score4` , `param_score5` , `param_score6` , `param_score7` , `param_score8` , `param_score9` , `param_outTotal` , `param_score10` , `param_score11` , `param_score12` , `param_score13` , `param_score14` , `param_score15` , `param_score16` , `param_score17` , `param_score18` , `param_inTotal` , `param_grossTotal` , `param_netTotal` , `param_birdieTotal`, `param_cid`,`param_hdcp`,now(),`param_enteredHoleCount`,`param_scoreDiff`);
 set err="";
 set msg="Score inserted successfully";
 
@@ -981,7 +975,7 @@ set msg="Score inserted successfully";
 ELSE
 update  tournament_score_details set score1=param_score1, score2=param_score2,score3=param_score3,score4=param_score4,score5=param_score5,score6=param_score6,
 score7=param_score7,score8=param_score8,score9=param_score9,score10=param_score10,score11=param_score11,score12=param_score12,score13=param_score13,score14=param_score14,score15=param_score15,score16=param_score16,
-score17=param_score17,score18=param_score18, inn=param_inTotal, outt= param_outTotal,gross=param_grossTotal, net=param_netTotal, birdie=param_birdieTotal, hdcp=param_hdcp, holeNum=param_enteredHoleCount where tour_id=param_tourId and round_Id=param_roundId and p_id=param_playerId;
+score17=param_score17,score18=param_score18, inn=param_inTotal, outt= param_outTotal,gross=param_grossTotal, net=param_netTotal, birdie=param_birdieTotal, hdcp=param_hdcp, holeNum=param_enteredHoleCount,scoreDifferential=param_scoreDiff where tour_id=param_tourId and round_Id=param_roundId and p_id=param_playerId;
 
 set err="";
 set msg="Score updated successfully";
@@ -1419,9 +1413,12 @@ CREATE TABLE `course_rating` (
 
 INSERT INTO `course_rating` (`cRatingId`, `courseId`, `teeName`, `courseRating`, `slopeRating`) VALUES
 (9, 1, 'Gold', '12.5', '12.2'),
-(10, 2, 'Silver', '13', '12.9'),
 (11, 3, 'red', '32', '111'),
-(12, 29, 'blue', '34', '112');
+(12, 29, 'blue', '34', '112'),
+(13, 2, 'Black', '74.5', '108'),
+(14, 2, 'Gold', '72.8', '113'),
+(15, 2, 'Blue', '72.8', '102'),
+(16, 2, 'White', '69.6', '105');
 
 -- --------------------------------------------------------
 
@@ -1505,14 +1502,8 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`tourID`, `tournamentName`, `eventType`, `numRounds`, `is_Deleted`, `startDate`, `endDate`, `created_Date`, `modified_Date`, `created_By`, `modified_By`, `flag`, `holes`) VALUES
-<<<<<<< HEAD
-(120, 'echelon golf', 'Stroke Play', 3, 0, '2022-08-16 18:30:00', '2022-08-18 18:30:00', '2022-08-17 11:29:25', '2022-08-17 11:29:25', '', '', 0, 18),
-(121, 'golf club', 'Stroke Play', 3, 1, '2022-08-17 18:30:00', '2022-08-19 18:30:00', '2022-08-18 06:24:40', '2022-08-18 06:24:40', '', '', 0, 18),
-(122, 'golfClub', 'Stroke Play', 3, 0, '2022-08-17 18:30:00', '2022-08-26 18:30:00', '2022-08-18 06:28:41', '2022-08-18 06:28:41', '', '', 0, 18),
-(123, 'test 2233', 'Stroke Play', 3, 0, '2022-08-17 18:30:00', '2022-08-19 18:30:00', '2022-08-18 10:11:04', '2022-08-18 10:11:04', '', '', 0, 18);
-=======
-(1, 'Testdata', 'Match Play', 4, 0, '2022-08-22 18:30:00', '2022-08-25 18:30:00', '2022-08-23 12:18:49', '2022-08-23 12:18:49', '', '', 0, 18);
->>>>>>> 4b08fea541da79c76e3a6bd513c7d3cce4d7c309
+(1, 'golf club', 'Stroke Play', 3, 0, '2022-08-24 18:30:00', '2022-08-26 18:30:00', '2022-08-25 07:12:41', '2022-08-25 07:12:41', '', '', 0, 18),
+(2, 'golf plus', 'Stroke Play', 2, 0, '2022-08-26 18:30:00', '2022-08-27 18:30:00', '2022-08-25 09:06:56', '2022-08-25 09:06:56', '', '', 0, 18);
 
 -- --------------------------------------------------------
 
@@ -1768,153 +1759,11 @@ CREATE TABLE `round_details` (
 --
 
 INSERT INTO `round_details` (`round_Id`, `event_Date`, `cid`, `tourID`, `created_Date`, `modified_Date`, `round_name`) VALUES
-<<<<<<< HEAD
-(126, '2022-02-25 00:00:00', 1, 66, '2022-04-07 06:55:40', '2022-04-07 06:55:40', 'Round1'),
-(127, '2022-02-26 00:00:00', 29, 66, '2022-04-07 06:55:40', '2022-04-07 06:55:40', 'Round2'),
-(128, '2022-03-02 00:00:00', 2, 66, '2022-04-07 06:55:40', '2022-04-07 06:55:40', 'Round3'),
-(129, '2022-04-25 00:00:00', 29, 67, '2022-04-26 06:44:53', '2022-04-26 06:44:53', 'Round1'),
-(130, '2022-04-27 00:00:00', 3, 67, '2022-04-26 06:44:53', '2022-04-26 06:44:53', 'Round3'),
-(131, '2022-04-26 00:00:00', 1, 67, '2022-04-26 06:44:53', '2022-04-26 06:44:53', 'Round2'),
-(132, '2022-04-28 00:00:00', 1, 68, '2022-04-27 06:07:39', '2022-04-27 06:07:39', 'Round3'),
-(133, '2022-04-27 00:00:00', 3, 68, '2022-04-27 06:07:39', '2022-04-27 06:07:39', 'Round2'),
-(134, '2022-04-26 00:00:00', 2, 68, '2022-04-27 06:07:39', '2022-04-27 06:07:39', 'Round1'),
-(135, '2022-05-19 00:00:00', 3, 69, '2022-05-13 06:48:55', '2022-05-13 06:48:55', 'Round1'),
-(136, '2022-05-17 00:00:00', 3, 70, '2022-05-13 06:51:33', '2022-05-13 06:51:33', 'Round1'),
-(137, '2022-05-26 00:00:00', 29, 70, '2022-05-13 06:51:33', '2022-05-13 06:51:33', 'Round2'),
-(138, '2022-05-25 00:00:00', 2, 71, '2022-05-24 06:11:59', '2022-05-24 06:11:59', 'Round1'),
-(139, '2022-05-27 00:00:00', 3, 71, '2022-05-24 06:11:59', '2022-05-24 06:11:59', 'Round2'),
-(140, '2022-05-25 00:00:00', 1, 0, '2022-05-24 06:56:54', '2022-05-24 06:56:54', 'Round1'),
-(141, '2022-05-25 00:00:00', 1, 72, '2022-05-24 06:56:59', '2022-05-24 06:56:59', 'Round1'),
-(142, '2022-05-27 00:00:00', 3, 0, '2022-05-24 07:07:11', '2022-05-24 07:07:11', 'Round1'),
-(143, '2022-05-26 00:00:00', 3, 0, '2022-05-24 07:10:26', '2022-05-24 07:10:26', 'Round1'),
-(144, '2022-05-27 00:00:00', 1, 0, '2022-05-24 07:16:25', '2022-05-24 07:16:25', 'Round1'),
-(145, '2022-05-27 00:00:00', 1, 0, '2022-05-24 07:19:20', '2022-05-24 07:19:20', 'Round1'),
-(146, '2022-05-27 00:00:00', 3, 0, '2022-05-25 12:38:23', '2022-05-25 12:38:23', 'Round1'),
-(147, '2022-05-26 00:00:00', 2, 73, '2022-05-26 12:01:26', '2022-05-26 12:01:26', 'Round1'),
-(148, '2022-05-27 00:00:00', 1, 73, '2022-05-26 12:01:26', '2022-05-26 12:01:26', 'Round2'),
-(149, '2022-05-30 00:00:00', 1, 74, '2022-05-30 06:04:10', '2022-05-30 06:04:10', 'Round1'),
-(150, '2022-06-02 00:00:00', 1, 74, '2022-05-30 06:04:10', '2022-05-30 06:04:10', 'Round3'),
-(151, '2022-05-31 00:00:00', 2, 74, '2022-05-30 06:04:10', '2022-05-30 06:04:10', 'Round2'),
-(152, '2022-05-16 00:00:00', 3, 0, '2022-06-01 09:08:05', '2022-06-01 09:08:05', 'Round1'),
-(153, '2022-05-26 00:00:00', 29, 0, '2022-06-01 09:08:07', '2022-06-01 09:08:07', 'Round2'),
-(154, '2022-05-31 00:00:00', 2, 75, '2022-06-01 09:09:48', '2022-06-01 09:09:48', 'Round1'),
-(155, '2022-06-01 00:00:00', 2, 75, '2022-06-01 09:09:48', '2022-06-01 09:09:48', 'Round2'),
-(156, '2022-06-03 00:00:00', 1, 75, '2022-06-01 09:09:49', '2022-06-01 09:09:49', 'Round3'),
-(157, '2022-06-02 00:00:00', 2, 76, '2022-06-01 09:50:27', '2022-06-01 09:50:27', 'Round1'),
-(158, '2022-06-03 00:00:00', 1, 76, '2022-06-01 09:50:28', '2022-06-01 09:50:28', 'Round2'),
-(159, '2022-06-01 00:00:00', 2, 77, '2022-06-01 12:02:26', '2022-06-01 12:02:26', 'Round1'),
-(160, '2022-06-03 00:00:00', 2, 77, '2022-06-01 12:02:26', '2022-06-01 12:02:26', 'Round2'),
-(161, '2022-06-29 00:00:00', 3, 0, '2022-06-03 10:21:55', '2022-06-03 10:21:55', 'Round1'),
-(162, '2022-06-29 00:00:00', 3, 0, '2022-06-03 10:24:28', '2022-06-03 10:24:28', 'Round1'),
-(163, '2022-06-29 00:00:00', 3, 72, '2022-06-03 10:25:07', '2022-06-03 10:25:07', 'Round1'),
-(164, '2022-05-24 00:00:00', 1, 72, '2022-06-03 10:33:23', '2022-06-03 10:33:23', 'Round1'),
-(165, '2022-05-24 00:00:00', 1, 72, '2022-06-03 10:35:14', '2022-06-03 10:35:14', 'Round1'),
-(166, '2022-06-06 00:00:00', 29, 78, '2022-06-06 06:03:42', '2022-06-06 06:03:42', 'Round1'),
-(167, '2022-06-08 00:00:00', 3, 78, '2022-06-06 06:03:42', '2022-06-06 06:03:42', 'Round3'),
-(168, '2022-06-07 00:00:00', 2, 78, '2022-06-06 06:03:42', '2022-06-06 06:03:42', 'Round2'),
-(169, '2022-06-27 00:00:00', 2, 79, '2022-06-06 06:07:40', '2022-06-06 06:07:40', 'Round1'),
-(170, '2022-06-28 00:00:00', 2, 79, '2022-06-06 06:07:40', '2022-06-06 06:07:40', 'Round2'),
-(171, '2022-06-07 00:00:00', 29, 80, '2022-06-06 06:12:42', '2022-06-06 06:12:42', 'Round1'),
-(172, '2022-06-09 00:00:00', 2, 80, '2022-06-06 06:12:42', '2022-06-06 06:12:42', 'Round2'),
-(173, '2022-06-10 00:00:00', 2, 81, '2022-06-06 06:16:08', '2022-06-06 06:16:08', 'Round1'),
-(174, '2022-06-13 00:00:00', 2, 81, '2022-06-06 06:16:08', '2022-06-06 06:16:08', 'Round2'),
-(175, '2022-06-06 00:00:00', 2, 82, '2022-06-06 06:22:23', '2022-06-06 06:22:23', 'Round1'),
-(176, '2022-06-07 00:00:00', 1, 82, '2022-06-06 06:22:23', '2022-06-06 06:22:23', 'Round2'),
-(177, '2022-06-06 00:00:00', 29, 83, '2022-06-06 06:26:56', '2022-06-06 06:26:56', 'Round1'),
-(178, '2022-06-07 00:00:00', 2, 83, '2022-06-06 06:26:56', '2022-06-06 06:26:56', 'Round2'),
-(179, '2022-06-07 00:00:00', 2, 84, '2022-06-07 05:59:10', '2022-06-07 05:59:10', 'Round1'),
-(180, '2022-06-08 00:00:00', 2, 85, '2022-06-07 06:18:04', '2022-06-07 06:18:04', 'Round1'),
-(181, '2022-06-09 00:00:00', 1, 85, '2022-06-07 06:18:04', '2022-06-07 06:18:04', 'Round2'),
-(182, '2022-06-09 00:00:00', 2, 86, '2022-06-07 06:46:40', '2022-06-07 06:46:40', 'Round1'),
-(183, '2022-06-07 00:00:00', 2, 87, '2022-06-07 07:04:55', '2022-06-07 07:04:55', 'Round1'),
-(184, '2022-06-29 00:00:00', 1, 87, '2022-06-07 07:04:55', '2022-06-07 07:04:55', 'Round3'),
-(185, '2022-06-08 00:00:00', 2, 87, '2022-06-07 07:04:55', '2022-06-07 07:04:55', 'Round2'),
-(186, '2022-06-05 00:00:00', 29, 88, '2022-06-07 07:05:39', '2022-06-07 07:05:39', 'Round1'),
-(187, '2022-06-06 00:00:00', 2, 88, '2022-06-07 07:05:39', '2022-06-07 07:05:39', 'Round2'),
-(188, '2022-06-07 00:00:00', 3, 88, '2022-06-07 07:05:39', '2022-06-07 07:05:39', 'Round3'),
-(189, '2022-06-07 00:00:00', 2, 87, '2022-06-07 07:28:38', '2022-06-07 07:28:38', 'Round1'),
-(190, '2022-06-08 00:00:00', 2, 87, '2022-06-07 07:28:38', '2022-06-07 07:28:38', 'Round2'),
-(191, '2022-06-29 00:00:00', 1, 87, '2022-06-07 07:28:38', '2022-06-07 07:28:38', 'Round3'),
-(192, '2022-06-11 00:00:00', 2, 89, '2022-06-10 07:26:08', '2022-06-10 07:26:08', 'Round2'),
-(193, '2022-06-10 00:00:00', 29, 89, '2022-06-10 07:26:08', '2022-06-10 07:26:08', 'Round1'),
-(194, '2022-06-16 00:00:00', 2, 90, '2022-06-10 11:25:17', '2022-06-10 11:25:17', 'Round2'),
-(195, '2022-06-10 00:00:00', 2, 90, '2022-06-10 11:25:17', '2022-06-10 11:25:17', 'Round1'),
-(196, '2022-06-10 00:00:00', 2, 91, '2022-06-10 11:51:44', '2022-06-10 11:51:44', 'Round1'),
-(197, '2022-06-12 00:00:00', 1, 91, '2022-06-10 11:51:44', '2022-06-10 11:51:44', 'Round2'),
-(198, '2022-06-13 00:00:00', 29, 92, '2022-06-13 07:20:55', '2022-06-13 07:20:55', 'Round1'),
-(199, '2022-06-20 00:00:00', 1, 92, '2022-06-13 07:20:55', '2022-06-13 07:20:55', 'Round3'),
-(200, '2022-06-15 00:00:00', 2, 92, '2022-06-13 07:20:55', '2022-06-13 07:20:55', 'Round2'),
-(201, '2022-06-17 00:00:00', 29, 93, '2022-06-17 06:20:30', '2022-06-17 06:20:30', 'Round1'),
-(202, '2022-06-17 00:00:00', 29, 0, '2022-06-17 06:20:31', '2022-06-17 06:20:31', 'Round1'),
-(203, '2022-06-18 00:00:00', 1, 93, '2022-06-17 06:20:31', '2022-06-17 06:20:31', 'Round2'),
-(204, '2022-06-18 00:00:00', 1, 0, '2022-06-17 06:20:31', '2022-06-17 06:20:31', 'Round2'),
-(205, '2022-06-20 00:00:00', 3, 93, '2022-06-17 06:20:31', '2022-06-17 06:20:31', 'Round3'),
-(206, '2022-06-20 00:00:00', 3, 0, '2022-06-17 06:20:31', '2022-06-17 06:20:31', 'Round3'),
-(207, '2022-07-28 00:00:00', 29, 94, '2022-07-04 11:42:44', '2022-07-04 11:42:44', 'Round1'),
-(208, '2022-07-04 00:00:00', 3, 0, '2022-07-04 11:50:42', '2022-07-04 11:50:42', 'Round1'),
-(209, '2022-07-04 00:00:00', 3, 95, '2022-07-04 11:50:55', '2022-07-04 11:50:55', 'Round1'),
-(210, '2022-07-12 00:00:00', 2, 96, '2022-07-12 06:18:50', '2022-07-12 06:18:50', 'Round1'),
-(211, '2022-07-13 00:00:00', 3, 96, '2022-07-12 06:18:50', '2022-07-12 06:18:50', 'Round2'),
-(212, '2022-07-14 00:00:00', 29, 97, '2022-07-15 07:01:15', '2022-07-15 07:01:15', 'Round1'),
-(213, '2022-07-15 00:00:00', 1, 97, '2022-07-15 07:01:15', '2022-07-15 07:01:15', 'Round2'),
-(214, '2022-07-22 00:00:00', 2, 98, '2022-07-15 10:25:25', '2022-07-15 10:25:25', 'Round1'),
-(215, '2022-07-29 00:00:00', 3, 98, '2022-07-15 10:25:25', '2022-07-15 10:25:25', 'Round2'),
-(216, '2022-07-19 00:00:00', 29, 99, '2022-07-18 10:34:31', '2022-07-18 10:34:31', 'Round1'),
-(217, '2022-07-27 00:00:00', 3, 99, '2022-07-18 10:34:31', '2022-07-18 10:34:31', 'Round2'),
-(218, '2022-07-22 00:00:00', 3, 100, '2022-07-18 10:36:50', '2022-07-18 10:36:50', 'Round1'),
-(219, '2022-07-18 00:00:00', 2, 101, '2022-07-18 10:43:57', '2022-07-18 10:43:57', 'Round1'),
-(220, '2022-07-26 00:00:00', 3, 102, '2022-07-27 05:51:49', '2022-07-27 05:51:49', 'Round1'),
-(221, '2022-07-26 00:00:00', 29, 103, '2022-07-27 06:16:57', '2022-07-27 06:16:57', 'Round1'),
-(222, '2022-07-27 00:00:00', 3, 103, '2022-07-27 06:16:57', '2022-07-27 06:16:57', 'Round2'),
-(223, '2022-07-27 00:00:00', 29, 104, '2022-07-27 06:19:32', '2022-07-27 06:19:32', 'Round1'),
-(224, '2022-07-26 00:00:00', 29, 105, '2022-07-27 06:27:54', '2022-07-27 06:27:54', 'Round1'),
-(225, '2022-07-26 00:00:00', 29, 106, '2022-07-27 06:40:21', '2022-07-27 06:40:21', 'Round1'),
-(226, '2022-07-27 00:00:00', 3, 106, '2022-07-27 06:40:21', '2022-07-27 06:40:21', 'Round2'),
-(227, '2022-08-01 00:00:00', 3, 107, '2022-08-01 06:10:31', '2022-08-01 06:10:31', 'Round2'),
-(228, '2022-07-31 00:00:00', 29, 107, '2022-08-01 06:10:31', '2022-08-01 06:10:31', 'Round1'),
-(229, '2022-08-03 00:00:00', 2, 108, '2022-08-01 06:16:30', '2022-08-01 06:16:30', 'Round1'),
-(230, '2022-08-04 00:00:00', 1, 108, '2022-08-01 06:16:30', '2022-08-01 06:16:30', 'Round2'),
-(231, '2022-08-03 00:00:00', 29, 109, '2022-08-01 06:23:20', '2022-08-01 06:23:20', 'Round1'),
-(232, '2022-08-04 00:00:00', 3, 109, '2022-08-01 06:23:20', '2022-08-01 06:23:20', 'Round2'),
-(233, '2022-08-04 00:00:00', 2, 110, '2022-08-01 06:34:56', '2022-08-01 06:34:56', 'Round2'),
-(234, '2022-08-03 00:00:00', 29, 110, '2022-08-01 06:34:56', '2022-08-01 06:34:56', 'Round1'),
-(242, '0000-00-00', 29, 0, '2022-08-01 07:17:04', '2022-08-01 07:17:04', 'Round1'),
-(243, '0000-00-00', 2, 0, '2022-08-01 07:17:04', '2022-08-01 07:17:04', 'Round2'),
-(244, '0000-00-00', 29, 115, '2022-08-01 07:18:47', '2022-08-01 07:18:47', 'Round1'),
-(245, '0000-00-00', 1, 115, '2022-08-01 07:18:47', '2022-08-01 07:18:47', 'Round2'),
-(246, '2022-08-04', 29, 116, '2022-08-01 07:20:11', '2022-08-01 07:20:11', 'Round1'),
-(247, '2022-08-05', 1, 116, '2022-08-01 07:20:11', '2022-08-01 07:20:11', 'Round2'),
-(248, '2022-08-04', 2, 117, '2022-08-03 11:37:30', '2022-08-03 11:37:30', 'Round2'),
-(249, '2022-08-03', 29, 117, '2022-08-03 11:37:30', '2022-08-03 11:37:30', 'Round1'),
-(250, '2022-08-03', 1, 0, '2022-08-03 12:07:34', '2022-08-03 12:07:34', 'Round1'),
-(251, '2022-08-03', 1, 118, '2022-08-03 12:07:34', '2022-08-03 12:07:34', 'Round1'),
-(252, '2022-08-04', 29, 118, '2022-08-03 12:07:34', '2022-08-03 12:07:34', 'Round2'),
-(253, '2022-08-03', 1, 0, '2022-08-03 12:07:35', '2022-08-03 12:07:35', 'Round1'),
-(254, '2022-08-03', 1, 0, '2022-08-03 12:07:35', '2022-08-03 12:07:35', 'Round1'),
-(255, '2022-08-04', 29, 0, '2022-08-03 12:07:35', '2022-08-03 12:07:35', 'Round2'),
-(256, '2022-08-04', 29, 0, '2022-08-03 12:07:35', '2022-08-03 12:07:35', 'Round2'),
-(257, '2022-08-04', 29, 0, '2022-08-03 12:07:35', '2022-08-03 12:07:35', 'Round2'),
-(258, '2022-08-17', 29, 119, '2022-08-17 09:23:08', '2022-08-17 09:23:08', 'Round1'),
-(259, '2022-08-18', 3, 119, '2022-08-17 09:23:08', '2022-08-17 09:23:08', 'Round2'),
-(260, '2022-08-19', 2, 119, '2022-08-17 09:23:08', '2022-08-17 09:23:08', 'Round3'),
-(261, '2022-08-17', 29, 120, '2022-08-17 11:29:25', '2022-08-17 11:29:25', 'Round1'),
-(262, '2022-08-18', 29, 120, '2022-08-17 11:29:25', '2022-08-17 11:29:25', 'Round2'),
-(263, '2022-08-19', 2, 120, '2022-08-17 11:29:25', '2022-08-17 11:29:25', 'Round3'),
-(264, '2022-08-18', 29, 121, '2022-08-18 06:24:40', '2022-08-18 06:24:40', 'Round1'),
-(265, '2022-08-19', 2, 121, '2022-08-18 06:24:40', '2022-08-18 06:24:40', 'Round2'),
-(266, '2022-08-20', 1, 121, '2022-08-18 06:24:40', '2022-08-18 06:24:40', 'Round3'),
-(267, '2022-08-18', 2, 122, '2022-08-18 06:28:41', '2022-08-18 06:28:41', 'Round1'),
-(268, '2022-08-20', 2, 122, '2022-08-18 06:28:41', '2022-08-18 06:28:41', 'Round2'),
-(269, '2022-08-27', 3, 122, '2022-08-18 06:28:41', '2022-08-18 06:28:41', 'Round3'),
-(270, '2022-08-19', 2, 123, '2022-08-18 10:13:27', '2022-08-18 10:13:27', 'Round2'),
-(271, '2022-08-18', 29, 123, '2022-08-18 10:13:27', '2022-08-18 10:13:27', 'Round1'),
-(272, '2022-08-20', 1, 123, '2022-08-18 10:13:27', '2022-08-18 10:13:27', 'Round3');
-=======
-(1, '2022-08-23 00:00:00', 29, 1, '2022-08-23 12:18:49', '2022-08-23 12:18:49', 'Round1'),
-(2, ' 2022-08-24 00:00:00', 2, 1, '2022-08-23 12:18:49', '2022-08-23 12:18:49', 'Round2'),
-(3, ' 2022-08-25 00:00:00', 50, 1, '2022-08-23 12:18:49', '2022-08-23 12:18:49', 'Round3'),
-(4, ' 2022-08-26 00:00:00', 3, 1, '2022-08-23 12:18:49', '2022-08-23 12:18:49', 'Round4');
->>>>>>> 4b08fea541da79c76e3a6bd513c7d3cce4d7c309
+(1, '2022-08-25 00:00:00', 2, 1, '2022-08-25 07:12:41', '2022-08-25 07:12:41', 'Round1'),
+(2, ' 2022-08-26 00:00:00', 2, 1, '2022-08-25 07:12:41', '2022-08-25 07:12:41', 'Round2'),
+(3, ' 2022-08-27 00:00:00', 29, 1, '2022-08-25 07:12:41', '2022-08-25 07:12:41', 'Round3'),
+(4, '2022-08-27 00:00:00', 2, 2, '2022-08-25 09:06:56', '2022-08-25 09:06:56', 'Round1'),
+(5, ' 2022-08-28 00:00:00', 1, 2, '2022-08-25 09:06:56', '2022-08-25 09:06:56', 'Round2');
 
 -- --------------------------------------------------------
 
@@ -2247,9 +2096,8 @@ CREATE TABLE `tournament_group_details` (
 --
 
 INSERT INTO `tournament_group_details` (`groupId`, `groupName`, `tee_Number`, `tee_Time`, `tourID`, `round_Id`) VALUES
-(3, 'Group1', 1, '10:10', 120, 262),
-(6, 'Group1', 1, '11:11', 122, 268),
-(7, 'Group2', 2, '12:00', 122, 268);
+(3, 'Group1', 9, '12:11', 2, 5),
+(5, 'Group1', 12, '12:12', 1, 3);
 
 --
 -- Triggers `tournament_group_details`
@@ -2280,9 +2128,9 @@ CREATE TABLE `tournament_group_details_archive` (
 --
 
 INSERT INTO `tournament_group_details_archive` (`groupId`, `groupName`, `tee_Number`, `tee_Time`, `tourID`, `round_Id`) VALUES
-(1, 'Group1', 9, '22:10', 120, 261),
-(4, 'Group1', 1, '12:12', 122, 267),
-(5, 'Group2', 2, '22:10', 122, 267);
+(1, 'Group1', 14, '00:12', 1, 1),
+(2, 'Group1', 15, '12:10', 2, 4),
+(4, 'Group1', 15, '12:12', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -2306,12 +2154,11 @@ CREATE TABLE `tournament_group_player_details` (
 --
 
 INSERT INTO `tournament_group_player_details` (`t_player_Id`, `tournamentId`, `groupName`, `playerId`, `tee_time`, `isPlay`, `isWithdraw`, `roundId`) VALUES
-(1, 120, 'Group1', 6, '22:10', 1, 0, '261'),
-(2, 120, 'Group1', 6, '11:00', 0, 0, '262'),
-(4, 122, 'Group1', 6, '12:12', 1, 0, '267'),
-(5, 122, 'Group2', 19, '22:10', 1, 0, '267'),
-(6, 122, 'Group1', 6, '11:11', 0, 0, '268'),
-(7, 122, 'Group2', 19, '12:00', 0, 0, '268');
+(1, 1, 'Group1', 6, '00:12', 0, 0, '1'),
+(2, 2, 'Group1', 6, '12:10', 0, 0, '4'),
+(3, 2, 'Group1', 6, '12:11', 0, 0, '5'),
+(4, 1, 'Group1', 6, '12:12', 0, 0, '2'),
+(5, 1, 'Group1', 6, '12:12', 0, 0, '3');
 
 -- --------------------------------------------------------
 
@@ -2337,13 +2184,8 @@ CREATE TABLE `tournament_player_list` (
 --
 
 INSERT INTO `tournament_player_list` (`tour_player_id`, `tourID`, `playerID`, `isPlay`, `isInvited`, `isAccepted`, `isApproved`, `isRejected`, `isWithdraw`, `created_Date`) VALUES
-(125, 120, 6, 0, 1, 1, 1, 0, 0, '2022-08-17'),
-(126, 121, 6, 0, 1, 0, 0, 0, 0, '2022-08-18'),
-(127, 121, 19, 0, 1, 0, 0, 0, 0, '2022-08-18'),
-(128, 121, 6, 0, 1, 0, 0, 0, 0, '2022-08-18'),
-(129, 122, 19, 0, 1, 1, 1, 0, 0, '2022-08-18'),
-(130, 122, 6, 0, 1, 1, 1, 0, 0, '2022-08-18'),
-(131, 123, 6, 0, 1, 0, 0, 0, 0, '2022-08-18');
+(4, 1, 6, 0, 0, 1, 1, 0, 0, '2022-08-25'),
+(5, 2, 6, 0, 1, 1, 1, 0, 0, '2022-08-25');
 
 -- --------------------------------------------------------
 
@@ -2382,6 +2224,7 @@ CREATE TABLE `tournament_score_details` (
   `birdie` int(11) NOT NULL,
   `holeNum` int(10) DEFAULT 0,
   `cid` varchar(4) NOT NULL,
+  `scoreDifferential` varchar(250) NOT NULL,
   `createdDate` datetime DEFAULT NULL,
   `isDeleted` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -2390,10 +2233,12 @@ CREATE TABLE `tournament_score_details` (
 -- Dumping data for table `tournament_score_details`
 --
 
-INSERT INTO `tournament_score_details` (`tour_score_id`, `p_id`, `tour_id`, `score1`, `score2`, `score3`, `score4`, `score5`, `score6`, `score7`, `score8`, `score9`, `score10`, `score11`, `score12`, `score13`, `score14`, `score15`, `score16`, `score17`, `score18`, `round_Id`, `hdcp`, `inn`, `outt`, `gross`, `net`, `birdie`, `holeNum`, `cid`, `createdDate`, `isDeleted`) VALUES
-(1, 6, 120, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 5, 5, 5, 5, 261, 5, 41, 45, 86, 81, 0, 17, '2', '2022-08-17 17:51:34', 0),
-(2, 6, 122, 4, 5, 6, 4, 5, 6, 4, 5, 6, 4, 5, 4, 4, 4, 4, 4, 5, 5, 267, 10, 39, 45, 84, 74, 0, 17, '2', '2022-08-18 12:04:12', 0),
-(3, 19, 122, 5, 6, 5, 6, 7, 7, 6, 5, 4, 5, 6, 6, 4, 3, 6, 6, 3, 2, 267, 7, 41, 51, 92, 85, 0, 17, '29', '2022-08-18 12:06:08', 0);
+INSERT INTO `tournament_score_details` (`tour_score_id`, `p_id`, `tour_id`, `score1`, `score2`, `score3`, `score4`, `score5`, `score6`, `score7`, `score8`, `score9`, `score10`, `score11`, `score12`, `score13`, `score14`, `score15`, `score16`, `score17`, `score18`, `round_Id`, `hdcp`, `inn`, `outt`, `gross`, `net`, `birdie`, `holeNum`, `cid`, `scoreDifferential`, `createdDate`, `isDeleted`) VALUES
+(1, 6, 1, 5, 6, 4, 5, 6, 5, 4, 5, 6, 5, 4, 5, 6, 5, 4, 3, 2, 1, 1, 15, 35, 46, 81, 66, 3, 17, '2', '6.8', '2022-08-25 14:11:09', 0),
+(2, 6, 2, 5, 4, 5, 4, 5, 4, 5, 6, 8, 5, 4, 6, 4, 4, 4, 6, 6, 5, 4, 12, 44, 46, 90, 78, 1, 17, '2', '16.2', '2022-08-25 14:43:53', 0),
+(3, 6, 2, 5, 6, 4, 5, 6, 7, 6, 5, 4, 4, 4, 4, 5, 6, 6, 6, 5, 4, 5, 12, 44, 48, 92, 80, 3, 17, '1', '736.4', '2022-08-25 15:09:30', 0),
+(4, 6, 1, 5, 4, 5, 6, 5, 6, 7, 7, 6, 5, 5, 6, 5, 6, 6, 5, 4, 5, 2, 14, 47, 51, 98, 84, 0, 17, '2', '27.9', '2022-08-25 15:14:46', 0),
+(5, 6, 1, 5, 4, 5, 6, 7, 6, 5, 6, 7, 7, 7, 6, 5, 5, 5, 4, 4, 7, 3, 12, 50, 51, 101, 89, 1, 17, '29', '67.6', '2022-08-25 15:19:17', 0);
 
 -- --------------------------------------------------------
 
@@ -2812,7 +2657,7 @@ ALTER TABLE `courses`
 -- AUTO_INCREMENT for table `course_rating`
 --
 ALTER TABLE `course_rating`
-  MODIFY `cRatingId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `cRatingId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `course_tee`
@@ -2830,11 +2675,7 @@ ALTER TABLE `employment`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-<<<<<<< HEAD
-  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
-=======
-  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
->>>>>>> 4b08fea541da79c76e3a6bd513c7d3cce4d7c309
+  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `event_details`
@@ -2882,11 +2723,7 @@ ALTER TABLE `player_details`
 -- AUTO_INCREMENT for table `round_details`
 --
 ALTER TABLE `round_details`
-<<<<<<< HEAD
-  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=273;
-=======
-  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
->>>>>>> 4b08fea541da79c76e3a6bd513c7d3cce4d7c309
+  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `score_details`
@@ -2928,25 +2765,25 @@ ALTER TABLE `tournament_details`
 -- AUTO_INCREMENT for table `tournament_group_details`
 --
 ALTER TABLE `tournament_group_details`
-  MODIFY `groupId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `groupId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tournament_group_player_details`
 --
 ALTER TABLE `tournament_group_player_details`
-  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tournament_player_list`
 --
 ALTER TABLE `tournament_player_list`
-  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tournament_score_details`
 --
 ALTER TABLE `tournament_score_details`
-  MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tournament_winners`
