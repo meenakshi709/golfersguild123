@@ -10,11 +10,11 @@ const mail = require('../restapi/utilities/mailService');
 /**
  * User login api.
  * @requiredField email,password
- * @Developer Echelon Team
+ * @Developer Meenakshi
  */
 
 
-//get all course
+//save all events and round
 
 
 tourCtrl.saveEventDetails = (req, res) => {
@@ -24,11 +24,10 @@ tourCtrl.saveEventDetails = (req, res) => {
             let roundData = "";
             data.eventDetailsArr[0].roundsArray.filter((roundeDetails, index) => {
                 const roundName = 'Round' + (index + 1);
-                if(index==0)
-                {
+                if (index == 0) {
                     roundData = `${roundeDetails.eventDate}/${roundeDetails.cname}/${roundName}`;
-                }else{
-                    roundData = roundData+','+` ${roundeDetails.eventDate}/${roundeDetails.cname}/${roundName}`;         
+                } else {
+                    roundData = roundData + ',' + ` ${roundeDetails.eventDate}/${roundeDetails.cname}/${roundName}`;
                 }
             });
             data.eventDetailsArr.filter((item, eventIndex) => {
@@ -42,7 +41,7 @@ tourCtrl.saveEventDetails = (req, res) => {
                         releaseconnection();
                         res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
                     }
-                  
+
                 });
 
             });
@@ -69,27 +68,28 @@ tourCtrl.tournamentInvitation = (req, res) => {
                         res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
                     } else {
 
-                        if (results[0][0].err == "") {
-                            let option = {
-                                template: "tourInvite.ejs",
-                                subject: "Tournament Invitation",
-                                name: results[0][0].usrName,
-                                tourName: results[0][0].tourName,
-                                tourDate: results[0][0].tourDate
-                            }
-                            mail.sendEmail(results[0][0].emailAddress, option).then((response) => {
-                                console.log(response)
-                                // res.end(JSON.stringify({ "err": "", "response":{"msg": "password has been sent successfully to your registered Email ID" }}));
-                            }).catch((error) => {
-                                console
-                                res.end(JSON.stringify({ "error": "X", "response": { "msg": "Contact Developer " + error } }));
-                            });
-                        }
-
+                        // if (results[0][0].err == "") {
+                        //     let option = {
+                        //         template: "tourInvite.ejs",
+                        //         subject: "Tournament Invitation",
+                        //         name: results[0][0].usrName,
+                        //         tourName: results[0][0].tourName,
+                        //         tourDate: results[0][0].tourDate
+                        //     }
+                        // mail.sendEmail(results[0][0].emailAddress, option).then((response) => {
+                        //     console.log(response)
+                        //     // res.end(JSON.stringify({ "err": "", "response":{"msg": "password has been sent successfully to your registered Email ID" }}));
+                        // }).catch((error) => {
+                        //     console
+                        //     res.end(JSON.stringify({ "error": "X", "response": { "msg": "Contact Developer " + error } }));
+                        // });
                         if (data.selectedPlayerList.length == index + 1) {
                             res.end(JSON.stringify({ "error": "", "response": { "result": results[0][0] } }));
                         }
                     }
+
+
+
                 });
             });
         }
@@ -147,7 +147,7 @@ tourCtrl.invitationAcceptDenyById = (req, res) => {
 
 tourCtrl.tournamnetPlayWithdrawById = (req, res) => {
     try {
-        let sql = `call tournament_Play_or_withdraw("${req.body.tournamentId}","${req.body.isPlay}","${req.body.isWithdraw}","${req.body.playerId}")`;
+        let sql = `call tournament_Play_or_withdraw("${req.body.tournamentId}","${req.body.isPlay}","${req.body.isWithdraw}","${req.body.playerId}","${req.body.roundId}")`;
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {
@@ -374,7 +374,7 @@ tourCtrl.saveTournamentGroupDetails = (req, res) => {
                             } else {
                                 item.playerDetails.filter((playerDetail, index) => {
 
-                                    let round = `call saveTournamentGroupPlayerDetails("${data.tourId}","${item.group}","${playerDetail.id}","${playerDetail.teeTime}")`;
+                                    let round = `call saveTournamentGroupPlayerDetails("${data.tourId}","${item.group}","${playerDetail.id}","${playerDetail.teeTime}","${data.roundId}")`;
                                     connection.query(round, function (error, eventDetails) {
                                         if (error) {
                                             res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
@@ -642,7 +642,7 @@ tourCtrl.getPlayerDetailForScore = (req, res) => {
 tourCtrl.savetournamentScore = (req, res) => {
     try {
         const data = req.body;
-        let sql = `call saveTournamentScores("${data.tour_id}","${data.p_id}","${data.round_Id}","${data.groupId}","${data.score1}","${data.score2}","${data.score3}","${data.score4}","${data.score5}","${data.score6}","${data.score7}","${data.score8}","${data.score9}","${data.outTotal}","${data.score10}","${data.score11}","${data.score12}","${data.score13}","${data.score14}","${data.score15}","${data.score16}","${data.score17}","${data.score18}","${data.inTotal}","${data.grossTotal}","${data.netTotal}","${data.birdieTotal}","${data.cid}","${data.hdcp}","${data.enteredHoleCount}")`;
+        let sql = `call saveTournamentScores("${data.tour_id}","${data.p_id}","${data.round_Id}","${data.groupId}","${data.score1}","${data.score2}","${data.score3}","${data.score4}","${data.score5}","${data.score6}","${data.score7}","${data.score8}","${data.score9}","${data.outTotal}","${data.score10}","${data.score11}","${data.score12}","${data.score13}","${data.score14}","${data.score15}","${data.score16}","${data.score17}","${data.score18}","${data.inTotal}","${data.grossTotal}","${data.netTotal}","${data.birdieTotal}","${data.cid}","${data.hdcp}","${data.enteredHoleCount}","${data.scoreDiff}")`;
         connection.query(sql, function (error, results) {
             // releaseconnection();
             if (error) {

@@ -106,7 +106,7 @@ export class TournamentTabsComponent implements OnInit {
       this.monthData = APIresponse?.response;
       if (this.monthData && this.monthData?.result.length > 0) {
 
-        debugger;
+        ;
         const data = {
           month: "All",
           monthNum: '',

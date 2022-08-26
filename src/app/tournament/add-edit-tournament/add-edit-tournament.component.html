@@ -245,7 +245,7 @@
             <div class="row">
                 <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3">
                     <button mat-stroked-button class="ml-3" (click)="manualGroupInit()">Manual Group </button>
-                    <button mat-raised-button color="warn" (click)="automaticGroupInit()">Generate Group </button>
+                    <button mat-raised-button color="primary" (click)="automaticGroupInit()">Generate Group </button>
                 </div>
             </div>
         </div>
@@ -307,7 +307,7 @@
                                                 Please select player
                                             </mat-error>
                                         </mat-form-field>
-                                        <mat-form-field appearance="outline" class="ml-11">
+                                        <!-- <mat-form-field appearance="outline" >
                                             <mat-label>Tee*</mat-label>
 
                                             <mat-select formControlName="tee" id="tee">
@@ -317,6 +317,20 @@
                                                 </mat-option>
 
                                             </mat-select>
+                                            <mat-error *ngIf="item.controls['tee'].errors?.required">
+                                                Please select tee
+                                            </mat-error>
+                                        </mat-form-field> -->
+
+
+                                        <mat-form-field appearance="outline" class="ml-11">
+                                            <mat-label>Tee Name* </mat-label>
+                                            <mat-select formControlName="tee" id="tee" >
+                                                <option value="" selected></option>
+                                                <mat-option *ngFor="let teeDetails of this.teeNameList" [value]="teeDetails.cRatingId">{{teeDetails.teeName}}
+                                                </mat-option>
+                                            </mat-select>
+                
                                             <mat-error *ngIf="item.controls['tee'].errors?.required">
                                                 Please select tee
                                             </mat-error>

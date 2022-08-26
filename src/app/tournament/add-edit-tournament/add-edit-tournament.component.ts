@@ -21,6 +21,7 @@ export class AddEditTournamentComponent implements OnInit {
   approvedPlayerList: any = [];
   tourID: any;
   playerList: any = [];
+  teeNameList:any=[];
   eventDetailsArr: any = new FormArray([]);
   eventFormGroup: any = new FormGroup({
     eventDetailsArr: new FormArray([]),
@@ -143,7 +144,7 @@ export class AddEditTournamentComponent implements OnInit {
     for (let i = 0; i < selectedEvent.controls.numRounds.value; i++) {
 
       selectedEvent.controls.roundsArray.push(this.roundFormGroupInit(this.data.selectedRound[i]));
-      debugger;
+      ;
       if (this.data?.details) {
         const formControl = selectedEvent?.controls?.roundsArray?.controls[i].controls;
         // const getEventTime = formControl.eventDate.value.getTime();
@@ -247,6 +248,17 @@ export class AddEditTournamentComponent implements OnInit {
         });
 
         this.groupFormGroup.controls.roundId.setValue(this.data.roundList[roundIndex].round_Id);
+        
+  
+        this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + this.data.roundList[roundIndex].cid).subscribe((APIResponse: any) => {
+          if (APIResponse.error == '') {
+            this.teeNameList = APIResponse.response.result;
+          } else {
+    
+          }
+        });
+
+        
         this.groupFormGroup.controls.roundId.disable();
       }
 
@@ -428,7 +440,7 @@ export class AddEditTournamentComponent implements OnInit {
       item['eventDate'] = this.datePipe.transform(item.eventDate, "yyyy-MM-dd HH:mm:ss");
     });
     const url = "/tournament/saveEventDetails";
-    debugger
+    
     this.service.postAPIMethod(url, data).subscribe((response: any) => {
       if (response.error != 'X' && response.response.result.err != "X") {
         if (this.data.isTournamentAdd) {
@@ -508,6 +520,7 @@ export class AddEditTournamentComponent implements OnInit {
 
 
   groupTabDisplay() {
+
     const groupList = this.service.getAPIMethod('/dataApi/getGroupList');
     const approvedPlayerList = this.service.getAPIMethod('/tournament/getApprovedPlayerList?tourId=' + 48);
     forkJoin([groupList, approvedPlayerList]).subscribe((response: any) => {
