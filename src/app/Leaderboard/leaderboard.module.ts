@@ -4,13 +4,15 @@ import { LeaderboardListingComponent } from './leaderboard-listing/leaderboard-l
 import { AddEditLeaderboardComponent } from './add-edit-leaderboard/add-edit-leaderboard.component';
 import { LeaderboardRoutingModule } from './leaderboard-routing.module';
 import { SharedModule } from '../Shared/shared.module';
+import { AddEditOldScoreComponent } from './add-edit-old-score/add-edit-old-score.component';
 
 
 
 @NgModule({
   declarations: [ 
     AddEditLeaderboardComponent,
-    LeaderboardListingComponent
+    LeaderboardListingComponent,
+    AddEditOldScoreComponent
 
   ],
   imports: [
