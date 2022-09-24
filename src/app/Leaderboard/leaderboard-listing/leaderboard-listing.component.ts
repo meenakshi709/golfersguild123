@@ -9,6 +9,7 @@ import { CommonListMenuItem } from 'src/app/Shared/common-Listing/common-list-me
 import { CommonListProperties } from 'src/app/Shared/common-Listing/common-properties';
 import Swal from 'sweetalert2';
 import { AddEditLeaderboardComponent } from '../add-edit-leaderboard/add-edit-leaderboard.component';
+import { AddEditOldScoreComponent } from '../add-edit-old-score/add-edit-old-score.component';
 
 @Component({
   selector: 'app-leaderboard-listing',
@@ -101,6 +102,39 @@ export class LeaderboardListingComponent implements OnInit {
     }
 
   }
+
+
+// for history scores
+
+savePastScoreDetails(clickedRecordDetails: any) {
+
+  const getPlayerListing = this.service.getAPIMethod("/players");
+  const courseListing = this.service.getAPIMethod("/courseList");
+  forkJoin([getPlayerListing, courseListing]).subscribe((APIResponse) => {
+    this.loader.stop();
+    if (APIResponse[0]['error'] != 'X' && APIResponse[1]['error'] != 'X') {
+    const dialogRef = this.dialog.open(AddEditOldScoreComponent, {
+
+      data: {
+        title: 'Score Details',        
+        sectionName: 'Score',
+        selectedRecordDetails: clickedRecordDetails,
+       playerListing: APIResponse[0].response.result,
+        courseListing:APIResponse[1].response.result,
+      },
+      width: '80%',
+      height: '600px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getScoreList();
+      }
+    });
+  }
+  });
+}
+
+
 
 
 

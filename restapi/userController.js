@@ -262,7 +262,7 @@ usrCtrl.getPlayersList = (req, res) => {
             if (error) {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             } else {
-                res.end(JSON.stringify({ "error": "", "response": results[0] }));
+                res.end(JSON.stringify({ "error": "", "response": { result: results[0] } }));
             }
         });
     }

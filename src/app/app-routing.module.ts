@@ -82,6 +82,12 @@ const routes: Routes = [
     loadChildren: () => import('./winner/winner.module').then(m => m.WinnerModule),
    component:SidebarComponent
   },
+  {
+    path: 'settings',
+   // canActivate: [AuthGuard],
+    loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule),
+   component:SidebarComponent
+  },
   
   
   {path:'**', component:PageNotFoundComponent}

@@ -1,0 +1,32 @@
+
+
+
+  <div class="container-fluid">
+                     
+    <div class="row">
+        <div class="col-lg-7 col-md-7 col-xs-6 col-sm-7">
+            <h5 class="mt-3 mb-3 text-darkBlue">Match Play Details</h5>
+        </div>
+        <div class="col-lg-5 col-md-5 col-xs-6 col-sm-5 text-right">
+            <mat-form-field appearance="outline">
+               
+                <input matInput (keyup)="applyFilter($event)" placeholder="Search Tournament" #input >
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+           
+            <!-- <button class="btn btn-red text-right" [routerLink]="['/course/addCourse']">Add Course</button> -->
+            <button mat-button  class="btn btn-primary  text-right mt-1" (click)="addEditEventDetails('','')">  <mat-icon>add_circle_outline</mat-icon> Add Tour</button>
+ 
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            
+            <div *ngIf="this.isLoadingDone">
+                 <app-common-list [CommonListProperties]="matchPlayList" (onMenuItemClick)="onCourseActionClick($event)"></app-common-list> 
+            </div>
+        </div>
+    </div>
+</div>
+
+

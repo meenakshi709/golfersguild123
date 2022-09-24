@@ -87,15 +87,15 @@ mail.sendEmail = (email, options) => {
                         secureConnection: false,
                         STARTTLS: true,
                         auth: {
-                     user: "ankit.khandelwal@echelonedge.com",
-                            pass: "svjvkmfflpfffjqx"
+                     user: "meenakshi@echelonedge.com",
+                            pass: "nvrfvrcjqvgwgvvv"
                 
                         },
                   
                     });
             ejs.renderFile("views/" + options.template, options).then((resFile) => {
                 smtpTransport.sendMail({
-                    from: 'ankit.khandelwal@echelonedge.com',
+                    from: 'meenakshi@echelonedge.com',
                     to: email,
                     cc: options.cc,
                     subject: options.subject,

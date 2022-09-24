@@ -245,8 +245,8 @@ id:any;
 
   getTourDetail(tourId:string):void{
     this.service.getAPIMethod(`/tournament/tournamentScoreById?tournamentId=${tourId}&playerId=0`).subscribe((APTres: any) => {
-     
-     this.tourDetail = APTres?.response?.result
+     debugger
+     this.tourDetail = APTres?.response?.result[0];
       if(this.tourDetail){
     console.log(this.tourDetail)
     this.getGross(this.tourDetail)

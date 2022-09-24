@@ -4,5 +4,8 @@
 }
 .mat-form-field{
     float: left!important;
-    margin-left: 4rem!important;
+ /* margin-left: 6rem!important; */
+}
+.ml-1 {
+    margin-left: 1rem !important;
 }

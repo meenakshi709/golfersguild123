@@ -12,6 +12,7 @@ const router = express.Router();
  const commonCtrl = require("../commonController");
  const tourCtrl = require("../tournamentController");
  const courseCtrl=require("../courseController");
+ const formatCtrl=require("../matchFormatController");
 /**
  * Utilites files.
  */
@@ -47,7 +48,7 @@ router.post("/tournament/approvedListBytourOrganizer",tourCtrl.approvedListBytou
 router.get("/tournament/deleteTournament",tourCtrl.deleteTournament);
 router.post("/tournament/saveTournamentGroupDetails", tourCtrl.saveTournamentGroupDetails);
 router.post("/tournament/saveTournamentCouponDetails", tourCtrl.saveTournamentCouponDetails);
-router.post("/tournament/getTournamentCouponList", tourCtrl.getTournamentCouponList);
+router.get("/tournament/getTournamentCouponList",auth.verifyAuthToken, tourCtrl.getTournamentCouponList);
 router.post("/contactdetails",commonCtrl.contactdetails);
 router.get("/tournament/tournamentDetailedScoreById", tourCtrl.tournamentDetailedScoreById);
 router.get("/tournament/getApprovalStatusForPlayer",tourCtrl.getApprovalStatusForPlayer);
@@ -80,6 +81,18 @@ router.get("/course/getTeeColors",  courseCtrl.getTeeColors);
 router.post("/course/addCourse",  courseCtrl.addCourse); 
 router.get("/course/deleteCourse",   courseCtrl.deleteCourse); 
 router.get("/course/getCourseTeeList",   courseCtrl.getCourseTeeList); 
+router.get("/course/getCourseHandicap",   courseCtrl.getCourseHandicap); 
+router.post("/tournament/savePastScores",tourCtrl.savePastScores);
+router.get("/course/updateCourseHandicap",   courseCtrl.updateCourseHandicap); 
+
+router.get("/tournament/getTournamentFormat",   formatCtrl.getTournamentFormat); 
+router.post("/tournament/addEditTournamentFormat",   formatCtrl.addEditTournamentFormat); 
+router.get("/tournament/deleteTournamentFormat",formatCtrl.deleteTournamentFormat);
+
+router.get("/tournament/getHandicapScores",formatCtrl.getHandicapScores);
+router.get("/tournament/getStablefordPoints",formatCtrl.getStablefordPoints);
+router.post("/tournament/addEditStablefordPoints",formatCtrl.addEditStablefordPoints);
+router.get("/tournament/deleteStablefordPoint",formatCtrl.deleteStablefordPoint);
 
 
 

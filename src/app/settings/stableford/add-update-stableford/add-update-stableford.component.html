@@ -1,0 +1,68 @@
+<div class="container">
+
+    <div class="row headerBox">
+        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6 pt-3">
+            <h4 class="text-darkBlue" mat-dialog-title>{{this.data.title}}</h4>
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6  pt-2">
+            <button class="text-right" [mat-dialog-close]="false">X</button>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <form [formGroup]="formatForm">
+            <section class="container">
+                <div class="row">
+
+                    <div class="col-sm-4 col-lg-4 col-xs-12 col-md-4 ">
+                        <mat-form-field appearance="outline" class="ml-11">
+                            <mat-label>Score Field Name*</mat-label>
+                            <input matInput type="text" placeholder=" Score Field Name"
+                                formControlName="scoreName" maxlength="100" id="scoreName" />
+                                <mat-error *ngIf="formatForm.controls['scoreName'].errors?.required">
+                                Please enter match format name
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+                    <div class="col-sm-4 col-lg-4 col-xs-12 col-md-4 ">
+                        <mat-form-field appearance="outline" class="ml-11">
+                            <mat-label>Match ponits*</mat-label>
+                            <input matInput type="text" placeholder="ponits"
+                                formControlName="ponits" maxlength="100" id="ponits" />
+                                <mat-error *ngIf="formatForm.controls['ponits'].errors?.required">
+                                Please enter match ponits 
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+                </div>
+
+                    <div class="row text-right">
+                        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+    
+    
+                            <div mat-dialog-actions>
+                                <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
+                                <button type="submit" class="btn btn-primary" [disabled]="!this.formatForm.valid"
+                                    (click)="saveFormatDetails()">Submit</button>
+    
+                                <!-- <button type="submit" class="btn btn-danger" [disabled]="!this.scoreForm.valid"
+                            (click)="calculateResult();" id="calculateResult">Calculate</button> -->
+    
+    
+    
+                            </div>
+    
+    
+    
+                        </div>
+                    </div>
+    
+                </section>
+            </form>
+        </div>
+    </div>
+
+

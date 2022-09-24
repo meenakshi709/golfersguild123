@@ -50,24 +50,30 @@
                             <img src="../../../assets/images/leaderboard.svg" class="imgWidth"> Winner</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="#submenu2" data-bs-toggle="collapse" routerLinkActive="router-link-active" class="nav-link  align-middle ">
+                        <span class="ms-1 d-none d-sm-inline">
+                            <img src="../../../assets/images/leaderboard.svg" class="imgWidth"> Settings</span>
+                    </a>
+                    <ul class="collapse nav flex-column " id="submenu2" data-bs-parent="#menu">
+                        <li class="w-100">
+                            <a class="nav-link " [routerLink]="['/settings/matchformat']" routerLinkActive="router-link-active" > <span class="d-none d-sm-inline">  <img src="../../../assets/images/player.svg" class="imgWidth">Match Format</span> </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" [routerLink]="['/settings/stableford']" routerLinkActive="router-link-active"> <span class="d-none d-sm-inline">  <img src="../../../assets/images/player.svg" class="imgWidth">Stableford</span> </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" [routerLink]="['/settings/matchplay']" routerLinkActive="router-link-active"> <span class="d-none d-sm-inline">  <img src="../../../assets/images/player.svg" class="imgWidth">Match Play</span> </a>
+                        </li>
+                    </ul>
+                </li>
              
                
                
              
            
-  <!--
-                  <li>
-                      <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
-                          <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Bootstrap</span></a>
-                      <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
-                          <li class="w-100">
-                              <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1</a>
-                          </li>
-                          <li>
-                              <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2</a>
-                          </li>
-                      </ul>
-                  </li>
+
+               <!--
                   <li>
                       <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                           <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Products</span> </a>

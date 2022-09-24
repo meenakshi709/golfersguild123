@@ -1,62 +1,79 @@
 const connection = require('../restapi/utilities/sqlConnection').connection;
+const auth = require("../restapi/utilities/authService");
+const config = require('../restapi/utilities/config.json');
+const formatCtrl = {};
+const mail = require('../restapi/utilities/mailService');
 
+// This API use for login purpose
 
-const courseCtrl = {};
-
-
-//add course
-
-courseCtrl.addCourse = (req, res) => {
-    try {
-
-        const data = req.body;
-
-        let sql = `Call saveCourseDetails("${data.cid}","${data.cname}", "${data.caddress}", "${data.par1}", "${data.par2}", "${data.par3}", "${data.par4}", "${data.par5}", "${data.par6}", "${data.par7}", "${data.par8}", "${data.par9}", "${data.par10}", "${data.par11}", "${data.par12}", "${data.par13}", "${data.par14}", "${data.par15}", "${data.par16}", "${data.par17}", "${data.par18}", "${data.pinn}", "${data.pout}", "${data.hdcp1}", "${data.hdcp2}", "${data.hdcp3}", "${data.hdcp4}", "${data.hdcp5}", "${data.hdcp6}", "${data.hdcp7}", "${data.hdcp8}", "${data.hdcp9}", "${data.hdcp10}", "${data.hdcp11}", "${data.hdcp12}", "${data.hdcp13}", "${data.hdcp14}", "${data.hdcp15}", "${data.hdcp16}", "${data.hdcp17}", "${data.hdcp18}","${data.teeNameArr}")`;
-
-        connection.query(sql, function (error, results) {
-            releaseconnection();
-            if (error) {
-                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-            } else {
-                res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
-            }
-        });
-    } catch (error) {
-        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
-    }
-};
-
-
-//Delete course
-
-
-
-courseCtrl.deleteCourse = (req, res) => {
-    try {
-        let sql = `call delete_course("${req.query.courseId}")`;
-        connection.query(sql, function (error, results) {
-            releaseconnection();
-            if (error) {
-                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-            }
-            else {
-                res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
-            }
-        });
-    } catch (error) {
-        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
-    }
-};
-
-
-/* 
-AuthorName:-
-CreatedFor-get course tee list
-CreatedOn-17-08-2021
+/**
+ * User login api.
+ * @requiredField email,password
+ * @Developer Meenakshi
  */
-courseCtrl.getCourseTeeList = (req, res) => {
+
+ formatCtrl.addEditStablefordPoints = (req, res) => {
     try {
-        let sql = `call getCourseteeList("${req.query.courseId}")`;
+        const data = req.body;
+        let sql = `Call saveStablefordPoint("${data.pointId}", "${data.netScoreName}", "${data.netScorePoints}", "${data.points}")`;
+        connection.query(sql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            } else {
+                res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
+            }
+        });
+    } catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
+};
+
+
+//get  stableford  ponits details
+formatCtrl.getStablefordPoints= (req, res) => {
+
+    try {
+
+        let sql = `call getStablefordPoints()`;
+        connection.query(sql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            } else {
+                res.send(JSON.stringify({ "error": "", "response": { result: results[0] } }));
+            }
+        });
+    } catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
+};
+
+
+//delete tournament format details
+formatCtrl.deleteStablefordPoint = (req, res) => {
+    try {
+        let sql = `call delete_stablefordPoint("${req.query.ponitId}")`;
+        connection.query(sql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            }
+            else {
+                res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
+            }
+        });
+    } catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
+};
+
+
+
+//get  tournament format details
+formatCtrl.getTournamentFormat = (req, res) => {
+    try {
+        let sql = `call getTournamentFormats()`;
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {
@@ -72,16 +89,36 @@ courseCtrl.getCourseTeeList = (req, res) => {
 };
 
 
-courseCtrl.getCourseHandicap  = (req, res) => {
+//
+//save tournament format details
+formatCtrl.addEditTournamentFormat = (req, res) => {
     try {
-
-        let sql = `call CalculateCourseHandicap("${req.query.playerId}","${req.query.courseId}","${req.query.tee}")`
-
+        const data = req.body;
+        let sql = `call saveTournamentFormat("${data.formatId}","${data.formatName}")`;
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-            } else {
+            }
+            else {
+                res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
+            }
+        });
+    } catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
+};
+
+//delete tournament format details
+formatCtrl.deleteTournamentFormat = (req, res) => {
+    try {
+        let sql = `call delete_TournamentFormat("${req.query.formatId}")`;
+        connection.query(sql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            }
+            else {
                 res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
             }
         });
@@ -91,38 +128,29 @@ courseCtrl.getCourseHandicap  = (req, res) => {
 };
 
 
-
-
-courseCtrl.updateCourseHandicap  = (req, res) => {
+//get handicap score details
+formatCtrl.getHandicapScores = (req, res) => {
     try {
-
-        let sql = `call updateCourseHandicap("${req.query.playerId}","${req.query.hndycap}")`
-
+        let sql = `call getHandicapScores("${req.query.player_Id}")`;
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-            } else {
-                res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
             }
-        });
-    } catch (error) {
-        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
-    }
-};
-
-
-courseCtrl.getTeeColors = (req, res) => {
-    try {
-
-        let sql = `call getTeeColors()`;
-
-        connection.query(sql, function (error, results) {
-            releaseconnection();
-            if (error) {
-                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-            } else {
-                res.send(JSON.stringify({ "error": "", "response": { result: results[0] } }));
+            else {
+                if (results[2].length > 0) {
+                    results[2].map(item => {
+                        item.selected = false;
+                        if (results[0].length > 0) {
+                            results[0].map(record => {
+                                if (item.tour_score_id == record.tour_score_id) {
+                                    item.selected = true;
+                                }
+                            });
+                        }
+                    });
+                }
+                res.send(JSON.stringify({ "error": "", "response": { result: results[2],scoreCount:results[1][0] } }));
             }
         });
     } catch (error) {
@@ -133,14 +161,16 @@ courseCtrl.getTeeColors = (req, res) => {
 
 
 
-function releaseconnection() {
+
+
+
+/**
+ * Purpose connection release 
+ */
+ function releaseconnection() {
     connection.getConnection(function (err, result) {
         result.release();
     })
 }
 
-
-
-
-
-module.exports = courseCtrl;
+module.exports = formatCtrl;

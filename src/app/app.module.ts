@@ -71,6 +71,7 @@ import { AuthgaurdService } from './Service/authGaurd/authGuard.service';
     AdminLoginComponent,
     ThankyouComponent,
     PrivacyPolicyComponent,
+ 
 
 
 
