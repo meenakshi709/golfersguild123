@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { CommonServiceService } from 'src/app/Service/common-service.service';
+import { CommonServiceService } from 'src/app/Service/common.service';
 
 declare var $: any;
 @Component({

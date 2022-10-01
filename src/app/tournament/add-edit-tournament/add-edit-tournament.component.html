@@ -38,7 +38,7 @@
                                     <mat-label>Match Format*</mat-label>
 
                                     <mat-select formControlName="eventType" id="eventType">
-                                        <mat-option *ngFor="let item of this.data.eventType" [value]=item> {{item}}
+                                        <mat-option *ngFor="let item of this.data.eventType" [value]=item.formatKey> {{item.formatName}}
                                         </mat-option>
                                     </mat-select>
                                     <mat-error *ngIf="item.controls['eventType'].errors?.required">

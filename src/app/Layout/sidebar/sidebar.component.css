@@ -136,3 +136,11 @@
 padding: 15px 5px;
 }
 
+ngx-avatar{
+  text-align: center!important;
+  display:inline-block;
+
+}
+.sidebar div{
+  text-align: center!important;
+}

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonListProperties } from '../../Shared/common-Listing/common-properties';
 import { CommonListMenu } from '../../Shared/common-Listing/common-list-menu';
 import { CommonListMenuItem } from '../../Shared/common-Listing/common-list-menu-item';
-import { CommonServiceService } from 'src/app/Service/common-service.service';
+import { CommonServiceService } from 'src/app/Service/common.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
@@ -43,7 +43,7 @@ export class TournamentListingComponent implements OnInit {
 
         this.courseList.miDataSource = new MatTableDataSource(data.response.result);
         this.courseList.columnLabels = ['Tournament Name', 'Event Type', 'Rounds', 'Date', 'Action'];
-        this.courseList.displayedColumns = ['tournamentName', 'eventType', 'numRounds', 'startDate', 'Action'];
+        this.courseList.displayedColumns = ['tournamentName', 'eventType', 'numRounds', 'tournamentDate', 'Action'];
 
         this.courseList.miListMenu = new CommonListMenu();
         this.courseList.miListMenu.menuItems =
@@ -127,27 +127,30 @@ export class TournamentListingComponent implements OnInit {
     // const apiResponse: any = APIresponse;
     const arrayToSend = [];
     const courseList = this.service.getAPIMethod('/courseList');
+    const formatList = this.service.getAPIMethod('/tournament/getTournamentFormat');
     arrayToSend.push(courseList);
+    arrayToSend.push(formatList);
     if (clickedRecordDetails) {
       const roundDetailList = this.service.getAPIMethod('/tournament/getTournamentRoundDetails?tourId=' + clickedRecordDetails.tourID);
       arrayToSend.push(roundDetailList);
     }
 
+
     forkJoin(arrayToSend).subscribe((apiResponse: any) => {
       this.loader.stop();
       
 
-      if (apiResponse[0]?.['error'] != 'X' && apiResponse[1]?.['error'] != 'X') {
+      if (apiResponse[0]?.['error'] != 'X' && apiResponse[1]?.['error'] != 'X' && apiResponse[2]?.['error'] != 'X') {
 
-
+debugger
 
         const dialogRef = this.dialog.open(AddEditTournamentComponent, {
           data: {
             title: 'Tournament Details',
             details: clickedRecordDetails,
-            selectedRound: apiResponse[1]?.response?.result?.length > 0 ? apiResponse[1].response.result : [],
+            selectedRound: apiResponse[2]?.response?.result?.length > 0 ? apiResponse[2].response.result : [],
             sectionName: 'tournament',
-            eventType: ['Match Play', 'Stroke Play'],
+            eventType: apiResponse[1]?.response?.result?.length > 0 ? apiResponse[1].response.result : [],
             roundsList: ['1', '2', '3', '4', '5', '6', '7'],
             courseList: apiResponse[0].response.result,
             isTournamentAdd: true

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, from } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +64,21 @@ public getAPIMethod(url: any): Observable<any> {
  // url= this.baseURL +url;
   return this.http.get<any>(url).pipe(
     map((res: any) => { return res; }), catchError(<T>(error: any, result?: T) => { return of(result as T); }));
+}
+
+
+
+
+showToasterMsg(typeIcon: any, msg: any) {
+  console.log(typeIcon, msg)
+  Swal.fire({
+    toast: true,
+    position: 'top',
+    showConfirmButton: false,
+    icon: typeIcon,
+    timer: 2000,
+    title: msg,
+  });
 }
 
 }

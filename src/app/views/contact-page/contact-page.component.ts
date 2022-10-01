@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators} from '@angular/forms';
 import { Router } from '@angular/router';
-import { CommonServiceService } from '../../Service/common-service.service';
+import { CommonServiceService } from '../../Service/common.service';
 
 @Component({
   selector: 'app-contact-page',

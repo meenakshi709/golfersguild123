@@ -13,7 +13,7 @@ import { map, catchError } from 'rxjs/operators';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
-import { CommonServiceService } from '../common-service.service';
+import { CommonServiceService } from '../common.service';
 
 
 @Injectable()

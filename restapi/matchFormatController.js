@@ -131,7 +131,7 @@ formatCtrl.deleteTournamentFormat = (req, res) => {
 //get handicap score details
 formatCtrl.getHandicapScores = (req, res) => {
     try {
-        let sql = `call getHandicapScores("${req.query.player_Id}")`;
+        let sql = `call getHandicapScores("${req.query.player_Id}","${req.query.isRecentScore}")`;
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {
@@ -149,8 +149,12 @@ formatCtrl.getHandicapScores = (req, res) => {
                             });
                         }
                     });
+                    res.send(JSON.stringify({ "error": "", "response": { result: results[2],scoreCount:results[1][0] } }));
                 }
-                res.send(JSON.stringify({ "error": "", "response": { result: results[2],scoreCount:results[1][0] } }));
+                else{
+                    res.send(JSON.stringify({ "error": "", "response": { result: [],scoreCount:0 } }));
+                }
+               
             }
         });
     } catch (error) {

@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { CommonServiceService } from 'src/app/Service/common-service.service';
+import { CommonServiceService } from 'src/app/Service/common.service';
 import Swal from 'sweetalert2';
 import { AddEditLeaderboardComponent } from '../add-edit-leaderboard/add-edit-leaderboard.component';
 
@@ -546,14 +546,14 @@ debugger
   }
 
   // calculateAgs(fieldName: any, finalValue: any) {
-  //   debugger;
+  //   
   //   const fieldNum = fieldName.replace("score", '');
   //   const newFieldName="ags"+fieldNum;
   //   this.scoreForm.controls[newFieldName].setValue(finalValue);
   // }
 
   calculateAgs(fieldName: any, parValue: any, hdcpValue: any, scoreValue: any) {
-    debugger;
+    
     let hdcp = 0;
     let ags = 0;
     this.data.playerListing.forEach((element: any) => {

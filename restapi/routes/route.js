@@ -56,7 +56,7 @@ router.get("/tournament/getTournamentGroups",tourCtrl.getTournamentGroups);
 router.get("/tournament/getPlayerDetailForScore",tourCtrl.getPlayerDetailForScore);
 router.post("/tournament/savetournamentScore",tourCtrl.savetournamentScore);
 router.get("/courseList", commonCtrl.courseList);
-router.get("/tourDetails", commonCtrl.tourDetails);
+router.get("/tournament/tourDetails", commonCtrl.tourDetails);
 router.get("/tournament/groupList", tourCtrl.getTournamentGroupList);
 router.get("/tournament/getTournamentGroupPlayerList", tourCtrl.getTournamentGroupPlayerList);
 router.get("/score/deleteScore",commonCtrl.deleteScore);

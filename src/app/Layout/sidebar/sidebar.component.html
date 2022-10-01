@@ -8,10 +8,11 @@
               <p class="navbar-brand text-center mb-2" [routerLink]="['']"><img src="../../assets/images/golfer-logo.png" width="160"></p>
 
          
-                <!-- <p class="text-center pb-3 pt-2">
-                    <img src="https://github.com/mdo.png" alt="" width="80" height="80" class="rounded-circle">
-                    <br><span class="text-center "> Gaurav Gandhi<br> Admin</span>
-                </p> -->
+                <p class="text-center pb-3 pt-2">
+                    <!-- <img src="https://github.com/mdo.png" alt="" width="80" height="80" class="rounded-circle"> -->
+                    <ngx-avatar class="text-center" bgColor="#fff" fgColor="#1266FB" size="60" name="{{this.userDetails?.firstName }}  {{this.userDetails?.lastName }}"></ngx-avatar>
+                    <span class="text-center "> <br> {{this.userDetails?.roleName | titlecase}}</span>
+                </p>
                
                
            
@@ -66,8 +67,9 @@
                             <a class="nav-link" [routerLink]="['/settings/matchplay']" routerLinkActive="router-link-active"> <span class="d-none d-sm-inline">  <img src="../../../assets/images/player.svg" class="imgWidth">Match Play</span> </a>
                         </li>
                     </ul>
-                </li>
-             
+                </li>  <hr>
+                
+               
                
                
              
@@ -97,7 +99,11 @@
                           <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Customers</span> </a>
                   </li>-->
               </ul>
-              <hr>
+            <hr>     <p  class="nav-link align-top" (click)="logout()" >
+              
+                    <mat-icon style="font-size: 18px;padding-top: 4px;" >exit_to_app</mat-icon> Logout 
+                </p>
+        
               
           </div>
       </div>

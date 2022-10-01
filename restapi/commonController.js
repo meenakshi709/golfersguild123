@@ -186,7 +186,7 @@ commonCtrl.tourDetails =(req, res) => {
 
     try {
     
-        let sql = `call getTournamentAndRoundDetail()`;
+        let sql = `call getLiveTournamentDetails()`;
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {

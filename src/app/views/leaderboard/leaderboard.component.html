@@ -27,11 +27,12 @@
                             <thead>
                                 <tr>
 
-                                    <th scope="col" colspan="8" class="holeboxBg text-left"> <h6>{{rd.data[0]?.course}} <img
+                                    <th scope="col" colspan="9" class="holeboxBg text-left"> <h6>{{rd.data[0]?.course}} <img
                                             src="../../../assets/images/loc.svg"></h6></th>
 
 
-                                </tr>
+                                </tr
+                                >
                           
                                 <tr>
                                     <td scope="col" class="holebox2 text-left" colspan="2">&nbsp;&nbsp;Holes</td>
@@ -63,7 +64,7 @@
                                           
 
                                                                     
-                                    <td scope="col" class="text-dark bg-white text-center" rowspan="3" colspan="3">
+                                    <td scope="col" class="text-dark bg-white text-center" rowspan="3" colspan="4">
                                                                                     
                                         <table class="cornerCard m-0">
                                             <tr>
@@ -90,7 +91,7 @@
                                         
                                    </td>
                                   
-                                    <th scope="col" class="holebox2">&nbsp;</th>
+                                    <th scope="col"  class="holebox2">&nbsp;</th>
                                 </tr>
                                 <tr class="bgRed"  >
        
@@ -122,14 +123,15 @@
                                    
                                     <td scope="col" class="holebox2 text-left" colspan="2">&nbsp;&nbsp;Players</td>
                                                                                                              
-                                        <th><span class="text-danger bg-white">&nbsp;</span></th>
+                                        <th width="350"><span class="text-danger bg-white">&nbsp;</span></th>
                                                                            
-                                        <th><span class="text-danger bg-white">&nbsp;</span></th> 
+                                        <th width="350"><span class="text-danger bg-white">&nbsp;</span></th> 
                                         <th>GROSS</th> 
                                         <th>HDCP</th> 
                                         <th>NET</th>                     
 
-                                        <th scope="col" class="holebox2 birdiBox" width="50">Birdie</th>
+                                        <th scope="col" class=" birdiBox" width="50">Birdie</th>
+                                        <th scope="col" class="holebox2 birdiBox text-center" width="50"><span *ngIf="tournamentDetails.eventType=='1'">SFP</span></th>
                                 </tr>
                               
                             </thead>
@@ -138,8 +140,8 @@
                                   
                                     
                                     <th scope="row" class="starbg" width="40"> </th>
-                                    <td class="holebox2" width="110">
-                                        {{ player?.board?.playerName }}
+                                    <td class="holebox2" width="130" >
+                                        {{ player?.board?.playerName }} <mat-icon style="color:#fcb430;font-size:14px;" (click)="isSfpShown=!isSfpShown">info</mat-icon>
                                     </td>
                               
                                    
@@ -154,9 +156,43 @@
                                     <td class=""> {{player?.board?.gross}}</td>
                                     <td class=""> {{player?.board?.hdcp}}</td>
                                     <th> {{player?.board?.net}}</th>
-                                    <th scope="col" class="holebox2 text-center">
+                                    <th scope="col" class=" text-center">
                                         
                                         {{player?.board?.birdie}}
+                                    </th>
+                                    <th class="holebox2 text-center" >  
+                                        <span *ngIf="tournamentDetails.eventType=='1'">{{(player?.stf[0]?.stfSum)+(player?.stf[1]?.stfSum)}} </span>
+                                    </th>
+                                </tr>
+
+
+
+                                <tr class="bgRed" *ngIf="tournamentDetails.eventType=='1' && isSfpShown">
+                                    <th scope="row" class="holebox2" width="40"> &nbsp;</th>
+                                    <td  class="holebox2 text-center" scope="row"   > 
+                                             SFP
+                                    </td>
+                              
+                                   
+                                   <td *ngFor="let stf of rd.data[0]?.stf" width="350">
+                                        <span *ngFor="let stfData of stf.stfValue;let ik=index">
+                                            <!-- <span class="{{ getactiveClass(stf,ik)}}"> -->
+                                                {{stfData}}
+                                            <!-- </span> -->
+                                        </span>
+                                        <span class=""><b>{{stf.stfSum}}</b></span>
+                                    </td>   
+
+                                   
+                                    <td class="">0 </td>
+                                    <td class="">0</td>
+                                    <th>0 </th>
+                                    <th scope="col" class=" text-center">
+                                        0
+                                       
+                                    </th>
+                                    <th class="holebox2 text-center"  >  
+                                       0 <!-- <span *ngIf="tournamentDetails.eventType=='1'">{{(stf?.stf[0]?.stfSum)+(player?.stf[1]?.stfSum)}} </span></th> -->
                                     </th>
                                 </tr>
                         </tbody>
@@ -184,7 +220,7 @@
                                     </table>
                                   </td>
                                 
-                                <th scope="col" colspan="2" class="holeboxBgFootR"> &nbsp;</th>
+                                <th scope="col" colspan="3" class="holeboxBgFootR"> &nbsp;</th>
     
                             </tr>
                         </tfoot>
@@ -205,6 +241,20 @@
 
 
             </ul>
+            <!-- <mat-accordion>
+                
+                <mat-expansion-panel (opened)="panelOpenState = true"
+                                     (closed)="panelOpenState = false">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Stableford Points
+                    </mat-panel-title>
+                   
+                  </mat-expansion-panel-header>
+                  <p>I'm visible because I am open</p>
+                </mat-expansion-panel>
+              </mat-accordion> -->
+              
         </div>
         </div>
         </div>
@@ -217,4 +267,8 @@
 </div>
 
 <h5 id="msg" *ngIf="(scoreData.length==0) && dnotfound==true" class="text-center btn-danger text-white"> You swing your best when you have the fewest things to think about.</h5>
+
+
+
+
 <app-footer></app-footer>

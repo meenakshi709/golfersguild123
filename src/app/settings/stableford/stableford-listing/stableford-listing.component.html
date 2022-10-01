@@ -15,7 +15,7 @@
               </mat-form-field>
            
             <!-- <button class="btn btn-red text-right" [routerLink]="['/course/addCourse']">Add Course</button> -->
-            <button mat-button  class="btn btn-primary  text-right mt-1" (click)="addEditEventDetails('')">  <mat-icon>add_circle_outline</mat-icon> Add Points</button>
+            <button mat-button  class="btn btn-primary  text-right mt-1" (click)="addEditStablefordPonits('')">  <mat-icon>add_circle_outline</mat-icon> Add Points</button>
  
         </div>
     </div>
@@ -23,7 +23,7 @@
         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
             
             <div *ngIf="this.isLoadingDone">
-                 <app-common-list [CommonListProperties]="matchPlayList" (onMenuItemClick)="onCourseActionClick($event)"></app-common-list> 
+                 <app-common-list [CommonListProperties]="matchPlayList" (onMenuItemClick)="onScoreActionClick($event)"></app-common-list> 
             </div>
         </div>
     </div>

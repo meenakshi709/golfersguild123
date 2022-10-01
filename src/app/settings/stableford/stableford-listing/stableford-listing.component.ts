@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonServiceService } from 'src/app/Service/common-service.service';
+import { CommonServiceService } from 'src/app/Service/common.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
@@ -26,12 +26,14 @@ export class StablefordListingComponent implements OnInit {
   constructor(private service: CommonServiceService, public dialog: MatDialog, public loader: NgxUiLoaderService) { }
 
   ngOnInit(): void {
-    this.getMatchFormatList();
+    this.getStablefordList();
   }
 
-  getMatchFormatList() {
+
+
+  getStablefordList() {
     this.loader.start();
-    this.service.getAPIMethod("/tournament/getTournamentFormat").subscribe((response) => {
+    this.service.getAPIMethod("/tournament/getStablefordPoints").subscribe((response) => {
       this.loader.stop();
       const data: any = response;
 
@@ -40,15 +42,13 @@ export class StablefordListingComponent implements OnInit {
     
 
         this.matchPlayList.miDataSource = new MatTableDataSource(data.response.result);
-        this.matchPlayList.columnLabels = ['Format Id', 'Format Name',  'Action'];
-        this.matchPlayList.displayedColumns = ['formatKey', 'formatName',  'Action'];
+        this.matchPlayList.columnLabels = ['Format Id', 'Score Name','Score Point',  'Action'];
+        this.matchPlayList.displayedColumns = ['sno', 'netScoreName','netScorePoints',  'Action'];
 
         this.matchPlayList.miListMenu = new CommonListMenu();
         this.matchPlayList.miListMenu.menuItems =
           [
-
             new CommonListMenuItem('Edit', 1, true, false, null,'edit'),
-       
             new CommonListMenuItem('Delete', 2, true, true, null, 'delete'),
           ];
       }
@@ -62,14 +62,14 @@ export class StablefordListingComponent implements OnInit {
 
   }
 
-  onCourseActionClick(clickedRecord: any) {
+  onScoreActionClick(clickedRecord: any) {
 
     if (clickedRecord.name == 'Edit') {
 
-      this.addEditEventDetails(clickedRecord.data)
+      this.addEditStablefordPonits(clickedRecord.data)
     }
     else if (clickedRecord.name == 'Delete') {
-      this.deleteTournamentFormat(clickedRecord.data)
+      this.deletePoints(clickedRecord.data)
     }
   }
 
@@ -78,7 +78,7 @@ export class StablefordListingComponent implements OnInit {
 
 
 
-  deleteTournamentFormat(clickedrecord: any) {
+  deletePoints(clickedrecord: any) {
 debugger
     Swal.fire({
       title: 'Delete Tournament Format',
@@ -91,7 +91,7 @@ debugger
     }).then((result) => {
       if (result.isConfirmed) {
         this.loader.start();
-        this.service.getAPIMethod('/tournament/deleteTournamentFormat?formatId=' + clickedrecord.formatKey).subscribe((success) => {
+        this.service.getAPIMethod('/tournament/deleteStablefordPoint?ponitId=' + clickedrecord.sno).subscribe((success) => {
           this.loader.stop();
           if (success.error === 'X') {
             this.sweetAlertMsg('error', success.response.result.msg);
@@ -101,7 +101,7 @@ debugger
             this.sweetAlertMsg('success', success.response.result.msg);
 
             this.isLoadingDone = false;
-            this.getMatchFormatList();
+            this.getStablefordList();
 
           }
         })
@@ -126,7 +126,7 @@ debugger
 
   // approved list status
 
-  addEditEventDetails(clickedRecordDetails: any) {
+  addEditStablefordPonits(clickedRecordDetails: any) {
 debugger
 
         const dialogRef = this.dialog.open(AddUpdateStablefordComponent, {
@@ -138,7 +138,7 @@ debugger
        
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
-            this.getMatchFormatList();
+            this.getStablefordList();
           }
         });
       }

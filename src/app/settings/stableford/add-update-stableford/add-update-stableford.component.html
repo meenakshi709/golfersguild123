@@ -11,28 +11,39 @@
 
     <div class="row">
 
-        <form [formGroup]="formatForm">
+        <form [formGroup]="pointsForm">
             <section class="container">
                 <div class="row">
 
-                    <div class="col-sm-4 col-lg-4 col-xs-12 col-md-4 ">
-                        <mat-form-field appearance="outline" class="ml-11">
+                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                        <mat-form-field appearance="outline" class="">
                             <mat-label>Score Field Name*</mat-label>
                             <input matInput type="text" placeholder=" Score Field Name"
-                                formControlName="scoreName" maxlength="100" id="scoreName" />
-                                <mat-error *ngIf="formatForm.controls['scoreName'].errors?.required">
-                                Please enter match format name
+                                formControlName="netScoreName" maxlength="100" id="netScoreName" />
+                                <mat-error *ngIf="pointsForm.controls['netScoreName'].errors?.required">
+                                Please enter score name
                             </mat-error>
                         </mat-form-field>
 
                     </div>
-                    <div class="col-sm-4 col-lg-4 col-xs-12 col-md-4 ">
-                        <mat-form-field appearance="outline" class="ml-11">
+                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                        <mat-form-field appearance="outline" class="">
+                            <mat-label>Score Value *</mat-label>
+                            <input matInput type="text" placeholder=" Score Value"
+                                formControlName="netScorePoints" maxlength="100" id="netScorePoints" />
+                                <mat-error *ngIf="pointsForm.controls['netScorePoints'].errors?.required">
+                                Please enter score value
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                        <mat-form-field appearance="outline" class="">
                             <mat-label>Match ponits*</mat-label>
                             <input matInput type="text" placeholder="ponits"
                                 formControlName="ponits" maxlength="100" id="ponits" />
-                                <mat-error *ngIf="formatForm.controls['ponits'].errors?.required">
-                                Please enter match ponits 
+                                <mat-error *ngIf="pointsForm.controls['ponits'].errors?.required">
+                                Please enter match points 
                             </mat-error>
                         </mat-form-field>
 
@@ -45,8 +56,8 @@
     
                             <div mat-dialog-actions>
                                 <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
-                                <button type="submit" class="btn btn-primary" [disabled]="!this.formatForm.valid"
-                                    (click)="saveFormatDetails()">Submit</button>
+                                <button type="submit" class="btn btn-primary" [disabled]="!this.pointsForm.valid"
+                                    (click)="savePointsDetails()">Submit</button>
     
                                 <!-- <button type="submit" class="btn btn-danger" [disabled]="!this.scoreForm.valid"
                             (click)="calculateResult();" id="calculateResult">Calculate</button> -->

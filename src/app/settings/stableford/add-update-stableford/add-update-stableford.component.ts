@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { CommonServiceService } from 'src/app/Service/common-service.service';
+import { CommonServiceService } from 'src/app/Service/common.service';
 import Swal from 'sweetalert2';
 
 
@@ -28,21 +28,22 @@ export class AddUpdateStablefordComponent implements OnInit {
     console.log("data=", this.data);
     if (this.data) {
       //  this.scoreForm.controls.cname.disable();
-        this.setFormatDetails();
+        this.setPointsDetails();
 
     }
   }
 
 
-  public formatForm: FormGroup = new FormGroup({
+  public pointsForm: FormGroup = new FormGroup({
     pointId: new FormControl(''),
-    scoreName: new FormControl('', [Validators.required]),
-    ponits:new FormControl('', [Validators.required])
+    netScoreName: new FormControl('', [Validators.required]),
+    ponits:new FormControl('', [Validators.required]),
+    netScorePoints:new FormControl('', [Validators.required]) 
   });
 
-  setFormatDetails() {
+  setPointsDetails() {
     const keys = Object.keys(this.data);
-    const formGroup = this.formatForm.controls;
+    const formGroup = this.pointsForm.controls;
 
     for (let i = 0; i < keys.length; i++) {
       const keyName = keys[i];
@@ -51,11 +52,11 @@ export class AddUpdateStablefordComponent implements OnInit {
   }
 
 
-  saveFormatDetails() {  
+  savePointsDetails() {  
     
-    const data = this.formatForm.getRawValue();
+    const data = this.pointsForm.getRawValue();
    
-    this.service.postAPIMethod('/tournament/addEditTournamentFormat', data).subscribe(APIresponse => {
+    this.service.postAPIMethod('/tournament/addEditStablefordPoints', data).subscribe(APIresponse => {
       // console.log("final",response);
 
       if (APIresponse.error != 'X') {

@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CommonServiceService } from 'src/app/Service/common-service.service';
+import { CommonServiceService } from 'src/app/Service/common.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { forkJoin } from 'rxjs';
@@ -465,7 +465,7 @@ export class AddEditTournamentComponent implements OnInit {
   // --------------------Add Tournament flow--------------------------
 
   eventTabDisplay() {
-    this.service.getCourseApi().subscribe((courseResponse: any) => {
+    this.service.getAPIMethod('/courseList').subscribe((courseResponse: any) => {
       if (courseResponse.error != 'X') {
         const tournamentDetails = {
           tourID: this.eventFormGroup.controls.tourID.value
@@ -568,12 +568,12 @@ export class AddEditTournamentComponent implements OnInit {
   getPlayerList() {
 
     this.service.getAPIMethod('/players').subscribe((res: any) => {
-      console.log(res.result);
-      if (res.response.err == 'X') {
+      console.log(res.response.result);
+      if (res.response.error == 'X') {
 
       }
       else {
-        this.playerList = res.response;
+        this.playerList = res.response.result;
         this.data.sectionName = 'sendInvite'
 
       }

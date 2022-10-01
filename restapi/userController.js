@@ -9,10 +9,8 @@ const mail = require('../restapi/utilities/mailService');
 /**
  * User login api.
  * @requiredField email,password
- * @Developer Echelon Team
+ * @Developer Meenaxi 
  */
-
-
 usrCtrl.userlogin = (req, res) => {
     try {
         const data = req.body;
@@ -32,7 +30,7 @@ usrCtrl.userlogin = (req, res) => {
             }
         });
     } catch (error) {
-        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+        res.end(JSON.stringify({ "error": 'X', "response": { "msg": "contact Developer" + error } }));
     }
 };
 

@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonListProperties } from '../../Shared/common-Listing/common-properties';
 import { CommonListMenu } from '../../Shared/common-Listing/common-list-menu';
 import { CommonListMenuItem } from '../../Shared/common-Listing/common-list-menu-item';
-import { CommonServiceService } from 'src/app/Service/common-service.service';
+import { CommonServiceService } from 'src/app/Service/common.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEditCourseComponent } from '../add-edit-course/add-edit-course.component';

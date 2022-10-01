@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,12 +7,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
-
-  constructor() { }
+  userDetails: any;
+  constructor(public route: Router) { }
 
   ngOnInit(): void {
+    const data: any = localStorage.getItem('userDetails');
+    this.userDetails = JSON.parse(data);
   }
- 
- 
+
+
+
+  logout() {
+    localStorage.clear();
+    this.route.navigate(['/admin-login']);
+  }
 
 }

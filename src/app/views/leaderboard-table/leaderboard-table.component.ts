@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
 import { Component, Directive, EventEmitter, Input, Output, QueryList, ViewChildren } from '@angular/core';
-import { CommonServiceService } from '../../Service/common-service.service';
+import { CommonServiceService } from '../../Service/common.service';
 
 
 interface Leader {
@@ -337,7 +337,7 @@ this.summryTable();
 summryTable()
 {
 
-  this.service.getAPIMethod('/tourDetails').subscribe((APIresponse: any) => {
+  this.service.getAPIMethod('/tournament/tourDetails').subscribe((APIresponse: any) => {
     
   
     var tourId = APIresponse.response?.result?.tour_id;

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { CommonServiceService } from 'src/app/Service/common-service.service';
+import { CommonServiceService } from 'src/app/Service/common.service';
 import { CommonListMenu } from 'src/app/Shared/common-Listing/common-list-menu';
 import { CommonListMenuItem } from 'src/app/Shared/common-Listing/common-list-menu-item';
 import { CommonListProperties } from 'src/app/Shared/common-Listing/common-properties';

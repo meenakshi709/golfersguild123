@@ -23,7 +23,7 @@ import { PhotosComponent } from './views/photos/photos.component';
 import { September21Component } from './views/september21/september21.component';
 import { November20Component } from './views/november20/november20.component';
 import { TestimonialComponent } from './views/testimonial/testimonial.component';
-import { CommonServiceService } from './Service/common-service.service';
+import { CommonServiceService } from './Service/common.service';
 import { NavigationComponent } from './views/navigation/navigation.component';
 import { FooterComponent } from './views/footer/footer.component';
 import {January21Component} from './views/january21/january21.component';
@@ -39,7 +39,7 @@ import { RootInterceptor } from './Service/authGaurd/rootInterceptor';
 import { ErrorInterceptor } from './Service/authGaurd/errorInterceptor';
 import { AuthgaurdService } from './Service/authGaurd/authGuard.service';
 
-
+import { AvatarModule } from 'ngx-avatar';
 
 
 
@@ -88,7 +88,8 @@ import { AuthgaurdService } from './Service/authGaurd/authGuard.service';
     NgbNavModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    SharedModule
+    SharedModule,
+    AvatarModule
     
     
   ],
