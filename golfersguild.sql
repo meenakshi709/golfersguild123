@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 22, 2022 at 08:14 AM
+-- Generation Time: Oct 01, 2022 at 10:26 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
 
@@ -339,7 +339,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getGroupDetails` ()  BEGIN
 	SELECT * FROM group_details order by groupName asc;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getHandicapScores` (IN `param_player_Id` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getHandicapScores` (IN `param_player_Id` INT, IN `isRecentScore` INT)  BEGIN
 Declare scoreCount varchar(1000);
 Declare handicapIndex varchar(1000);
 set handicapIndex=0;
@@ -350,20 +350,20 @@ select tournament_score_details.tour_score_id, tournament_score_details.gross,to
 ELSE IF (scoreCount>=10 AND scoreCount<15) THEN
 select *  from (
 SELECT  * FROM(
-select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=6 order by createdDate desc   limit 10
+select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=param_player_Id order by createdDate desc   limit 10
 )result   order by  CONVERT(result.scoreDifferential,Decimal(10,2))  limit 3 )result1;
 
 ELSE IF (scoreCount>=15 AND scoreCount<20) THEN
 
 select *  from (
 SELECT   * FROM(
-select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=6 order by createdDate desc   limit 15
+select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=param_player_Id order by createdDate desc   limit 15
 )result   order by  CONVERT(result.scoreDifferential,Decimal(10,2))  limit 6 )result1;
 ELSE IF (scoreCount>=20) THEN
 
 select *  from (
 SELECT   * FROM(
-select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=6 order by createdDate desc   limit 20
+select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=param_player_Id order by createdDate desc   limit 20
 )result   order by  CONVERT(result.scoreDifferential,Decimal(10,2))  limit 10 )result1;
 
 
@@ -372,10 +372,10 @@ END IF;
 END IF;
 END IF;
 SELECT CASE when scoreCount>20 then '20' else scoreCount END as scoreCount; 
-if (scoreCount<=20) then 
-select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=6 order by createdDate desc  limit 20;
+if (isRecentScore=1) then 
+select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=param_player_Id order by createdDate desc  limit 20;
 else 
-select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=6 order by createdDate desc ;
+select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=param_player_Id order by createdDate desc ;
 end if;
 END$$
 
@@ -384,6 +384,11 @@ select * from industry_details where isDeleted=0;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getInvitedTournamentListById` (IN `param_userId` INT)  select * from tournament_player_list inner join events on events.tourID=tournament_player_list.tourID where isInvited=1 and playerID=param_userId and is_Deleted=0 and isPlay=0 and CURRENT_DATE() between startDate and endDate  ORDER by startDate$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getLiveTournamentDetails` ()  BEGIN
+SELECT * FROM live_tournament_round_details 
+inner join events on events.tourID=live_tournament_round_details.tour_id;
+END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getPlayerListing` ()  BEGIN
 
@@ -435,10 +440,6 @@ END IF;
 select err,msg from dual;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournamentAndRoundDetail` ()  BEGIN
-	SELECT * FROM statictournamentrounddetails;
-END$$
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournamentApprovalStatus` (IN `param_tourId` VARCHAR(50), IN `param_playerId` VARCHAR(50))  BEGIN
 Declare err varchar(2);
 Declare  msg varchar(100);
@@ -484,7 +485,7 @@ WHERE  sd.p_id=param_player_id and sd.tour_id=param_tour_id and sd.round_Id=para
  END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournamentDetails` ()  BEGIN
-	SELECT * FROM events WHERE is_Deleted=0 order by tournamentName asc;
+		SELECT *, DATE_FORMAT(startdate, '%d-%b-%Y')  as tournamentDate FROM events WHERE is_Deleted=0 order by tournamentName asc;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournamentFormats` ()  BEGIN
@@ -1457,15 +1458,15 @@ Declare isUserExist int;
 select count(*) into isUserExist from user_details where email=param_emailId And  password=param_password And isDeleted=0;
 if(isUserExist>0) then
 
-SELECT * from user_details WHERE email=param_emailId And  password=param_password And isDeleted=0; 
+SELECT * from user_details INNER join  user_role on user_role.roleId=user_details.roleId WHERE email=param_emailId And  password=param_password And user_details.isDeleted=0; 
 Set err="";
-Set msg="User logged in successfully";
+Set msg="User login successfully";
 
 
 ELSE
 
 Set err="X";
-Set msg="Please enter valid login details";
+Set msg="Sorry, either username or password is incorrect. Please try again";
 
 
 END IF;
@@ -1752,14 +1753,18 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`tourID`, `tournamentName`, `eventType`, `numRounds`, `is_Deleted`, `startDate`, `endDate`, `created_Date`, `modified_Date`, `created_By`, `modified_By`, `flag`, `holes`) VALUES
-(1, 'golf club', 'Stroke Play', 3, 0, '2022-08-24 18:30:00', '2022-08-26 18:30:00', '2022-08-25 07:12:41', '2022-08-25 07:12:41', '', '', 0, 18),
-(2, 'golf plus', 'Stroke Play', 2, 0, '2022-08-26 18:30:00', '2022-08-27 18:30:00', '2022-08-25 09:06:56', '2022-08-25 09:06:56', '', '', 0, 18),
-(3, 'July test Tournament', 'Stroke Play', 1, 0, '2022-08-26 18:30:00', '2022-08-26 18:30:00', '2022-08-26 06:50:05', '2022-08-26 06:50:05', '', '', 0, 18),
-(4, 'test', 'Stroke Play', 1, 0, '2022-08-25 18:30:00', '2022-08-25 18:30:00', '2022-08-26 07:20:05', '2022-08-26 07:20:05', '', '', 0, 18),
-(5, 'test tour', 'Stroke Play', 1, 0, '2022-08-25 18:30:00', '2022-08-25 18:30:00', '2022-08-26 09:00:52', '2022-08-26 09:00:52', '', '', 0, 18),
-(6, 'test cd', 'Stroke Play', 1, 0, '2022-08-25 18:30:00', '2022-08-25 18:30:00', '2022-08-26 09:03:57', '2022-08-26 09:03:57', '', '', 0, 18),
-(7, 'test 12', 'Stroke Play', 7, 0, '2022-08-29 18:30:00', '2022-09-04 18:30:00', '2022-08-30 07:16:12', '2022-08-30 07:16:12', '', '', 0, 18),
-(8, 'aug 31', 'Stroke Play', 7, 0, '2022-08-30 18:30:00', '2022-09-05 18:30:00', '2022-08-31 06:20:56', '2022-08-31 06:20:56', '', '', 0, 18);
+(1, 'golf club', '1', 3, 0, '2022-08-24 18:30:00', '2022-08-26 18:30:00', '2022-08-25 07:12:41', '2022-08-25 07:12:41', '', '', 0, 18),
+(2, 'golf plus', '6', 2, 0, '2022-08-26 18:30:00', '2022-08-27 18:30:00', '2022-08-25 09:06:56', '2022-08-25 09:06:56', '', '', 0, 18),
+(3, 'July test Tournament', '6', 1, 0, '2022-08-26 18:30:00', '2022-08-26 18:30:00', '2022-08-26 06:50:05', '2022-08-26 06:50:05', '', '', 0, 18),
+(4, 'test', '6', 1, 0, '2022-08-25 18:30:00', '2022-08-25 18:30:00', '2022-08-26 07:20:05', '2022-08-26 07:20:05', '', '', 0, 18),
+(5, 'test tour', '6', 1, 0, '2022-08-25 18:30:00', '2022-08-25 18:30:00', '2022-08-26 09:00:52', '2022-08-26 09:00:52', '', '', 0, 18),
+(6, 'test cd', '6', 1, 0, '2022-08-25 18:30:00', '2022-08-25 18:30:00', '2022-08-26 09:03:57', '2022-08-26 09:03:57', '', '', 0, 18),
+(7, 'test 12', '6', 7, 0, '2022-08-29 18:30:00', '2022-09-04 18:30:00', '2022-08-30 07:16:12', '2022-08-30 07:16:12', '', '', 0, 18),
+(8, 'aug 31', '6', 7, 0, '2022-08-30 18:30:00', '2022-09-05 18:30:00', '2022-08-31 06:20:56', '2022-08-31 06:20:56', '', '', 0, 18),
+(9, 'golf club2', 'Stroke Play', 2, 0, '2022-09-27 18:30:00', '2022-09-28 18:30:00', '2022-09-28 11:59:22', '2022-09-28 11:59:22', '', '', 0, 18),
+(10, 'ff', 'Stroke Play', 2, 1, '2022-09-27 18:30:00', '2022-09-28 18:30:00', '2022-09-28 12:04:39', '2022-09-28 12:04:39', '', '', 0, 18),
+(11, 'golf club5', 'Stroke Play', 1, 0, '2022-09-27 18:30:00', '2022-09-27 18:30:00', '2022-09-28 12:13:18', '2022-09-28 12:13:18', '', '', 0, 18),
+(12, 'aaaaaaaa', '1', 1, 0, '2022-09-27 18:30:00', '2022-09-27 18:30:00', '2022-09-28 12:24:09', '2022-09-28 12:24:09', '', '', 0, 18);
 
 -- --------------------------------------------------------
 
@@ -1873,6 +1878,25 @@ INSERT INTO `industry_details` (`industryId`, `industryName`, `isDeleted`) VALUE
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `live_tournament_round_details`
+--
+
+CREATE TABLE `live_tournament_round_details` (
+  `st_id` int(11) NOT NULL,
+  `tour_id` int(11) NOT NULL,
+  `round_Id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `live_tournament_round_details`
+--
+
+INSERT INTO `live_tournament_round_details` (`st_id`, `tour_id`, `round_Id`) VALUES
+(1, 1, 3);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `master_event_format`
 --
 
@@ -1887,11 +1911,9 @@ CREATE TABLE `master_event_format` (
 --
 
 INSERT INTO `master_event_format` (`formatKey`, `formatName`, `isDeleted`) VALUES
-(1, 'stableford', 0),
-(2, 'undefined', 1),
-(3, 'undefined', 1),
-(4, 'undefined', 1),
-(5, 'testmatch', 0);
+(1, 'Stableford', 0),
+(6, 'Stroke Play', 0),
+(7, 'Match Play', 0);
 
 -- --------------------------------------------------------
 
@@ -2102,7 +2124,13 @@ INSERT INTO `round_details` (`round_Id`, `event_Date`, `cid`, `tourID`, `created
 (20, ' 2022-09-03 00:00:00', 2, 8, '2022-08-31 06:20:56', '2022-08-31 06:20:56', 'Round4'),
 (21, ' 2022-09-04 00:00:00', 2, 8, '2022-08-31 06:20:56', '2022-08-31 06:20:56', 'Round5'),
 (22, ' 2022-09-05 00:00:00', 2, 8, '2022-08-31 06:20:56', '2022-08-31 06:20:56', 'Round6'),
-(23, ' 2022-09-06 00:00:00', 2, 8, '2022-08-31 06:20:56', '2022-08-31 06:20:56', 'Round7');
+(23, ' 2022-09-06 00:00:00', 2, 8, '2022-08-31 06:20:56', '2022-08-31 06:20:56', 'Round7'),
+(24, '2022-09-28 00:00:00', 29, 9, '2022-09-28 11:59:22', '2022-09-28 11:59:22', 'Round1'),
+(25, ' 2022-09-29 00:00:00', 1, 9, '2022-09-28 11:59:22', '2022-09-28 11:59:22', 'Round2'),
+(26, '2022-09-28 00:00:00', 29, 10, '2022-09-28 12:04:39', '2022-09-28 12:04:39', 'Round1'),
+(27, ' 2022-09-29 00:00:00', 3, 10, '2022-09-28 12:04:39', '2022-09-28 12:04:39', 'Round2'),
+(28, '2022-09-28 00:00:00', 2, 11, '2022-09-28 12:13:18', '2022-09-28 12:13:18', 'Round1'),
+(29, '2022-09-28 00:00:00', 2, 12, '2022-09-28 12:24:09', '2022-09-28 12:24:09', 'Round1');
 
 -- --------------------------------------------------------
 
@@ -2198,7 +2226,10 @@ INSERT INTO `stableford_points` (`sno`, `points`, `netScoreName`, `netScorePoint
 (3, 2, 'Par', 0, 0),
 (4, 3, 'Birdie', -1, 0),
 (5, 4, 'Eagle', -2, 0),
-(6, 5, 'Albatross', -3, 0);
+(6, 5, 'Albatross', -3, 0),
+(7, 6, 'Albatross', -4, 0),
+(8, 0, 'undefined', 0, 1),
+(9, 0, 'dd', 4, 1);
 
 -- --------------------------------------------------------
 
@@ -2252,25 +2283,6 @@ INSERT INTO `state` (`state_Id`, `state_name`, `country_Id`) VALUES
 (36, 'JHARKHAND', 1),
 (37, 'CHATTISGARH', 1),
 (38, 'ANDHRA PRADESH', 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `statictournamentrounddetails`
---
-
-CREATE TABLE `statictournamentrounddetails` (
-  `st.id` int(11) NOT NULL,
-  `tour_id` int(11) NOT NULL,
-  `round_Id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `statictournamentrounddetails`
---
-
-INSERT INTO `statictournamentrounddetails` (`st.id`, `tour_id`, `round_Id`) VALUES
-(1, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -2453,7 +2465,9 @@ INSERT INTO `tournament_player_list` (`tour_player_id`, `tourID`, `playerID`, `i
 (7, 5, 6, 0, 1, 0, 0, 0, 0, '2022-08-26'),
 (8, 6, 6, 0, 1, 0, 0, 0, 0, '2022-08-26'),
 (9, 7, 6, 0, 1, 1, 1, 0, 0, '2022-08-30'),
-(10, 8, 6, 0, 1, 1, 1, 0, 0, '2022-08-31');
+(10, 8, 6, 0, 1, 1, 1, 0, 0, '2022-08-31'),
+(11, 10, 6, 0, 1, 0, 0, 0, 0, '2022-09-28'),
+(12, 11, 6, 0, 1, 0, 0, 0, 0, '2022-09-28');
 
 -- --------------------------------------------------------
 
@@ -2518,12 +2532,12 @@ INSERT INTO `tournament_score_details` (`tour_score_id`, `p_id`, `tour_id`, `sco
 (13, 6, 5, 6, 5, 5, 5, 6, 6, 5, 5, 6, 5, 4, 5, 6, 6, 5, 7, 6, 5, 0, 13.5, 35, 45, 80, 70, 0, 0, '1', '17.5', '2022-08-30', 0, ''),
 (14, 6, 5, 6, 5, 5, 5, 6, 6, 5, 5, 6, 5, 4, 5, 6, 6, 5, 7, 6, 5, 0, 13.5, 35, 45, 80, 70, 0, 0, '1', '15.5', '2022-08-30', 0, ''),
 (15, 6, 0, 5, 6, 5, 4, 5, 6, 6, 7, 6, 5, 5, 4, 5, 5, 6, 6, 6, 6, 6, 13.5, 6, 4, 99, 88, 0, 18, '1', '18.9', '2022-08-30', 0, ''),
-(16, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 100, 90, 0, 18, '4', '12.3', '2022-08-30', 0, ''),
-(17, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 0, 0, 0, 0, '', '13.4', '2022-08-30', 0, ''),
-(18, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 100, 90, 0, 18, '4', '12.3', '2022-08-30', 0, ''),
-(19, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 0, 0, 0, 0, '', '13.4', '2022-08-30', 0, ''),
-(20, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 0, 0, 0, 0, '', '14.7', '2022-08-30', 0, ''),
-(21, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 0, 0, 0, 0, '', '18.9', '2022-08-30', 0, ''),
+(16, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 100, 90, 0, 18, '1', '12.3', '2022-08-30', 0, ''),
+(17, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 0, 0, 0, 0, '1', '13.4', '2022-08-30', 0, ''),
+(18, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 100, 90, 0, 18, '1', '12.3', '2022-08-30', 0, ''),
+(19, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 0, 0, 0, 0, '1', '13.4', '2022-08-30', 0, ''),
+(20, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 0, 0, 0, 0, '1', '14.7', '2022-08-30', 0, ''),
+(21, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 0, 0, 0, 0, '3', '18.9', '2022-08-30', 0, ''),
 (22, 6, 8, 4, 5, 6, 5, 5, 6, 6, 5, 5, 5, 5, 5, 5, 6, 5, 5, 3, 4, 17, 13.5, 43, 47, 90, 78, 1, 17, '2', '16.2', '2022-08-31', 0, ''),
 (23, 6, 8, 4, 5, 4, 4, 5, 4, 5, 4, 5, 4, 5, 4, 5, 6, 4, 4, 5, 4, 18, 13.5, 41, 40, 81, 67, 2, 17, '2', '6.8', '2022-08-31', 0, ''),
 (24, 6, 8, 5, 4, 5, 6, 5, 4, 6, 5, 7, 5, 6, 4, 4, 4, 5, 4, 4, 7, 19, 13.5, 43, 47, 90, 77, 1, 17, '2', '16.2', '2022-08-31', 0, ''),
@@ -2664,7 +2678,7 @@ CREATE TABLE `user_details` (
 --
 
 INSERT INTO `user_details` (`p_id`, `firstName`, `lastName`, `playerName`, `userName`, `contactNumber`, `email`, `password`, `dob`, `gender`, `homeCourse`, `hdcp`, `handicapIndex`, `hdcpCertificate`, `platformLink`, `vaccineStatus`, `employment`, `companyName`, `jobTitle`, `industry`, `profileImg`, `roleId`, `isDeleted`, `isWebUser`, `isFirstLogin`, `countryId`, `stateId`, `createdDate`, `updatedDate`, `isAccountVerified`, `device_id`, `device_platform`) VALUES
-(1, 'super', 'admin', '', 'superAdmin', 'h', 'meenakshi@echelonedge.com', 'Meen@1234', NULL, 'female', NULL, NULL, '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 1, 0, NULL, NULL, NULL, NULL, 0, '', ''),
+(1, 'Meenakshi', NULL, '', 'superAdmin', 'h', 'meenakshi@echelonedge.com', 'Meen@1234', NULL, 'female', NULL, NULL, '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 1, 0, NULL, NULL, NULL, NULL, 0, '', ''),
 (6, 'test', ' testii', 'test mina testii', 'test@1234', '5544667788', 'er.minaxi18@gmail.com', 'testi@123456', '2000-01-01', 'male', 'test mnmjk', '13.50', '12.70', '', '', 1, 2, 'test test', 'manager', '2', NULL, 3, 0, 0, 0, NULL, NULL, '2022-01-19 00:00:00', '2022-01-21 00:00:00', 1, '', ''),
 (10, 'Rajiv', 'Ghumman', 'Rajiv Ghumman', 'RajivGhumman2', NULL, NULL, NULL, NULL, NULL, NULL, '15.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, NULL, 0, NULL, NULL, '2022-02-26 06:51:44', '2022-02-26 06:51:44', 1, '', ''),
 (11, 'Aseem', 'Vivek', 'Aseem Vivek', 'AseemVivek2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, NULL, 0, NULL, NULL, '2022-02-26 06:51:44', '2022-02-26 06:51:44', 1, '', ''),
@@ -2800,6 +2814,12 @@ ALTER TABLE `industry_details`
   ADD PRIMARY KEY (`industryId`);
 
 --
+-- Indexes for table `live_tournament_round_details`
+--
+ALTER TABLE `live_tournament_round_details`
+  ADD PRIMARY KEY (`st_id`);
+
+--
 -- Indexes for table `master_event_format`
 --
 ALTER TABLE `master_event_format`
@@ -2861,12 +2881,6 @@ ALTER TABLE `stableford_points`
 --
 ALTER TABLE `state`
   ADD PRIMARY KEY (`state_Id`);
-
---
--- Indexes for table `statictournamentrounddetails`
---
-ALTER TABLE `statictournamentrounddetails`
-  ADD PRIMARY KEY (`st.id`);
 
 --
 -- Indexes for table `tournament_coupon_details`
@@ -2984,7 +2998,7 @@ ALTER TABLE `employment`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `event_details`
@@ -3011,10 +3025,16 @@ ALTER TABLE `industry_details`
   MODIFY `industryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
+-- AUTO_INCREMENT for table `live_tournament_round_details`
+--
+ALTER TABLE `live_tournament_round_details`
+  MODIFY `st_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `master_event_format`
 --
 ALTER TABLE `master_event_format`
-  MODIFY `formatKey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `formatKey` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `master_tee_colors`
@@ -3044,7 +3064,7 @@ ALTER TABLE `player_details`
 -- AUTO_INCREMENT for table `round_details`
 --
 ALTER TABLE `round_details`
-  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `score_details`
@@ -3062,19 +3082,13 @@ ALTER TABLE `sponserslist`
 -- AUTO_INCREMENT for table `stableford_points`
 --
 ALTER TABLE `stableford_points`
-  MODIFY `sno` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `sno` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `state`
 --
 ALTER TABLE `state`
   MODIFY `state_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
-
---
--- AUTO_INCREMENT for table `statictournamentrounddetails`
---
-ALTER TABLE `statictournamentrounddetails`
-  MODIFY `st.id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tournament_coupon_details`
@@ -3104,7 +3118,7 @@ ALTER TABLE `tournament_group_player_details`
 -- AUTO_INCREMENT for table `tournament_player_list`
 --
 ALTER TABLE `tournament_player_list`
-  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tournament_score_details`
