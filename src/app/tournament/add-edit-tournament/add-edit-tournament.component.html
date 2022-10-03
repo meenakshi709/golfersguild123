@@ -38,13 +38,15 @@
                                     <mat-label>Match Format*</mat-label>
 
                                     <mat-select formControlName="eventType" id="eventType">
-                                        <mat-option *ngFor="let item of this.data.eventType" [value]=item.formatKey> {{item.formatName}}
+                                        <mat-option *ngFor="let item of this.data.eventType" [value]=item.formatKey>
+                                            {{item.formatName}}
                                         </mat-option>
                                     </mat-select>
                                     <mat-error *ngIf="item.controls['eventType'].errors?.required">
                                         Please enter event type
                                     </mat-error>
                                 </mat-form-field>
+
 
                                 <mat-form-field appearance="outline" class="ml-11">
                                     <mat-label>Rounds*</mat-label>
@@ -62,10 +64,9 @@
                                 <mat-form-field appearance="outline" class="col-lg-2 ml-11">
                                     <mat-label>Holes*</mat-label>
 
-                                    <mat-select formControlName="holes" id="holes"
-                                        >
-                                        <mat-option value="9">9   </mat-option>
-                                        <mat-option value="18">18   </mat-option>
+                                    <mat-select formControlName="holes" id="holes">
+                                        <mat-option value="9">9 </mat-option>
+                                        <mat-option value="18">18 </mat-option>
                                     </mat-select>
                                     <mat-error *ngIf="item.controls['holes'].errors?.required">
                                         Please enter number of holes
@@ -94,7 +95,7 @@
                                             <mat-label>Event Date*</mat-label>
                                             <input matInput [matDatepicker]="picker" formControlName="eventDate"
                                                 id="eventDate" [min]="todayDate">
-                                               
+
                                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                             <mat-datepicker #picker></mat-datepicker>
                                             <mat-error *ngIf="roundsDetails.controls['eventDate'].errors?.required">
@@ -133,8 +134,10 @@
                     <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
                         <div mat-dialog-actions>
                             <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
-                            <button type="button" class="btn btn-primary" *ngIf="this.data.isTournamentAdd"
-                                [disabled]="!this.eventFormGroup.valid||this.isButtonDisable" (click)="saveTournamentDetails()">{{!this.data.details?'Add ':'Update'}}</button>
+                            <button type="button" class="btn btn-primary"
+                                *ngIf="this.data.isTournamentAdd && !this.data.details"
+                                [disabled]="!this.eventFormGroup.valid||this.isButtonDisable"
+                                (click)="saveTournamentDetails()">{{!this.data.details?'Add ':'Update'}}</button>
                         </div>
                     </div>
                 </div>
@@ -213,7 +216,8 @@
 
                         <div mat-dialog-actions class="text-right">
                             <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
-                            <button type="button" class="btn btn-primary" (click)="sendInviteLink()">Send Invite</button>
+                            <button type="button" class="btn btn-primary" (click)="sendInviteLink()">Send
+                                Invite</button>
 
                         </div>
                     </div>
@@ -235,17 +239,36 @@
     <div class="container">
         <div *ngIf="this.groupFormGroup.get('groupDetailsArr')['controls'].length==0">
             <div class="row">
-                <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3">
+                <div class="col-lg-3 col-xs-3 col-sm-3 col-md-3 mb-3">
+                    <mat-form-field appearance="outline" class="ml-11">
+                        <mat-label>Tournament Name</mat-label>
+                        <input matInput type="text" placeholder="Tournament Name" readonly
+                        [formControl]="groupTournamentName" maxlength="100" id="tournamentName" />
+
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-xs-3 col-sm-3 col-md-3 mb-3">
+                    <mat-form-field appearance="outline" class="ml-11">
+                        <mat-label>Round </mat-label>
+                        <mat-select [formControl]="groupRoundName" id="roundId" [disabled]="true">
+                            <mat-option *ngFor="let item of this.data.roundList" [value]=item.round_Id>
+                                {{item.round_name}}
+                            </mat-option>
+                        </mat-select>
+
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-xs-3 col-sm-3 col-md-3 mb-3">
                     <mat-form-field appearance="outline">
-                        <mat-label>Group(Player)</mat-label>
+                        <mat-label>Group(Player)*</mat-label>
                         <input type="text" matInput placeholder="" [formControl]="noPlayerGroup">
                     </mat-form-field>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3">
-                    <button mat-stroked-button class="ml-3" (click)="manualGroupInit()">Manual Group </button>
-                    <button mat-raised-button color="primary" (click)="automaticGroupInit()">Generate Group </button>
+                    <button mat-stroked-button class="ml-3" (click)="manualGroupInit()" [disabled]="!this.noPlayerGroup.value">Manual Group </button>
+                    <button mat-raised-button color="primary" (click)="automaticGroupInit()" [disabled]="!this.noPlayerGroup.value">Generate Group </button>
                 </div>
             </div>
         </div>
@@ -325,12 +348,13 @@
 
                                         <mat-form-field appearance="outline" class="ml-11">
                                             <mat-label>Tee Name* </mat-label>
-                                            <mat-select formControlName="tee" id="tee" >
+                                            <mat-select formControlName="tee" id="tee">
                                                 <option value="" selected></option>
-                                                <mat-option *ngFor="let teeDetails of this.teeNameList" [value]="teeDetails.cRatingId">{{teeDetails.teeName}}
+                                                <mat-option *ngFor="let teeDetails of this.teeNameList"
+                                                    [value]="teeDetails.cRatingId">{{teeDetails.teeName}}
                                                 </mat-option>
                                             </mat-select>
-                
+
                                             <mat-error *ngIf="item.controls['tee'].errors?.required">
                                                 Please select tee
                                             </mat-error>
@@ -418,7 +442,8 @@
                                     <mat-label>Round*</mat-label>
 
                                     <mat-select id="roundId" formControlName="roundId">
-                                        <mat-option *ngFor="let item of this.data.roundList" [value]=item.round_Id> {{item.round_name}}
+                                        <mat-option *ngFor="let item of this.data.roundList" [value]=item.round_Id>
+                                            {{item.round_name}}
                                         </mat-option>
                                     </mat-select>
                                     <mat-error *ngIf="item.controls['roundId'].errors?.required">
@@ -457,7 +482,8 @@
 
             <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 mt-1 tournament-Edit ">
                 <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
-                <button type="button" class="btn btn-primary" [disabled]="!this.couponFormGroup.valid" (click)="onSaveCouponDetails()">Save</button>
+                <button type="button" class="btn btn-primary" [disabled]="!this.couponFormGroup.valid"
+                    (click)="onSaveCouponDetails()">Save</button>
 
             </div>
 
@@ -473,30 +499,38 @@
 <div *ngIf="this.data.sectionName=='approval'" class="p-3">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3" >
-                <button mat-stroked-button class="ml-3" (click)="getAcceptRejectPlayerList('1');approvalStatus=1;"> Accepted </button>
-                <button mat-stroked-button color="warn" class="ml-3 mr-2" (click)="getAcceptRejectPlayerList('0');approvalStatus=0;">Deny </button>
-                <button mat-stroked-button color="warn" class="ml-3 mr-2" (click)="getAcceptRejectPlayerList('2');approvalStatus=2;">Pending </button>
+            <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3">
+                <button mat-stroked-button class="ml-3" (click)="getAcceptRejectPlayerList('1');approvalStatus=1;">
+                    Accepted </button>
+                <button mat-stroked-button color="warn" class="ml-3 mr-2"
+                    (click)="getAcceptRejectPlayerList('0');approvalStatus=0;">Deny </button>
+                <button mat-stroked-button color="warn" class="ml-3 mr-2"
+                    (click)="getAcceptRejectPlayerList('2');approvalStatus=2;">Pending </button>
             </div>
         </div>
         <div class="row">
-              <section>
-                    <form  >
+            <section>
+                <form>
 
-                        <div >
-                            <div >
-                                <div >
-    
-                                    <div class="row">
-                                        <div class="col-lg-4 col-xs-6 col-sm-4 col-md-4 listBox">
-                                   
-                                            
-                                            <mat-label *ngFor="let item of this.data.playerList;let i=index" class="list-field" >
-                                           <div > <mat-checkbox *ngIf="approvalStatus==1"     (change)="getInvitedPlayerStatus($event,item.playerID)"> &nbsp; {{item.playerName}} </mat-checkbox></div>
-                                          <div *ngIf="approvalStatus!=1" >{{item.playerName}}</div>
-                                             </mat-label>
-                                           
-                                           
+                    <div>
+                        <div>
+                            <div>
+
+                                <div class="row">
+                                    <div class="col-lg-4 col-xs-6 col-sm-4 col-md-4 listBox">
+
+
+                                        <mat-label *ngFor="let item of this.data.playerList;let i=index"
+                                            class="list-field">
+                                            <div>
+                                                <mat-checkbox *ngIf="approvalStatus==1"
+                                                    (change)="getInvitedPlayerStatus($event,item.playerID)"> &nbsp;
+                                                    {{item.playerName}} </mat-checkbox>
+                                            </div>
+                                            <div *ngIf="approvalStatus!=1">{{item.playerName}}</div>
+                                        </mat-label>
+
+
 
                                         <!-- <mat-form-field appearance="outline" class="ml-11">
                                             <mat-label>Players*</mat-label>
@@ -513,39 +547,40 @@
                                                 Please select player
                                             </mat-error>
                                         </mat-form-field> -->
-                                       
-                                       
 
 
-                                
+
+
+
                                     </div>
                                 </div>
 
 
                             </div>
-                            
+
 
                         </div>
 
 
                     </div>
+
                    
-                    <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12 mt-1 tournament-Edit ">
 
-                        <div mat-dialog-actions class="text-right">
-                            <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
-                            <button type="button" class="btn btn-primary" (click)="saveApprovedPlayerList()"
-                          >Approve</button>
+                </form>
+                <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12 mt-1 tournament-Edit ">
 
-                        </div>
+                    <div  class="text-right">
+                        <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
+                        <button type="button" class="btn btn-primary"
+                            (click)="saveApprovedPlayerList()">Approve</button>
+
                     </div>
-
-            </form>
+                </div>
             </section>
 
-         
-    
 
+
+
+        </div>
     </div>
-</div>
 </div>

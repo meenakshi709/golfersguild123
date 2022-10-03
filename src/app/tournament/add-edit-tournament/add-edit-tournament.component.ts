@@ -21,15 +21,17 @@ export class AddEditTournamentComponent implements OnInit {
   approvedPlayerList: any = [];
   tourID: any;
   playerList: any = [];
-  teeNameList:any=[];
+  teeNameList: any = [];
   eventDetailsArr: any = new FormArray([]);
   eventFormGroup: any = new FormGroup({
     eventDetailsArr: new FormArray([]),
   });
   groupDetailsArr: any = new FormArray([]);
   groupFormGroup: any = new FormGroup({
+
     tourId: new FormControl('', []),
     roundId: new FormControl('', []),
+
     groupDetailsArr: new FormArray([]),
   });
   acceptRejectPlayerList: any = [];
@@ -40,6 +42,8 @@ export class AddEditTournamentComponent implements OnInit {
     couponArr: new FormArray([]),
   });
   noPlayerGroup = new FormControl('', [Validators.required]);
+  groupTournamentName = new FormControl('', [Validators.required]);
+  groupRoundName = new FormControl('', [Validators.required]);
   constructor(
     public dialogRef: MatDialogRef<AddEditTournamentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -61,29 +65,39 @@ export class AddEditTournamentComponent implements OnInit {
     if (this.data.sectionName == 'tournament') {
       this.eventFormGroupInit('');
       if (this.data.details) {
-
         this.eventFormGroup.controls.eventDetailsArr.controls[0].controls.numRounds.disable();
         this.eventFormGroup.controls.eventDetailsArr.controls[0].controls.tournamentName.disable();
         this.eventFormGroup.controls.eventDetailsArr.controls[0].controls.eventType.disable();
         this.eventFormGroup.controls.eventDetailsArr.controls[0].controls.holes.disable();
         // this.eventFormGroup.controls.eventDetailsArr.controls[0].controls.cname.disable();
-
-
         this.setEventDetails();
-
       }
-
     }
     else if (this.data.sectionName == 'coupon') {
-      this.couponFormGroupInit();
+      debugger;
+      if (this.data.couponList.length > 0) {
+
+        this.data.couponList.forEach((item: any) => {
+          this.couponFormGroupInit(item);
+        });
+      } else {
+        this.couponFormGroupInit('');
+      }
+
+    } else if (this.data.sectionName == 'group') {
+      this.data.roundList.forEach((round: any, index: any) => {
+        if (round.round_Id == this.data.previousRoundDetails.roundId) {
+          this.groupRoundName.setValue(this.data.roundList[index + 1].round_Id);
+        }
+      });
+
+      this.groupTournamentName.setValue(this.data.details.tournamentName)
 
     }
 
   }
 
   setEventDetails() {
-
-
     const keys = Object.keys(this.eventFormGroup.controls.eventDetailsArr.controls[0].controls);
     const formControl = this.eventFormGroup.controls.eventDetailsArr.controls[0].controls;
     console.log(keys);
@@ -96,7 +110,13 @@ export class AddEditTournamentComponent implements OnInit {
         this.onShownRounds(this.eventFormGroup.controls.eventDetailsArr.controls[0]);
 
       } else {
-        if (keyName != 'roundsArray') {
+        debugger;
+        if (keyName == 'eventType') {
+          formControl[keyName].setValue(Number(this.data.details[keyName]));
+        } else if (keyName == 'holes') {
+          formControl[keyName].setValue(this.data.details[keyName].toString());
+        }
+        else if (keyName != 'roundsArray') {
 
           formControl[keyName].setValue(this.data.details[keyName])
         }
@@ -169,21 +189,23 @@ export class AddEditTournamentComponent implements OnInit {
 
 
   // -----------------------------Coupon section starts-------------------------------------------------------
-  couponFormGroupInit() {
+  couponFormGroupInit(data: any) {
     const couponForm: FormGroup = new FormGroup({
-      roundId: new FormControl('', []),
-      name: new FormControl('', [Validators.required]),
-      quantity: new FormControl('', [Validators.required])
+      roundId: new FormControl(data.round_Id ? data.round_Id : '', []),
+      name: new FormControl(data.couponCode ? data.couponCode : '', [Validators.required]),
+      quantity: new FormControl(data.couponCount ? data.couponCount : '', [Validators.required])
     });
     (this.couponFormGroup.get('couponArr') as FormArray).push(couponForm);
   }
 
   onAddingNewCoupon() {
-    this.couponFormGroupInit();
+    this.couponFormGroupInit('');
   }
   onDeleteNewCoupon(index: any) {
     const couponArray = (this.couponFormGroup.get('couponArr') as FormArray).controls;
-    couponArray.splice(index, 1);
+    if (couponArray.length > 1) {
+      couponArray.splice(index, 1);
+    }
   }
 
   onSaveCouponDetails() {
@@ -210,6 +232,8 @@ export class AddEditTournamentComponent implements OnInit {
       teeTime: new FormControl(data ? data.teeTime : '', [Validators.required]),
     });
     (this.groupFormGroup.get('groupDetailsArr') as FormArray).push(groupForm);
+
+
   }
   onAddingNewGroup() {
     this.groupFormGroupInit('');
@@ -248,17 +272,17 @@ export class AddEditTournamentComponent implements OnInit {
         });
 
         this.groupFormGroup.controls.roundId.setValue(this.data.roundList[roundIndex].round_Id);
-        
-  
+
+
         this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + this.data.roundList[roundIndex].cid).subscribe((APIResponse: any) => {
           if (APIResponse.error == '') {
             this.teeNameList = APIResponse.response.result;
           } else {
-    
+
           }
         });
 
-        
+
         this.groupFormGroup.controls.roundId.disable();
       }
 
@@ -440,7 +464,7 @@ export class AddEditTournamentComponent implements OnInit {
       item['eventDate'] = this.datePipe.transform(item.eventDate, "yyyy-MM-dd HH:mm:ss");
     });
     const url = "/tournament/saveEventDetails";
-    
+
     this.service.postAPIMethod(url, data).subscribe((response: any) => {
       if (response.error != 'X' && response.response.result.err != "X") {
         if (this.data.isTournamentAdd) {
@@ -464,29 +488,29 @@ export class AddEditTournamentComponent implements OnInit {
 
   // --------------------Add Tournament flow--------------------------
 
-  eventTabDisplay() {
-    this.service.getAPIMethod('/courseList').subscribe((courseResponse: any) => {
-      if (courseResponse.error != 'X') {
-        const tournamentDetails = {
-          tourID: this.eventFormGroup.controls.tourID.value
-        }
-        const data = {
-          title: 'Event Details',
-          sectionName: 'tournament',
-          details: '',
-          eventType: ['Match Play', 'Stroke Play'],
-          roundsList: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-          courseList: courseResponse.response.result,
-          isTournamentAdd: true
-        }
-        this.data = data;
-        this.eventFormGroupInit(tournamentDetails);
-        //  this.selectedTabIndex = 0;
-      } else {
+  // eventTabDisplay() {
+  //   this.service.getAPIMethod('/courseList').subscribe((courseResponse: any) => {
+  //     if (courseResponse.error != 'X') {
+  //       const tournamentDetails = {
+  //         tourID: this.eventFormGroup.controls.tourID.value
+  //       }
+  //       const data = {
+  //         title: 'Event Details',
+  //         sectionName: 'tournament',
+  //         details: '',
+  //         eventType: ['Match Play', 'Stroke Play'],
+  //         roundsList: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+  //         courseList: courseResponse.response.result,
+  //         isTournamentAdd: true
+  //       }
+  //       this.data = data;
+  //       this.eventFormGroupInit(tournamentDetails);
+  //       //  this.selectedTabIndex = 0;
+  //     } else {
 
-      }
-    });
-  }
+  //     }
+  //   });
+  // }
 
 
 
@@ -519,49 +543,49 @@ export class AddEditTournamentComponent implements OnInit {
 
 
 
-  groupTabDisplay() {
+  // groupTabDisplay() {
 
-    const groupList = this.service.getAPIMethod('/dataApi/getGroupList');
-    const approvedPlayerList = this.service.getAPIMethod('/tournament/getApprovedPlayerList?tourId=' + 48);
-    forkJoin([groupList, approvedPlayerList]).subscribe((response: any) => {
-      if (response[0].error != 'X' && response[1].error != 'X') {
+  //   const groupList = this.service.getAPIMethod('/dataApi/getGroupList');
+  //   const approvedPlayerList = this.service.getAPIMethod('/tournament/getApprovedPlayerList?tourId=' + 48);
+  //   forkJoin([groupList, approvedPlayerList]).subscribe((response: any) => {
+  //     if (response[0].error != 'X' && response[1].error != 'X') {
 
-        const data = {
-          title: 'Group Details',
-          sectionName: 'group',
-          approvedPlayerList: response[1].response.result,
-          groupList: response[0].result,
-          teeList: ['Tee1', 'Tee2', 'Tee3', 'Tee4', 'Tee5', 'Tee6', 'Tee7', 'Tee8', 'Tee9', 'Tee10', 'Tee11', 'Tee12', 'Tee13', 'Tee14', 'Tee15', 'Tee16', 'Tee17', 'Tee18',],
-          isTournamentAdd: true
-        }
-        this.data = data;
-        //this.selectedTabIndex = 1;
-        this.groupFormGroupInit('');
-      } else {
+  //       const data = {
+  //         title: 'Group Details',
+  //         sectionName: 'group',
+  //         approvedPlayerList: response[1].response.result,
+  //         groupList: response[0].result,
+  //         teeList: ['Tee1', 'Tee2', 'Tee3', 'Tee4', 'Tee5', 'Tee6', 'Tee7', 'Tee8', 'Tee9', 'Tee10', 'Tee11', 'Tee12', 'Tee13', 'Tee14', 'Tee15', 'Tee16', 'Tee17', 'Tee18',],
+  //         isTournamentAdd: true
+  //       }
+  //       this.data = data;
+  //       //this.selectedTabIndex = 1;
+  //       this.groupFormGroupInit('');
+  //     } else {
 
-      }
+  //     }
 
-    });
-  }
+  //   });
+  // }
 
 
-  couponTabDisplay() {
-    this.service.getCourseApi().subscribe((courseResponse: any) => {
-      if (courseResponse.error != 'X') {
-        const data = {
-          title: 'Coupon Details',
-          details: '',
-          sectionName: 'coupon',
-          isTournamentAdd: true
-        }
-        this.data = data;
-        this.couponFormGroupInit();
-        // this.selectedTabIndex = 0;
-      } else {
+  // couponTabDisplay() {
+  //   this.service.getCourseApi().subscribe((courseResponse: any) => {
+  //     if (courseResponse.error != 'X') {
+  //       const data = {
+  //         title: 'Coupon Details',
+  //         details: '',
+  //         sectionName: 'coupon',
+  //         isTournamentAdd: true
+  //       }
+  //       this.data = data;
+  //       this.couponFormGroupInit('');
+  //       // this.selectedTabIndex = 0;
+  //     } else {
 
-      }
-    });
-  }
+  //     }
+  //   });
+  // }
 
 
 

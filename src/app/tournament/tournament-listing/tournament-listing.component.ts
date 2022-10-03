@@ -37,19 +37,19 @@ export class TournamentListingComponent implements OnInit {
       if (data.error == '') {
         this.isLoadingDone = true;
         //  this.roleList.url = '/getRolesList';
-        
-      //   var myDate = new Date(data.response.result.startDate);
-      //  let startDate= myDate.getDate()+ '/' +(myDate.getMonth() + 1)  + '/' + myDate.getFullYear();
+
+        //   var myDate = new Date(data.response.result.startDate);
+        //  let startDate= myDate.getDate()+ '/' +(myDate.getMonth() + 1)  + '/' + myDate.getFullYear();
 
         this.courseList.miDataSource = new MatTableDataSource(data.response.result);
-        this.courseList.columnLabels = ['Tournament Name', 'Event Type', 'Rounds', 'Date', 'Action'];
-        this.courseList.displayedColumns = ['tournamentName', 'eventType', 'numRounds', 'tournamentDate', 'Action'];
+        this.courseList.columnLabels = ['Name', 'Event Type', 'Num of Rounds', ' Tournament Date', 'Holes', ''];
+        this.courseList.displayedColumns = ['tournamentName', 'formatName', 'numRounds', 'tournamentDate', 'holes', 'Action'];
 
         this.courseList.miListMenu = new CommonListMenu();
         this.courseList.miListMenu.menuItems =
           [
 
-            new CommonListMenuItem('Edit', 1, true, false, null,'edit'),
+            new CommonListMenuItem('Edit', 1, true, false, null, 'edit'),
             new CommonListMenuItem('Group', 1, true, false, null, 'group'),
             new CommonListMenuItem('Approval', 1, true, false, null, 'approval'),
             new CommonListMenuItem('Coupon', 1, true, false, null, 'card_giftcard'),
@@ -85,45 +85,9 @@ export class TournamentListingComponent implements OnInit {
       this.deleteTournament(clickedRecord.data)
     }
   }
-
-  //   addEditEventDetails(clickedRecordDetails: any) {
-
-  //     this.service.getCourseApi().subscribe((APIresponse) => {
-
-  //        ;
-
-  //       // this.service.getAPIMethod(`/tournament/getTournamentListById?tourId=${clickedRecordDetails.tourID}`).subscribe((APIresponse: any) => {
-
-  //       const apiResponse: any = APIresponse;
-  // //console.log("tour data",apiResponse.response.result);
-
-  //       if (APIresponse.error != 'X' && APIresponse.response.result.error != "X") {
-  //         const dialogRef = this.dialog.open(AddEditTournamentComponent, {
-  //           data: {
-  //             title: 'Tournament Details',
-  //             details: clickedRecordDetails,
-  //             sectionName: 'tournament',
-  //             eventType: ['Match Play', 'Stroke Play'],
-  //             roundsList: ['1', '2', '3', '4', '5','6','7'],
-  //             tourList: apiResponse.response.result,
-  //             isTournamentAdd: true
-  //           },
-  //           width: '950px',
-  //           height: '400px'
-  //         });
-  //         dialogRef.afterClosed().subscribe(result => {
-  //           if (result) {
-  //             this.getTournamentList();
-  //           }
-  //         });
-  //       }
-  //     });
-  //   }
-
-
   addEditEventDetails(clickedRecordDetails: any, roundDetails: any) {
     this.loader.start();
-    
+
     // const apiResponse: any = APIresponse;
     const arrayToSend = [];
     const courseList = this.service.getAPIMethod('/courseList');
@@ -134,16 +98,9 @@ export class TournamentListingComponent implements OnInit {
       const roundDetailList = this.service.getAPIMethod('/tournament/getTournamentRoundDetails?tourId=' + clickedRecordDetails.tourID);
       arrayToSend.push(roundDetailList);
     }
-
-
     forkJoin(arrayToSend).subscribe((apiResponse: any) => {
       this.loader.stop();
-      
-
       if (apiResponse[0]?.['error'] != 'X' && apiResponse[1]?.['error'] != 'X' && apiResponse[2]?.['error'] != 'X') {
-
-debugger
-
         const dialogRef = this.dialog.open(AddEditTournamentComponent, {
           data: {
             title: 'Tournament Details',
@@ -173,19 +130,19 @@ debugger
 
   addEditGroupDetails(clickedRecordDetails: any) {
     this.loader.start();
-    
-  
+
+
     const playerList = this.service.getAPIMethod('/tournament/getApprovedPlayerList?tourId=' + clickedRecordDetails.tourID);
     const roundList = this.service.getAPIMethod('/tournament/getTournamentRoundDetails?tourId=' + clickedRecordDetails.tourID);
 
-    
-    forkJoin([ playerList, roundList]).subscribe(response => {
+
+    forkJoin([playerList, roundList]).subscribe(response => {
       this.loader.stop();
-      if (response[0]['error'] != 'X' && response[1]['error'] != 'X' ) {
+      if (response[0]['error'] != 'X' && response[1]['error'] != 'X') {
         if (response[1].response.result.length > 0) {
           const dialogRef = this.dialog.open(AddEditTournamentComponent, {
             data: {
-              title: 'Group Details',
+              title: 'Create Group ',
               details: clickedRecordDetails,
               sectionName: 'group',
               playerList: response[0].response.result,
@@ -214,26 +171,33 @@ debugger
 
 
   addEditCouponDetails(clickedRecordDetails: any) {
-    this.service.getAPIMethod('/tournament/getTournamentRoundDetails?tourId=' + clickedRecordDetails.tourID).subscribe((APIresponse: any) => {
-      console.log(APIresponse);
-      if (APIresponse.error != "X") {
+    this.loader.start();
+    const roundList = this.service.getAPIMethod('/tournament/getTournamentRoundDetails?tourId=' + clickedRecordDetails.tourID);
+    const playerList = this.service.getAPIMethod('/tournament/getTournamentCouponList?tourId=' + clickedRecordDetails.tourID + '&roundId=' + '');
+
+    forkJoin([roundList, playerList]).subscribe(res => {
+    
+      this.loader.stop();
+      if (res[0].error == "" && res[1].error == "") {
         const dialogRef = this.dialog.open(AddEditTournamentComponent, {
           data: {
             title: 'Coupon Details',
             details: clickedRecordDetails,
             sectionName: 'coupon',
-            roundList: APIresponse.response.result
+            roundList: res[0].response.result,
+            couponList: res[1].response.result
           },
           width: '740px',
           height: '300px'
         });
         dialogRef.afterClosed().subscribe(result => {
+         
           if (result) {
             this.getTournamentList();
           }
         });
       } else {
-        this.sweetAlertMsg("error", APIresponse.error);
+        this.sweetAlertMsg("error", 'Error occur while fetching details');
       }
     })
   }
@@ -244,8 +208,8 @@ debugger
   deleteTournament(clickedrecord: any) {
 
     Swal.fire({
-      title: 'Delete Tournament',
-      text: 'Are you sure you want to delete Tournament ?',
+      title: 'Delete tournament',
+      text: `Are you sure you want to delete '${clickedrecord.tournamentName}' ?`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: 'Yes, Delete',
@@ -312,6 +276,7 @@ debugger
           height: '400px'
         });
         dialogRef.afterClosed().subscribe(result => {
+          debugger;
           if (result) {
             this.getTournamentList();
           }

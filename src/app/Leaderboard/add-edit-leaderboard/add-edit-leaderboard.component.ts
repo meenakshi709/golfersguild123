@@ -453,7 +453,7 @@ debugger
         // this.onCourseChange(round.cid);
           
             this.data.courseListing.forEach((course: any) => {
-debugger
+
                 if (course.cid == round.cid) {
                   this.selectedCourse = course;
                 }
