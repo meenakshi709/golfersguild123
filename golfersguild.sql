@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.3
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 01, 2022 at 10:26 AM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.2.34
+-- Generation Time: Oct 04, 2022 at 07:49 AM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 8.1.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -459,9 +459,11 @@ select err,msg from dual;
  END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournamentCouponDetails` (IN `param_tourId` VARCHAR(100), IN `param_roundId` VARCHAR(100))  BEGIN
-if(param_tourId !="" || param_roundId !="") THEN
- 
+if(param_tourId !="" && param_roundId !="") THEN
 Select * from tournament_coupon_details where tourID=param_tourId and round_Id=param_roundId; 
+ELSE  
+ Select * from tournament_coupon_details inner join round_details on round_details.round_Id=tournament_coupon_details.round_Id
+ where tournament_coupon_details.tourID=param_tourId;
 
 END IF;
 END$$
@@ -485,7 +487,10 @@ WHERE  sd.p_id=param_player_id and sd.tour_id=param_tour_id and sd.round_Id=para
  END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournamentDetails` ()  BEGIN
-		SELECT *, DATE_FORMAT(startdate, '%d-%b-%Y')  as tournamentDate FROM events WHERE is_Deleted=0 order by tournamentName asc;
+		SELECT *, DATE_FORMAT(startdate, '%d-%b-%Y')  as tournamentDate FROM events
+        inner join master_event_format on master_event_format.formatKey=events.eventType
+        
+        WHERE is_Deleted=0 order by tournamentName asc;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournamentFormats` ()  BEGIN
@@ -648,7 +653,10 @@ SELECT round_Id into roundId from tournament_score_details WHERE tour_id=param_t
 select round_Id,round_name,round_details
 .cid,crs.cname, tourID, DATE_FORMAT(event_Date, '%m/%d/%Y') as "TournamentDate" from round_details inner join courses as crs on crs.cid=round_details.cid WHERE tourID=param_tournamentId ORDER by round_name;
 
+
 SELECT roundId from DUAL;
+
+
  END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_tournament_score_by_player` (IN `param_tour_id` VARCHAR(50), IN `param_player_id` VARCHAR(50))  BEGIN
@@ -1756,7 +1764,7 @@ INSERT INTO `events` (`tourID`, `tournamentName`, `eventType`, `numRounds`, `is_
 (1, 'golf club', '1', 3, 0, '2022-08-24 18:30:00', '2022-08-26 18:30:00', '2022-08-25 07:12:41', '2022-08-25 07:12:41', '', '', 0, 18),
 (2, 'golf plus', '6', 2, 0, '2022-08-26 18:30:00', '2022-08-27 18:30:00', '2022-08-25 09:06:56', '2022-08-25 09:06:56', '', '', 0, 18),
 (3, 'July test Tournament', '6', 1, 0, '2022-08-26 18:30:00', '2022-08-26 18:30:00', '2022-08-26 06:50:05', '2022-08-26 06:50:05', '', '', 0, 18),
-(4, 'test', '6', 1, 0, '2022-08-25 18:30:00', '2022-08-25 18:30:00', '2022-08-26 07:20:05', '2022-08-26 07:20:05', '', '', 0, 18),
+(4, 'test', '6', 1, 1, '2022-08-25 18:30:00', '2022-08-25 18:30:00', '2022-08-26 07:20:05', '2022-08-26 07:20:05', '', '', 0, 18),
 (5, 'test tour', '6', 1, 0, '2022-08-25 18:30:00', '2022-08-25 18:30:00', '2022-08-26 09:00:52', '2022-08-26 09:00:52', '', '', 0, 18),
 (6, 'test cd', '6', 1, 0, '2022-08-25 18:30:00', '2022-08-25 18:30:00', '2022-08-26 09:03:57', '2022-08-26 09:03:57', '', '', 0, 18),
 (7, 'test 12', '6', 7, 0, '2022-08-29 18:30:00', '2022-09-04 18:30:00', '2022-08-30 07:16:12', '2022-08-30 07:16:12', '', '', 0, 18),
@@ -1764,7 +1772,8 @@ INSERT INTO `events` (`tourID`, `tournamentName`, `eventType`, `numRounds`, `is_
 (9, 'golf club2', 'Stroke Play', 2, 0, '2022-09-27 18:30:00', '2022-09-28 18:30:00', '2022-09-28 11:59:22', '2022-09-28 11:59:22', '', '', 0, 18),
 (10, 'ff', 'Stroke Play', 2, 1, '2022-09-27 18:30:00', '2022-09-28 18:30:00', '2022-09-28 12:04:39', '2022-09-28 12:04:39', '', '', 0, 18),
 (11, 'golf club5', 'Stroke Play', 1, 0, '2022-09-27 18:30:00', '2022-09-27 18:30:00', '2022-09-28 12:13:18', '2022-09-28 12:13:18', '', '', 0, 18),
-(12, 'aaaaaaaa', '1', 1, 0, '2022-09-27 18:30:00', '2022-09-27 18:30:00', '2022-09-28 12:24:09', '2022-09-28 12:24:09', '', '', 0, 18);
+(12, 'aaaaaaaa', '1', 1, 1, '2022-09-27 18:30:00', '2022-09-27 18:30:00', '2022-09-28 12:24:09', '2022-09-28 12:24:09', '', '', 0, 18),
+(13, 'GOLFCLUB', '1', 2, 0, '2022-10-03 18:30:00', '2022-10-04 18:30:00', '2022-10-02 04:23:08', '2022-10-02 04:23:08', '', '', 0, 18);
 
 -- --------------------------------------------------------
 
@@ -2130,7 +2139,9 @@ INSERT INTO `round_details` (`round_Id`, `event_Date`, `cid`, `tourID`, `created
 (26, '2022-09-28 00:00:00', 29, 10, '2022-09-28 12:04:39', '2022-09-28 12:04:39', 'Round1'),
 (27, ' 2022-09-29 00:00:00', 3, 10, '2022-09-28 12:04:39', '2022-09-28 12:04:39', 'Round2'),
 (28, '2022-09-28 00:00:00', 2, 11, '2022-09-28 12:13:18', '2022-09-28 12:13:18', 'Round1'),
-(29, '2022-09-28 00:00:00', 2, 12, '2022-09-28 12:24:09', '2022-09-28 12:24:09', 'Round1');
+(29, '2022-09-28 00:00:00', 2, 12, '2022-09-28 12:24:09', '2022-09-28 12:24:09', 'Round1'),
+(30, '2022-10-04 00:00:00', 29, 13, '2022-10-02 04:23:08', '2022-10-02 04:23:08', 'Round1'),
+(31, ' 2022-10-05 00:00:00', 3, 13, '2022-10-02 04:23:08', '2022-10-02 04:23:08', 'Round2');
 
 -- --------------------------------------------------------
 
@@ -2311,7 +2322,8 @@ INSERT INTO `tournament_coupon_details` (`couponId`, `couponCode`, `couponCount`
 (7, 'cold drink', 1, 57, 100, 0, 0),
 (8, 'idli', 2, 57, 0, 0, 0),
 (9, 'Subway', 2, 72, 141, 0, 0),
-(10, 'samosa', 2, 5, 8, 0, 0);
+(10, 'samosa', 2, 5, 8, 0, 0),
+(16, '13ACV', 2, 8, 18, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -2467,7 +2479,9 @@ INSERT INTO `tournament_player_list` (`tour_player_id`, `tourID`, `playerID`, `i
 (9, 7, 6, 0, 1, 1, 1, 0, 0, '2022-08-30'),
 (10, 8, 6, 0, 1, 1, 1, 0, 0, '2022-08-31'),
 (11, 10, 6, 0, 1, 0, 0, 0, 0, '2022-09-28'),
-(12, 11, 6, 0, 1, 0, 0, 0, 0, '2022-09-28');
+(12, 11, 6, 0, 1, 0, 0, 0, 0, '2022-09-28'),
+(13, 13, 36, 0, 1, 0, 0, 0, 0, '2022-10-02'),
+(14, 13, 12, 0, 1, 0, 0, 0, 0, '2022-10-02');
 
 -- --------------------------------------------------------
 
@@ -2998,7 +3012,7 @@ ALTER TABLE `employment`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `event_details`
@@ -3064,7 +3078,7 @@ ALTER TABLE `player_details`
 -- AUTO_INCREMENT for table `round_details`
 --
 ALTER TABLE `round_details`
-  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `score_details`
@@ -3094,7 +3108,7 @@ ALTER TABLE `state`
 -- AUTO_INCREMENT for table `tournament_coupon_details`
 --
 ALTER TABLE `tournament_coupon_details`
-  MODIFY `couponId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `couponId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tournament_details`
@@ -3118,7 +3132,7 @@ ALTER TABLE `tournament_group_player_details`
 -- AUTO_INCREMENT for table `tournament_player_list`
 --
 ALTER TABLE `tournament_player_list`
-  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `tournament_score_details`
