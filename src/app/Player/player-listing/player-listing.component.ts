@@ -35,15 +35,15 @@ export class PlayerListingComponent implements OnInit {
       } else {
         this.isLoadingDone = true;
       //  this.roleList.url = '/getRolesList';
-        this.playerList.miDataSource = new MatTableDataSource(data.response);
+        this.playerList.miDataSource = new MatTableDataSource(data.response.result);
         this.playerList.columnLabels = [ 'Player Name','Handicap','Handicap Certificate','Platform Link','Home Course','Email Id','Phone','Gender','DOB','State','Country', 'Action'];
         this.playerList.displayedColumns = [  'playerName','hdcp', 'homeCourse','hdcpCertificate', 'platformLink','email','contact_Number','gender','dateofbirth','state_name','country_name','Action'];
     
         this.playerList.miListMenu = new CommonListMenu();
         this.playerList.miListMenu.menuItems =
           [
-            new CommonListMenuItem('Edit', 1, true, false, null, 'edit'),
-            new CommonListMenuItem('Delete', 2, true, true, null, 'delete'),
+            new CommonListMenuItem('Edit', 1, true, false, null, 'edit_icon'),
+            new CommonListMenuItem('Delete', 2, true, true, null, 'delete_icon'),
           ];
       
       }

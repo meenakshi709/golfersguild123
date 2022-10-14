@@ -51,7 +51,7 @@ export class MatchFormatListingComponent implements OnInit {
 
             new CommonListMenuItem('Edit', 1, true, false, null,'edit'),
        
-            new CommonListMenuItem('Delete', 2, true, true, null, 'delete'),
+            new CommonListMenuItem('Delete', 2, true, true, null, 'delete_icon'),
           ];
       }
     });

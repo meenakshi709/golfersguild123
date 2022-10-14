@@ -31,12 +31,13 @@
 
                     <td class="f16" mat-cell *matCellDef="let element; let ij = index">
                         <p [class.overflow]="isExpand" id={{ij}}+{{i}}
-                            *ngIf="(CommonListProperties.columnLabels[i] !== 'Status' ) "
+                            *ngIf="(CommonListProperties.columnLabels[i] !== 'Status' ) && element[columData] "
                             [matTooltip]="element[columData]" matTooltipPosition="above"
                        >
                            
                             {{ (element[columData] && (element[columData]).length>20)? ( element[columData] | slice:0:20)+'..':( element[columData]) }}
                         </p>
+                       
 
                        
                         
@@ -48,7 +49,7 @@
                             class="text-right">
                             <div *ngFor="let miItem of CommonListProperties.miListMenu.menuItems" class="table-buttons ">
                               
-                                <mat-icon id="{{ miItem.itemName + ij}}" [inline]="true" class="mat-font-decrease"
+                                <mat-icon id="{{ miItem.itemName + ij}}" [inline]="true"  class="{{miItem.class}} "
                                     style="cursor: pointer;" aria-hidden="false" aria-label="edit icon"
                                     (click)=" menuItemClicked(miItem.itemName,element,ij,element[columData])"
                                     [matTooltip]="miItem.itemName"

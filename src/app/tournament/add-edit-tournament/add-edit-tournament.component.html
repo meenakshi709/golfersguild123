@@ -135,7 +135,7 @@
                         <div mat-dialog-actions>
                             <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
                             <button type="button" class="btn btn-primary"
-                                *ngIf="this.data.isTournamentAdd && !this.data.details"
+                                *ngIf="this.data.isTournamentAdd "
                                 [disabled]="!this.eventFormGroup.valid||this.isButtonDisable"
                                 (click)="saveTournamentDetails()">{{!this.data.details?'Add ':'Update'}}</button>
                         </div>
@@ -500,13 +500,26 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3">
-                <button mat-stroked-button class="ml-3" (click)="getAcceptRejectPlayerList('1');approvalStatus=1;">
-                    Accepted </button>
-                <button mat-stroked-button color="warn" class="ml-3 mr-2"
-                    (click)="getAcceptRejectPlayerList('0');approvalStatus=0;">Deny </button>
-                <button mat-stroked-button color="warn" class="ml-3 mr-2"
-                    (click)="getAcceptRejectPlayerList('2');approvalStatus=2;">Pending </button>
+                <a    [class.active]="approvalStatus === 3"  class="borderClass ml-3" (click)="getAcceptRejectPlayerList('3');approvalStatus=3;">
+                    Approved </a> 
+                    <a   [class.active]="approvalStatus === 1" class="borderClass ml-3" (click)="getAcceptRejectPlayerList('1');approvalStatus=1">
+                        Accepted </a> 
+               
+                <a  [class.active]="approvalStatus === 2" class="borderClass ml-3 mr-2"
+                    (click)="getAcceptRejectPlayerList('2');approvalStatus=2;">Pending </a>
+                    <a  [class.active]="approvalStatus === 0" class="borderClass ml-3 mr-2"
+                    (click)="getAcceptRejectPlayerList('0');approvalStatus=0;" >Deny </a><hr>
             </div>
+
+            <!-- <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3">
+                <mat-tab-group>
+                    <mat-tab label="Accepted"> Content 1 </mat-tab>
+                    <mat-tab label="Second"> Content 2 </mat-tab>
+                    <mat-tab label="Third"> Content 3 </mat-tab>
+                  </mat-tab-group>
+            </div> -->
+
+
         </div>
         <div class="row">
             <section>

@@ -475,7 +475,7 @@ export class AddEditTournamentComponent implements OnInit {
         }
       }
       else {
-        this.sweetAlertMsg('error', response.msg ? response.msg : response.response.result.msg);
+        this.sweetAlertMsg('error', response.response.msg ? response.response.msg : response.response.result.msg);
       }
 
     });
@@ -678,6 +678,7 @@ export class AddEditTournamentComponent implements OnInit {
 
 
   getAcceptRejectPlayerList(value: any) {
+
 
     this.service.getAPIMethod('/tournament/getAcceptedDenyPlayerList?tourId=' + this.data.details.tourID + '&value=' + value).subscribe((res: any) => {
 

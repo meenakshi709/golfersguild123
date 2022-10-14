@@ -44,8 +44,8 @@ export class LeaderboardListingComponent implements OnInit {
         this.scoreList.miListMenu = new CommonListMenu();
         this.scoreList.miListMenu.menuItems =
           [
-            new CommonListMenuItem('Edit', 1, true, false, null, 'edit'),
-            new CommonListMenuItem('Delete', 2, true, true, null, 'delete'),
+            new CommonListMenuItem('Edit', 1, true, false, null, 'edit_icon'),
+            new CommonListMenuItem('Delete', 2, true, true, null, 'delete_icon'),
           ];
 
       }
@@ -95,7 +95,13 @@ export class LeaderboardListingComponent implements OnInit {
   onScoreActionClick(clickedRecord: any) {
 
     if (clickedRecord.name == 'Edit') {
-      this.saveScoreDetails(clickedRecord.data)
+      if(clickedRecord.data.tournamentName){
+        this.saveScoreDetails(clickedRecord.data)
+      }
+      else{
+        this.sweetAlertMsg('error','Tournament details does not exist')
+      }
+   
     }
     else if (clickedRecord.name == 'Delete') {
       this.deleteScore(clickedRecord.data)

@@ -56,7 +56,7 @@ export class MatchPlayListingComponent implements OnInit {
             new CommonListMenuItem('Group', 1, true, false, null, 'group'),
             new CommonListMenuItem('Approval', 1, true, false, null, 'approval'),
             new CommonListMenuItem('Coupon', 1, true, false, null, 'card_giftcard'),
-            new CommonListMenuItem('Delete', 2, true, true, null, 'delete'),
+            new CommonListMenuItem('Delete', 2, true, true, null, 'delete_icon'),
           ];
       }
     });

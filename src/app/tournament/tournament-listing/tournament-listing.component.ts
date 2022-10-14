@@ -42,18 +42,18 @@ export class TournamentListingComponent implements OnInit {
         //  let startDate= myDate.getDate()+ '/' +(myDate.getMonth() + 1)  + '/' + myDate.getFullYear();
 
         this.courseList.miDataSource = new MatTableDataSource(data.response.result);
-        this.courseList.columnLabels = ['Name', 'Event Type', 'Num of Rounds', ' Tournament Date', 'Holes', ''];
+        this.courseList.columnLabels = ['Name', 'Event Type', 'Num of Rounds', ' Tournament Date', 'Holes', 'Action'];
         this.courseList.displayedColumns = ['tournamentName', 'formatName', 'numRounds', 'tournamentDate', 'holes', 'Action'];
 
         this.courseList.miListMenu = new CommonListMenu();
         this.courseList.miListMenu.menuItems =
           [
 
-            new CommonListMenuItem('Edit', 1, true, false, null, 'edit'),
+            new CommonListMenuItem('Edit', 1, true, false, null, 'edit_icon'),
             new CommonListMenuItem('Group', 1, true, false, null, 'group'),
             new CommonListMenuItem('Approval', 1, true, false, null, 'approval'),
             new CommonListMenuItem('Coupon', 1, true, false, null, 'card_giftcard'),
-            new CommonListMenuItem('Delete', 2, true, true, null, 'delete'),
+            new CommonListMenuItem('Delete', 2, true, true, null, 'delete_icon'),
           ];
       }
     });

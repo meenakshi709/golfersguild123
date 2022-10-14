@@ -6,29 +6,53 @@
   font-family: 'Poppins-Medium'!important;
   height: 100%!important;
   background-color: #F3F8FF!important;
- 
+ margin: 0 auto;
+ padding: 0 auto;
  
 }
 .bgclass{
   background-color: #F3F8FF!important;
   font-family: 'Poppins-Medium'!important;
- 
+ padding: 1rem 0 1rem 1rem!important;
  
 }
 .sidebar {
-    margin: 1rem 0 1rem 0 ;
+    margin: 0 ;
     padding: 0;
     font-family: 'Poppins-Medium'!important;
     background-color:#1266FB!important;
 
-    height: -webkit-calc(100% - 25px)!important;
-    height:    -moz-calc(100% - 25px)!important;
-    height:         calc(100% - 25px)!important;
-   min-height: 100%!important;
-   max-height: 100%!important;
+    height: -webkit-calc(100% - 30px)!important;
+    height:    -moz-calc(100% - 30px)!important;
+    height:         calc(100% - 30px)!important;
+
+
     border-radius: 20px!important;
     transition: all 0.3s;
+    position: fixed!important;
+    overflow-y: scroll;
   }
+
+
+.sidebar::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+.sidebar::-webkit-scrollbar-track {
+  background: #F3F8FF;
+}
+
+/* Handle */
+.sidebar::-webkit-scrollbar-thumb {
+  background:#F3F8FF;
+}
+
+/* Handle on hover */
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #F3F8FF;
+}
+
   .sidebar p{
     font-size: 14px!important;
     margin-top: 1rem;
@@ -42,9 +66,7 @@
     padding: 8px 20px;
     text-decoration: none;
     margin: 5px 5px 5px 0;
-    border-radius: 0px 20px 20px 0px;
-  
-    
+    border-radius: 0px 20px 20px 0px;  
   }
   
   /* Active/current link */
@@ -82,7 +104,7 @@
   div.content {
     margin-left: 200px;
     padding: 1px 16px;
-    height: 1000px;
+    height: 100%1!important;
   }
   
   /* On screens that are less than 700px wide, make the sidebar into a topbar */
@@ -113,7 +135,8 @@
 
 .sidebox{
   /* background: url('../../../assets/images/bg-admin.png') no-repeat #F3F8FF;   */
-  background: #F3F8FF!important;    
+  background: #F3F8FF!important;  
+
 }
 .router-link-active{
   background-color:#F3F8FF;

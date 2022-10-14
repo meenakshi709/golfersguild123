@@ -17,6 +17,55 @@
 
             <div class="container-fluid pt-3 pb-3 mt-1">
                 <div class="row">
+                    <div class="col-lg-9 col-sm-9 col-xs-12 col-md-9">
+                         <div class="smallBox line">
+                                <h2 id="outt">
+                                    {{this.summaryForm.controls.outTotal.value?this.summaryForm.controls.outTotal.value:00}}
+                                </h2>
+                                <p>Out Holes</p>
+                            </div>
+                       
+                            <div class="smallBox line">
+                                <h2 id="inn">
+                                    {{this.summaryForm.controls.inTotal.value?this.summaryForm.controls.inTotal.value:00}}
+                                </h2>
+                                <p>In Holes</p>
+                            </div>
+                     
+                            <div class="smallBox line">
+                                <h2>{{ this.summaryForm.controls.inTotal.value+this.summaryForm.controls.outTotal.value}}
+                                </h2>
+                                <p>Gross</p>
+                            </div>
+                      
+                            <div class="smallBox line">
+                                <h2>{{this.scoreForm.controls.hdcp.value?this.scoreForm.controls.hdcp.value:0}}</h2>
+                                <p>HDCP</p>
+                            </div>
+                        
+                            <div class="smallBox line">
+                                <h2>{{(this.summaryForm.controls.inTotal.value+this.summaryForm.controls.outTotal.value)-(this.scoreForm.controls.hdcp.value)}}
+                                </h2>
+                                <p>Net</p>
+                            </div>
+                      
+                            <div class="smallBox line">
+                                <h2>{{this.summaryForm.controls.birdieTotal.value}}</h2>
+                                <p>Birdie</p>
+                            </div>
+                    
+                            <div class="smallBox">
+                                <h2>{{this.summaryForm.controls.scoreDiff.value}}</h2>
+                                <p>AGS</p>
+                            </div>
+                     
+                         </div>
+                      <div class="col-lg-3 col-sm-3 col-xs-12 col-md-3 text-center">
+                          <img src="../../../assets/images/admin/leaderboardSideMan.svg" width="80%" >
+                        </div>
+
+                </div>
+                <!-- <div class="row">
                     <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
                         <div class="smallBox">
                             <h2 id="outt">
@@ -65,7 +114,7 @@
                             <p>AGS</p>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </form>
@@ -143,7 +192,7 @@
                     <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
                         <mat-form-field appearance="outline">
                             <mat-label>Course Name* </mat-label>
-                            <mat-select formControlName="cid" id="cid" (selectionChange)="onCourseChange($event)">
+                            <mat-select formControlName="cid" id="cid" >
                                 <option value="" selected></option>
                                 <mat-option *ngFor="let course of this.data.courseListing" [value]="course.cid" >
                                     {{course.cname}}
@@ -418,7 +467,205 @@
 
                 </div>
 
+                <div class="row">
+                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
+                        <mat-label>AGS </mat-label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
 
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="AGS 1" (change)="calculateScoreOut('ags1')"
+                                formControlName="ags1" maxlength="2" id="ags1" />
+
+                           
+                        </mat-form-field>
+                    </div>
+                   
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="AGS 2" (change)="calculateScoreOut('ags2')"
+                                formControlName="ags2" maxlength="2" id="ags2" />
+
+                           
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="AGS 3" (change)="calculateScoreOut('ags3')"
+                                formControlName="ags3" maxlength="2" id="ags3" />
+
+                           
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="AGS 4" (change)="calculateScoreOut('ags4')"
+                                formControlName="ags4" maxlength="2" id="ags4" />
+
+                           
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="AGS 5" (change)="calculateScoreOut('ags5')"
+                                formControlName="ags5" maxlength="2" id="ags5" />
+
+                           
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="AGS 6" (change)="calculateScoreOut('ags6')"
+                                formControlName="ags6" maxlength="2" id="ags6" />
+
+                           
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="AGS 7" (change)="calculateScoreOut('ags7')"
+                                formControlName="ags7" maxlength="2" id="ags7" />
+
+                           
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="AGS 8" (change)="calculateScoreOut('ags8')"
+                                formControlName="ags8" maxlength="2" id="ags8" />
+
+                           
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="AGS 9" (change)="calculateScoreOut('ags9')"
+                                formControlName="ags9" maxlength="2" id="ags9" />
+
+                           
+                        </mat-form-field>
+                    </div>
+                   
+                    
+                  
+
+                </div>
+                <div class="row">
+               
+                        <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                            <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+    
+                                <input matInput type="text" placeholder="AGS 10" (change)="calculateScoreOut('ags10')"
+                                    formControlName="ags10" maxlength="2" id="ags10" />
+    
+                               
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                            <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+    
+                                <input matInput type="text" placeholder="AGS 11" (change)="calculateScoreOut('ags11')"
+                                    formControlName="ags11" maxlength="2" id="ags11" />
+    
+                               
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                            <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+    
+                                <input matInput type="text" placeholder="AGS 12" (change)="calculateScoreOut('ags12')"
+                                    formControlName="ags12" maxlength="2" id="ags12" />
+    
+                               
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                            <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+    
+                                <input matInput type="text" placeholder="AGS 13" (change)="calculateScoreOut('ags13')"
+                                    formControlName="ags13" maxlength="2" id="ags13" />
+    
+                               
+                            </mat-form-field>
+                        </div>
+                       
+                        <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                            <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+    
+                                <input matInput type="text" placeholder="AGS 14" (change)="calculateScoreOut('ags14')"
+                                    formControlName="ags14" maxlength="2" id="ags14" />
+    
+                               
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                            <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+    
+                                <input matInput type="text" placeholder="AGS 15" (change)="calculateScoreOut('ags15')"
+                                    formControlName="ags15" maxlength="2" id="ags15" />
+    
+                               
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                            <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+    
+                                <input matInput type="text" placeholder="AGS 16" (change)="calculateScoreOut('ags16')"
+                                    formControlName="ags16" maxlength="2" id="ags16" />
+    
+                               
+                            </mat-form-field>
+                        </div>
+
+                   <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="AGS 17" (change)="calculateScoreOut('ags17')"
+                                formControlName="ags17" maxlength="2" id="ags17" />
+
+                           
+                        </mat-form-field>
+                    </div>
+
+                 <div class="col-sm-1 col-lg-1 col-xs-2 col-md-1 ">
+
+                        <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
+
+                            <input matInput type="text" placeholder="AGS 18" (change)="calculateScoreOut('ags18')"
+                                formControlName="ags18" maxlength="2" id="ags18" />
+
+                           
+                        </mat-form-field>
+                    </div>
+
+                </div>
 
 
 

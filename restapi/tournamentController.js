@@ -317,7 +317,7 @@ tourCtrl.getAcceptedDenyPlayerList = (req, res) => {
     }
 };
 
-tourCtrl.getTournamentRoundDetails = (req, res) => {
+tourCtrl.getTournamentRoundDetails = (req, res) => {    
     try {
         let sql = `call get_Tournament_RoundDetails("${req.query.tourId}")`;
         connection.query(sql, function (error, results) {
@@ -835,7 +835,7 @@ tourCtrl.getTourDetails = (req, res) => {
 tourCtrl.savePastScores = (req, res) => {
     try {
         const data = req.body;
-        let sql = `call savePastScores("${data.playerId}","${data.score1}","${data.score2}","${data.score3}","${data.score4}","${data.score5}","${data.score6}","${data.score7}","${data.score8}","${data.score9}","${data.outTotal}","${data.score10}","${data.score11}","${data.score12}","${data.score13}","${data.score14}","${data.score15}","${data.score16}","${data.score17}","${data.score18}","${data.inTotal}","${data.grossTotal}","${data.netTotal}","${data.birdieTotal}","${data.cid}","${data.hdcp}","${data.enteredHoleCount}","${data.scoreDiff}","${data.tournamentDate}","${data.teeName}")`;
+        let sql =   `call savePastScores("${data.p_id}","${data.score1}","${data.score2}","${data.score3}","${data.score4}","${data.score5}","${data.score6}","${data.score7}","${data.score8}","${data.score9}","${data.outTotal}","${data.score10}","${data.score11}","${data.score12}","${data.score13}","${data.score14}","${data.score15}","${data.score16}","${data.score17}","${data.score18}","${data.inTotal}","${data.grossTotal}","${data.netTotal}","${data.birdieTotal}","${data.cid}","${data.hdcp}","${data.enteredHoleCount}","${data.scoreDiff}","${data.teeName}","${data.createdDate}")`;
         connection.query(sql, function (error, results) {
             // releaseconnection();
             if (error) {

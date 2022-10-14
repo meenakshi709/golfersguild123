@@ -24,6 +24,7 @@ export class AddEditOldScoreComponent implements OnInit {
   selectedPlayer: any;
   teeNameList: any = [];
   holeCount: any = 0;
+  class11: any = 0;
   selectedTeeName: any;
   scoreDiff: any = 0;
   courseRate: any = 0;
@@ -76,7 +77,7 @@ export class AddEditOldScoreComponent implements OnInit {
     score16: new FormControl('', []),
     score17: new FormControl('', []),
     score18: new FormControl('', []),
-    playDate: new FormControl('', [Validators.required]),
+    createdDate: new FormControl('', [Validators.required]),
     ags1: new FormControl('', []),
     ags2: new FormControl('', []),
     ags3: new FormControl('', []),
@@ -124,34 +125,26 @@ export class AddEditOldScoreComponent implements OnInit {
   }
 
   saveScoreDetails() {
-
     this.calculateScoreDifferential();
-
     const data = this.scoreForm.getRawValue();
     const data1 = this.summaryForm.getRawValue();
     data1.grossTotal = this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value;
     data1.netTotal = (this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value) - (this.scoreForm.controls.hdcp.value);
-
+    data.createdDate = new Date((data.createdDate.getMonth() + 1) + '/' + (data.createdDate.getDate() + 1) + '/' + data.createdDate.getFullYear());
+    debugger
     let enteredHoleCount = 0;
-    for (let i = 1; i < data.holeNum; i++) {
+    for (let i = 0; i < data.holeNum; i++) {
       const controlName = 'score' + i;
-
       if (data[controlName] > 0) {
         enteredHoleCount++;
-
       }
       data.enteredHoleCount = enteredHoleCount;
-      console.log("hole count", data.enteredHoleCount)
-
     }
-
-    console.log("finalData", data)
     let finalData = { ...data, ...data1 };
-    this.service.postAPIMethod('/tournament/savetournamentScore', finalData).subscribe(APIresponse => {
-      // console.log("final",response);
-      debugger
+
+    this.service.postAPIMethod('/tournament/savePastScores', finalData).subscribe(APIresponse => {
+
       if (APIresponse.error != 'X') {
-        //  this.route.navigateByUrl("/course");
         this.closeDialogClick();
         this.sweetAlertMsg("success", APIresponse.response.result.msg)
       }
@@ -308,7 +301,7 @@ export class AddEditOldScoreComponent implements OnInit {
     // const scoreOutValue=Number(this.scoreForm.value.score1)+Number(this.scoreForm.value.score2)+Number(this.scoreForm.value.score3)+Number(this.scoreForm.value.score4)+Number(this.scoreForm.value.score5)+Number(this.scoreForm.value.score6);Number(this.scoreForm.value.score7)+Number(this.scoreForm.value.score8)+Number(this.scoreForm.value.score9);
     this.summaryForm.controls.outTotal.setValue(scoreInValue);
     //  this.scoreForm.controls.pout.setValue(scoreOutValue);
-
+    debugger;
     this.calculateBirdie(fieldName);
     this.calculateScoreDifferential();
 
@@ -333,7 +326,7 @@ export class AddEditOldScoreComponent implements OnInit {
   }
 
   calculateBirdie(fieldName: any) {
-    var class11 = 0;
+   // var class11 = 0;
     var countPar = 0;
     const keys = Object.keys(this.selectedCourse);
     if (keys.length > 0) {
@@ -343,7 +336,7 @@ export class AddEditOldScoreComponent implements OnInit {
         if (keyName.indexOf("score") >= 0) {
           console.log('keyName', keyName);
           const scoreValue = this.scoreForm.controls[keyName].value;
-          if (scoreValue && keyName==fieldName) {
+          if (scoreValue && keyName == fieldName) {
             let field = keyName;
             field = field.replace('score', '');
             const parKey = "par" + field
@@ -355,44 +348,32 @@ export class AddEditOldScoreComponent implements OnInit {
 
             this.calculateAgs(fieldName, parValue, hdcpValue, scoreValue);
 
-
-
             switch (actualParValue) {
               case -1:
 
-                class11 = class11 + 1;
+                this.class11 = this.class11 + 1;
                 break;
               case -2:
 
-                class11 = class11 + 2;
+                this.class11 = this.class11 + 2;
                 break;
               case 0:
-                class11 = class11 + 0;
+                this.class11 = this.class11 + 0;
                 countPar = countPar + 1;
 
                 break;
-              case 1:
-                class11 = class11 + 0;
-
-                break;
-              case 2:
-                class11 = class11 + 0;
-
-                break;
-              case 3:
-                class11 = class11 + 0;
-                break;
+             
 
               default:
-                class11 = class11 + 0;
+                this.class11 = this.class11 + 0;
             }
 
 
           }
         }
       });
-
-      this.summaryForm.controls.birdieTotal.setValue(class11);
+      debugger;
+      this.summaryForm.controls.birdieTotal.setValue(this.class11);
       console.log("count of player", countPar)
     }
   }
@@ -414,7 +395,7 @@ export class AddEditOldScoreComponent implements OnInit {
     // const scoreOutValue=Number(this.scoreForm.value.score1)+Number(this.scoreForm.value.score2)+Number(this.scoreForm.value.score3)+Number(this.scoreForm.value.score4)+Number(this.scoreForm.value.score5)+Number(this.scoreForm.value.score6);Number(this.scoreForm.value.score7)+Number(this.scoreForm.value.score8)+Number(this.scoreForm.value.score9);
     this.summaryForm.controls.inTotal.setValue(scoreOutValue);
     //  this.scoreForm.controls.pout.setValue(scoreOutValue);
-
+    debugger;
     this.calculateBirdie(fieldName);
     this.calculateScoreDifferential();
   }
@@ -520,17 +501,17 @@ export class AddEditOldScoreComponent implements OnInit {
 
 
   calculateScoreDifferential() {
-debugger
+
     //let ags = (this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value);
-    let ags=Number(this.scoreForm.value.ags1)+Number(this.scoreForm.value.ags2)+
-    Number(this.scoreForm.value.ags3)+Number(this.scoreForm.value.ags4)+
-    Number(this.scoreForm.value.ags5)+Number(this.scoreForm.value.ags6)+
-    Number(this.scoreForm.value.ags7)+Number(this.scoreForm.value.ags8)+
-    Number(this.scoreForm.value.ags9)+Number(this.scoreForm.value.ags10)+
-    Number(this.scoreForm.value.ags11)+Number(this.scoreForm.value.ags12)+
-    Number(this.scoreForm.value.ags13)+Number(this.scoreForm.value.ags14)+
-    Number(this.scoreForm.value.ags15)+Number(this.scoreForm.value.ags16)+
-    Number(this.scoreForm.value.ags17)+Number(this.scoreForm.value.ags18);
+    let ags = Number(this.scoreForm.value.ags1) + Number(this.scoreForm.value.ags2) +
+      Number(this.scoreForm.value.ags3) + Number(this.scoreForm.value.ags4) +
+      Number(this.scoreForm.value.ags5) + Number(this.scoreForm.value.ags6) +
+      Number(this.scoreForm.value.ags7) + Number(this.scoreForm.value.ags8) +
+      Number(this.scoreForm.value.ags9) + Number(this.scoreForm.value.ags10) +
+      Number(this.scoreForm.value.ags11) + Number(this.scoreForm.value.ags12) +
+      Number(this.scoreForm.value.ags13) + Number(this.scoreForm.value.ags14) +
+      Number(this.scoreForm.value.ags15) + Number(this.scoreForm.value.ags16) +
+      Number(this.scoreForm.value.ags17) + Number(this.scoreForm.value.ags18);
 
 
 
@@ -553,7 +534,7 @@ debugger
   // }
 
   calculateAgs(fieldName: any, parValue: any, hdcpValue: any, scoreValue: any) {
-    
+
     let hdcp = 0;
     let ags = 0;
     this.data.playerListing.forEach((element: any) => {
@@ -574,20 +555,18 @@ debugger
     // }
 
 
-      if (actualParValue > 2) 
-          {
+    if (actualParValue > 2) {
 
-              if (hdcpValue <= hdcp)
-                {
-                    ags = parValue + 3;
-                }
-              else {
-                    ags = parValue + 2;
-                }
-           }
-     
-     else {
-         ags = scoreValue;
+      if (hdcpValue <= hdcp) {
+        ags = parValue + 3;
+      }
+      else {
+        ags = parValue + 2;
+      }
+    }
+
+    else {
+      ags = scoreValue;
     }
 
 

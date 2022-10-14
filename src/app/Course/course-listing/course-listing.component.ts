@@ -42,8 +42,8 @@ export class CourseListingComponent implements OnInit {
         this.courseList.miListMenu = new CommonListMenu();
         this.courseList.miListMenu.menuItems =
           [
-            new CommonListMenuItem('Edit', 1, true, false, null, 'edit'),
-            new CommonListMenuItem('Delete', 2, true, true, null, 'delete'),
+            new CommonListMenuItem('Edit', 1, true, false, null, 'edit_icon'),
+            new CommonListMenuItem('Delete', 2, true, true, null, 'delete_icon'),
           ];
       } else {
 this.sweetAlertMsg('error',data.response.msg);

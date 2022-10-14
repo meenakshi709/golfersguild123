@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 })
 export class AddEditLeaderboardComponent implements OnInit {
 
-
+  class11: any = 0;
   playerList: any = [];
   submitted = false;
   playerData: any = [];
@@ -26,26 +26,6 @@ export class AddEditLeaderboardComponent implements OnInit {
   scoreDiff: any = 0;
   courseRate: any = 0;
   slopeRate: any = 0;
-  constructor(
-    public dialogRef: MatDialogRef<AddEditLeaderboardComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public loader: NgxUiLoaderService,
-    private formBuilder: FormBuilder,
-    private service: CommonServiceService,
-    public route: Router) { }
-
-  ngOnInit(): void {
-
-    console.log("data=", this.data);
-    if (this.data) {
-      //  this.scoreForm.controls.cname.disable();
-      //  this.setScoreDetails();
-
-    }
-    // this.scoreForm.controls.round_Id.disable();teeDetails
-    //  this.scoreForm.controls.cid.disable();
-  }
-
   public scoreForm: FormGroup = new FormGroup({
     tour_id: new FormControl('', [Validators.required]),
     round_Id: new FormControl('', [Validators.required]),
@@ -73,10 +53,28 @@ export class AddEditLeaderboardComponent implements OnInit {
     score16: new FormControl('', []),
     score17: new FormControl('', []),
     score18: new FormControl('', []),
+    ags1: new FormControl('', []),
+    ags2: new FormControl('', []),
+    ags3: new FormControl('', []),
+    ags4: new FormControl('', []),
+    ags5: new FormControl('', []),
+    ags6: new FormControl('', []),
+    ags7: new FormControl('', []),
+    ags8: new FormControl('', []),
+    ags9: new FormControl('', []),
+    ags10: new FormControl('', []),
+    ags11: new FormControl('', []),
+    ags12: new FormControl('', []),
+    ags13: new FormControl('', []),
+    ags14: new FormControl('', []),
+    ags15: new FormControl('', []),
+    ags16: new FormControl('', []),
+    ags17: new FormControl('', []),
+    ags18: new FormControl('', []),
   });
 
   summaryForm: FormGroup = new FormGroup({
-
+    agsTotal: new FormControl(0, []),
     inTotal: new FormControl(0, []),
     outTotal: new FormControl(0, []),
     grossTotal: new FormControl(0, []),
@@ -86,6 +84,34 @@ export class AddEditLeaderboardComponent implements OnInit {
   });
 
 
+
+
+  constructor(
+    public dialogRef: MatDialogRef<AddEditLeaderboardComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public loader: NgxUiLoaderService,
+    private formBuilder: FormBuilder,
+    private service: CommonServiceService,
+    public route: Router) { }
+
+  ngOnInit(): void {
+    debugger;
+
+    // 
+
+
+    // }
+
+    for (let i = 1; i <= 18; i++) {
+      const agsKeyName = "ags" + i;
+      const scoreKeyName = "score" + i;
+      this.scoreForm.controls[agsKeyName].disable();
+      if (!this.data.selectedRecordDetails) {
+        this.scoreForm.controls[scoreKeyName].disable();
+      }
+    }
+    this.scoreForm.controls['cid'].disable();
+  }
 
 
 
@@ -102,16 +128,16 @@ export class AddEditLeaderboardComponent implements OnInit {
   }
 
   saveScoreDetails() {
-    
+
     this.calculateScoreDifferential();
-    
+
     const data = this.scoreForm.getRawValue();
     const data1 = this.summaryForm.getRawValue();
     data1.grossTotal = this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value;
     data1.netTotal = (this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value) - (this.scoreForm.controls.hdcp.value);
 
     let enteredHoleCount = 0;
-    for (let i = 1; i < data.holeNum; i++) {
+    for (let i = 0; i < data.holeNum; i++) {
       const controlName = 'score' + i;
 
       if (data[controlName] > 0) {
@@ -122,12 +148,12 @@ export class AddEditLeaderboardComponent implements OnInit {
       console.log("hole count", data.enteredHoleCount)
 
     }
-    
+
     console.log("finalData", data)
     let finalData = { ...data, ...data1 };
     this.service.postAPIMethod('/tournament/savetournamentScore', finalData).subscribe(APIresponse => {
       // console.log("final",response);
-debugger
+      debugger
       if (APIresponse.error != 'X') {
         //  this.route.navigateByUrl("/course");
         this.closeDialogClick();
@@ -176,7 +202,7 @@ debugger
                 // element.parkeyName=parkeyName;
                 parValue = element[parkeyName];
                 scoreValue = element[scoreName];
-                
+
                 if (scoreValue > 0) {
                   this.holeCount = this.holeCount + 1;
                 }
@@ -311,7 +337,7 @@ debugger
   }
 
   calculateBirdie(fieldName: any) {
-    var class11 = 0;
+    // var class11 = 0;
     var countPar = 0;
     const keys = Object.keys(this.selectedCourse);
     if (keys.length > 0) {
@@ -321,55 +347,44 @@ debugger
         if (keyName.indexOf("score") >= 0) {
           console.log('keyName', keyName);
           const scoreValue = this.scoreForm.controls[keyName].value;
-          if (scoreValue) {
+          if (scoreValue && keyName == fieldName) {
             let field = keyName;
             field = field.replace('score', '');
             const parKey = "par" + field
             const parValue = this.selectedCourse[parKey];
             const actualParValue = scoreValue - parValue;
+            const hdcpKey = "hdcp" + field;
+            const hdcpValue = this.selectedCourse[hdcpKey];
 
 
-            // if (actualParValue<=0)
-            // {
-            //   totalBirdie = totalBirdie + actualParValue;
-            // }
+            this.calculateAgs(fieldName, parValue, hdcpValue, scoreValue);
 
             switch (actualParValue) {
               case -1:
 
-                class11 = class11 + 1;
+                this.class11 = this.class11 + 1;
                 break;
               case -2:
 
-                class11 = class11 + 2;
+                this.class11 = this.class11 + 2;
                 break;
               case 0:
-                class11 = class11 + 0;
+                this.class11 = this.class11 + 0;
                 countPar = countPar + 1;
 
                 break;
-              case 1:
-                class11 = class11 + 0;
 
-                break;
-              case 2:
-                class11 = class11 + 0;
-
-                break;
-              case 3:
-                class11 = class11 + 0;
-                break;
 
               default:
-                class11 = class11 + 0;
+                this.class11 = this.class11 + 0;
             }
 
 
           }
         }
       });
-
-      this.summaryForm.controls.birdieTotal.setValue(class11);
+      debugger;
+      this.summaryForm.controls.birdieTotal.setValue(this.class11);
       console.log("count of player", countPar)
     }
   }
@@ -430,14 +445,14 @@ debugger
             // }
           });
         }
-        
+
         //   this.scoreForm.controls.round_Id.setValue(this.roundList[currentIndex].round_Id);
         //    this.scoreForm.controls.cid.setValue(this.roundList[currentIndex].cid);
 
         // this.data.courseListing.forEach((course: any) => {
 
         //   if (course.cid == this.roundList[currentIndex].cid) {
-        
+
         //   }
         // });
 
@@ -451,17 +466,19 @@ debugger
       if (round.round_Id == this.scoreForm.controls.round_Id.value) {
         this.scoreForm.controls.cid.setValue(round.cid);
         // this.onCourseChange(round.cid);
-          
-            this.data.courseListing.forEach((course: any) => {
 
-                if (course.cid == round.cid) {
-                  this.selectedCourse = course;
-                }
-              });
+        this.data.courseListing.forEach((course: any) => {
+
+          if (course.cid == round.cid) {
+            this.selectedCourse = course;
+         
+          }
+        });
 
 
 
         this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + round.cid).subscribe((APIResponse: any) => {
+        debugger;
           if (APIResponse.error == '') {
             this.teeNameList = APIResponse.response.result;
           }
@@ -479,7 +496,10 @@ debugger
   }
 
   onChangeTeeName(event: any) {
-
+    for (let i = 1; i <= 18; i++) {
+      const scoreKeyName = "score" + i;
+      this.scoreForm.controls[scoreKeyName].enable();
+    }
     this.teeNameList.forEach((item: any) => {
       if (item.cRatingId == event.value) {
         this.slopeRate = item.slopeRating;
@@ -507,14 +527,25 @@ debugger
   }
 
   onCourseChange(event: any) {
+    debugger;
 
 
   }
 
 
   calculateScoreDifferential() {
-    
-    var ags = (this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value);
+
+
+    let ags = Number(this.scoreForm.value.ags1) + Number(this.scoreForm.value.ags2) +
+      Number(this.scoreForm.value.ags3) + Number(this.scoreForm.value.ags4) +
+      Number(this.scoreForm.value.ags5) + Number(this.scoreForm.value.ags6) +
+      Number(this.scoreForm.value.ags7) + Number(this.scoreForm.value.ags8) +
+      Number(this.scoreForm.value.ags9) + Number(this.scoreForm.value.ags10) +
+      Number(this.scoreForm.value.ags11) + Number(this.scoreForm.value.ags12) +
+      Number(this.scoreForm.value.ags13) + Number(this.scoreForm.value.ags14) +
+      Number(this.scoreForm.value.ags15) + Number(this.scoreForm.value.ags16) +
+      Number(this.scoreForm.value.ags17) + Number(this.scoreForm.value.ags18);
+
     var Diff1 = (ags - this.courseRate) * 113;
     var socreAvg = Diff1 / this.slopeRate;
     var rounded = Math.round(socreAvg * 10) / 10
@@ -523,6 +554,53 @@ debugger
 
     this.summaryForm.controls.scoreDiff.setValue(rounded);
 
+  }
+
+
+
+  calculateAgs(fieldName: any, parValue: any, hdcpValue: any, scoreValue: any) {
+
+    let hdcp = 0;
+    let ags = 0;
+    this.playerList.forEach((element: any) => {
+      if (element.playerId == this.scoreForm.controls.p_id.value) {
+        hdcp = element.hdcp;
+      }
+    });
+    const actualParValue = scoreValue - parValue;
+    // if (hdcpValue <= hdcp) {
+    //   if (actualParValue > 2) {
+    //     ags = parValue + 3;
+    //   }
+    //   else {
+    //     ags = scoreValue;
+    //   }
+    // } else {
+    //   ags = scoreValue;
+    // }
+
+
+    if (actualParValue > 2) {
+
+      if (hdcpValue <= hdcp) {
+        ags = parValue + 3;
+      }
+      else {
+        ags = parValue + 2;
+      }
+    }
+
+    else {
+      ags = scoreValue;
+    }
+
+
+
+
+
+    const fieldNum = fieldName.replace("score", '');
+    const newFieldName = "ags" + fieldNum;
+    this.scoreForm.controls[newFieldName].setValue(ags);
   }
 
 }
