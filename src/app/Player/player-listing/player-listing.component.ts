@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { response } from 'express';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { CommonServiceService } from 'src/app/Service/common.service';
 import { CommonListMenu } from 'src/app/Shared/common-Listing/common-list-menu';
@@ -17,8 +18,8 @@ import { AddEditPlayerComponent } from '../add-edit-player/add-edit-player.compo
 export class PlayerListingComponent implements OnInit {
 
   playerList: CommonListProperties = new CommonListProperties();
-  isLoadingDone:boolean=false;
-  constructor(private service: CommonServiceService, public dialog: MatDialog,public loader:NgxUiLoaderService) { }
+  isLoadingDone: boolean = false;
+  constructor(private service: CommonServiceService, public dialog: MatDialog, public loader: NgxUiLoaderService) { }
 
   ngOnInit(): void {
     this.getPlayerList();
@@ -27,25 +28,25 @@ export class PlayerListingComponent implements OnInit {
     this.loader.start();
     this.service.getAPIMethod('/players').subscribe((response) => {
       this.loader.stop();
-      
- const data:any=response;
+
+      const data: any = response;
 
       if (response.error === 'X') {
-       console.log('error');
+        console.log('error');
       } else {
         this.isLoadingDone = true;
-      //  this.roleList.url = '/getRolesList';
+        //  this.roleList.url = '/getRolesList';
         this.playerList.miDataSource = new MatTableDataSource(data.response.result);
-        this.playerList.columnLabels = [ 'Player Name','Handicap','Handicap Certificate','Platform Link','Home Course','Email Id','Phone','Gender','DOB','State','Country', 'Action'];
-        this.playerList.displayedColumns = [  'playerName','hdcp', 'homeCourse','hdcpCertificate', 'platformLink','email','contact_Number','gender','dateofbirth','state_name','country_name','Action'];
-    
+        this.playerList.columnLabels = ['UserName', 'Name', 'Email', 'Contact No', 'Gender', 'Role', 'State', 'Country', 'Action'];
+        this.playerList.displayedColumns = ['userName', 'playerName', 'email', 'contactNumber', 'gender', 'Role', 'state_name', 'country_name', 'Action'];
+
         this.playerList.miListMenu = new CommonListMenu();
         this.playerList.miListMenu.menuItems =
           [
             new CommonListMenuItem('Edit', 1, true, false, null, 'edit_icon'),
             new CommonListMenuItem('Delete', 2, true, true, null, 'delete_icon'),
           ];
-      
+
       }
     });
   }
@@ -55,43 +56,52 @@ export class PlayerListingComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.playerList.miDataSource.filter = filterValue.trim().toLowerCase();
 
-  
+
   }
 
 
-  savePlayerDetails(clickedRecordDetails:any) {
-    const dialogRef = this.dialog.open(AddEditPlayerComponent, {
-      data: clickedRecordDetails,
-      width: '900px',
-      height: '400px'
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if(result){
-        this.getPlayerList();
+  savePlayerDetails(clickedRecordDetails: any) {
+    this.loader.start();
+    this.service.getAPIMethod('user/getUserRole').subscribe((res: any) => {
+      this.loader.stop();
+      if (res.error == '') {
+        const dialogRef = this.dialog.open(AddEditPlayerComponent, {
+          data: {
+            userDetails: clickedRecordDetails,
+            roleList: res.response.result
+          },
+          width: '650px',
+          height: '450px'
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.getPlayerList();
+          }
+        });
+      } else {
+        this.sweetAlertMsg('error', res.response.msg)
       }
-     });
+    })
   }
 
 
-    
-    
+
+
 
 
 
   onPlayerActionClick(clickedRecord: any) {
-   
+
     if (clickedRecord.name == 'Edit') {
-this.savePlayerDetails(clickedRecord.data)
+      this.savePlayerDetails(clickedRecord.data)
     }
-    else if (clickedRecord.name=='Delete')
-    {
-this.deletePlayer(clickedRecord.data);
+    else if (clickedRecord.name == 'Delete') {
+      this.deletePlayer(clickedRecord.data);
     }
   }
 
 
-  deletePlayer(clickedrecord:any)
-  {
+  deletePlayer(clickedrecord: any) {
 
     Swal.fire({
       title: 'Delete Player',
@@ -105,7 +115,7 @@ this.deletePlayer(clickedRecord.data);
       if (result.isConfirmed) {
         this.loader.start();
         this.service.getAPIMethod('/deletePlayer?playerId=' + clickedrecord.p_id).subscribe((success) => {
-          
+
           this.loader.stop();
           if (success.response.err === 'X') {
             this.sweetAlertMsg('error', success.response.msg);
@@ -118,10 +128,10 @@ this.deletePlayer(clickedRecord.data);
       }
     });
   }
- 
 
-  sweetAlertMsg(typeIcon:any, msg:any) {
-    console.log(typeIcon,msg)
+
+  sweetAlertMsg(typeIcon: any, msg: any) {
+    console.log(typeIcon, msg)
     Swal.fire({
       toast: true,
       position: 'top',

@@ -20,6 +20,8 @@ const auth = require("../utilities/authService");
 
 //Define user routes.
 router.post("/userRegistration", usrCtrl.addUpdateUser);
+router.get("/user/getUserRole", usrCtrl.getUserRole);
+
 router.post("/userLogin", usrCtrl.userlogin);
 router.post('/forgotPassword',  usrCtrl.forgotPassword);
 router.get('/refreshToken', auth.verifyAuthToken, usrCtrl.refreshToken);
