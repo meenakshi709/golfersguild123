@@ -54,7 +54,7 @@ export class AddEditPlayerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger;
+   
     this.PlayerForm.controls.stateId.disable();
     this.getCountryList();
     if (this.data.userDetails) {
@@ -65,13 +65,12 @@ export class AddEditPlayerComponent implements OnInit {
 
 
   setPlayerDetails() {
-
-    const keys = Object.keys(this.data);
+   
+    const keys = Object.keys(this.data.userDetails);
     const formGroup = this.PlayerForm.controls;
-    console.log(keys);
     for (let i = 0; i < keys.length; i++) {
       const keyName = keys[i];
-      formGroup[keyName].setValue(this.data[keyName])
+      formGroup[keyName].setValue(this.data.userDetails[keyName])
     }
   }
 
@@ -113,7 +112,7 @@ export class AddEditPlayerComponent implements OnInit {
 
     this.service.getAPIMethod('/getStates?countryId=' + this.PlayerForm.controls.countryId.value).subscribe(response => {
       const apiResponse: any = response.response;
-      debugger;
+     
       if (response.error == '') {
         this.PlayerForm.controls.stateId.enable();
         this.stateList = apiResponse.result;

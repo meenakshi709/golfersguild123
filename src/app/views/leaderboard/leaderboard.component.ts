@@ -194,7 +194,7 @@ export class LeaderboardComponent implements OnInit {
             if (indexNumber == 9 || indexNumber == 18) {
               let stfSum = 0;
               if (stfArr.length > 0) {
-                debugger;
+               
                 for (let i = 0; i < stfArr.length; i++) {
                   stfSum += parseInt(stfArr[i]);
                 }

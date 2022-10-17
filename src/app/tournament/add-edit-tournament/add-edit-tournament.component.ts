@@ -74,7 +74,7 @@ export class AddEditTournamentComponent implements OnInit {
       }
     }
     else if (this.data.sectionName == 'coupon') {
-      debugger;
+     
       if (this.data.couponList.length > 0) {
 
         this.data.couponList.forEach((item: any) => {
@@ -113,7 +113,7 @@ export class AddEditTournamentComponent implements OnInit {
         this.onShownRounds(this.eventFormGroup.controls.eventDetailsArr.controls[0]);
 
       } else {
-        debugger;
+       
         if (keyName == 'eventType') {
           formControl[keyName].setValue(Number(this.data.details[keyName]));
         } else if (keyName == 'holes') {
@@ -405,7 +405,7 @@ export class AddEditTournamentComponent implements OnInit {
       data.groupDetailsArr.forEach((item: any) => {
         grpArr.push(item.group);
       });
-      debugger;
+     
       const filtered = grpArr.filter((el: any, index: any) => grpArr.indexOf(el) !== index);
       if (filtered.length == 0) {
         this.service.postAPIMethod("/tournament/saveTournamentGroupDetails", data).subscribe((APIResponse: any) => {

@@ -276,7 +276,7 @@ export class TournamentListingComponent implements OnInit {
           height: '400px'
         });
         dialogRef.afterClosed().subscribe(result => {
-          debugger;
+         
           if (result) {
             this.getTournamentList();
           }

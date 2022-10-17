@@ -301,7 +301,7 @@ export class AddEditOldScoreComponent implements OnInit {
     // const scoreOutValue=Number(this.scoreForm.value.score1)+Number(this.scoreForm.value.score2)+Number(this.scoreForm.value.score3)+Number(this.scoreForm.value.score4)+Number(this.scoreForm.value.score5)+Number(this.scoreForm.value.score6);Number(this.scoreForm.value.score7)+Number(this.scoreForm.value.score8)+Number(this.scoreForm.value.score9);
     this.summaryForm.controls.outTotal.setValue(scoreInValue);
     //  this.scoreForm.controls.pout.setValue(scoreOutValue);
-    debugger;
+   
     this.calculateBirdie(fieldName);
     this.calculateScoreDifferential();
 
@@ -372,7 +372,7 @@ export class AddEditOldScoreComponent implements OnInit {
           }
         }
       });
-      debugger;
+     
       this.summaryForm.controls.birdieTotal.setValue(this.class11);
       console.log("count of player", countPar)
     }
@@ -395,7 +395,7 @@ export class AddEditOldScoreComponent implements OnInit {
     // const scoreOutValue=Number(this.scoreForm.value.score1)+Number(this.scoreForm.value.score2)+Number(this.scoreForm.value.score3)+Number(this.scoreForm.value.score4)+Number(this.scoreForm.value.score5)+Number(this.scoreForm.value.score6);Number(this.scoreForm.value.score7)+Number(this.scoreForm.value.score8)+Number(this.scoreForm.value.score9);
     this.summaryForm.controls.inTotal.setValue(scoreOutValue);
     //  this.scoreForm.controls.pout.setValue(scoreOutValue);
-    debugger;
+   
     this.calculateBirdie(fieldName);
     this.calculateScoreDifferential();
   }
