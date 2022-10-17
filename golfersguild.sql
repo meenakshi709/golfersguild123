@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 04, 2022 at 07:49 AM
+-- Generation Time: Oct 17, 2022 at 07:51 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -390,12 +390,6 @@ SELECT * FROM live_tournament_round_details
 inner join events on events.tourID=live_tournament_round_details.tour_id;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getPlayerListing` ()  BEGIN
-
-SELECT st.*,pd.*,cntry.*,DATE_FORMAT(dob, '%d/%m/%Y')  AS dateofbirth FROM user_details as pd LEFT JOIN state as st on st.state_Id=pd.stateId LEFT JOIN country as cntry on cntry.country_Id=pd.countryId where isDeleted=0 AND 
- roleID !=1 order by playerName asc;
-END$$
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getRoundDetails` (IN `param_tourID` VARCHAR(100))  BEGIN
 select * from round_details where tourID=param_tourID;
 END$$
@@ -626,6 +620,10 @@ where p_id=param_playerId and isDeleted=0 AND
  roleID !=1 ;
 
 
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserRole` ()  BEGIN
+SELECT * FROM user_role where isDeleted=0 order by roleName asc;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getWebTourDetails` (IN `param_tourID` VARCHAR(100))  BEGIN
@@ -1257,7 +1255,7 @@ END IF;
 Select err,msg from DUAL;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `save_user_details` (IN `param_p_id` VARCHAR(50), IN `param_FirstName` VARCHAR(100), IN `param_LastName` VARCHAR(150), IN `param_userName` VARCHAR(150), IN `param_email` VARCHAR(100), IN `param_contact` VARCHAR(250), IN `param_password` VARCHAR(100), IN `param_dob` DATE, IN `param_gender` VARCHAR(10), IN `param_HomeCourse` VARCHAR(255), IN `param_hdcp` INT(3), IN `param_hdcpCertificate` LONGTEXT, IN `param_platformLink` VARCHAR(255), IN `param_vaccineStatus` INT(2), IN `param_employment` INT(3), IN `param_company` VARCHAR(200), IN `param_jobTitle` VARCHAR(150), IN `param_industry` INT(200), IN `param_countryId` INT(10), IN `param_stateId` INT(10), IN `param_profileImg` LONGTEXT, IN `param_is_FirstLogin` INT, IN `param_is_WebLogin` INT, IN `param_device_id` VARCHAR(255), IN `param_device_platform` VARCHAR(255))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `save_user_details` (IN `param_p_id` VARCHAR(50), IN `param_FirstName` VARCHAR(100), IN `param_LastName` VARCHAR(150), IN `param_roleId` VARCHAR(50), IN `param_userName` VARCHAR(150), IN `param_email` VARCHAR(100), IN `param_contact` VARCHAR(250), IN `param_password` VARCHAR(100), IN `param_dob` DATE, IN `param_gender` VARCHAR(10), IN `param_HomeCourse` VARCHAR(255), IN `param_hdcp` INT(3), IN `param_hdcpCertificate` LONGTEXT, IN `param_platformLink` VARCHAR(255), IN `param_vaccineStatus` INT(2), IN `param_employment` INT(3), IN `param_company` VARCHAR(200), IN `param_jobTitle` VARCHAR(150), IN `param_industry` INT(200), IN `param_countryId` INT(10), IN `param_stateId` INT(10), IN `param_profileImg` LONGTEXT, IN `param_is_FirstLogin` INT, IN `param_is_WebLogin` INT, IN `param_device_id` VARCHAR(255), IN `param_device_platform` VARCHAR(255))  BEGIN
 DECLARE playerName varchar(200);
 Declare err varchar(2);
 Declare  msg varchar(100);
@@ -1269,8 +1267,9 @@ if (isRecordExist<1)
 THEN
 
 IF( isEmailExist=0) THEN
-INSERT INTO user_details (playerName,firstName,lastName,userName,email,contactNumber,gender,dob,password,homeCourse,vaccineStatus,hdcp,hdcpCertificate,employment,companyName,jobTitle,platformLink,industry,roleId,isWebUser,isFirstLogin,createdDate,isDeleted,updatedDate,isAccountVerified,device_id,device_platform)
-  VALUES ( concat(param_FirstName," ",param_LastName),param_FirstName,param_LastName,param_userName,param_email,param_contact,param_gender,param_dob,param_password,param_HomeCourse,param_vaccineStatus,param_hdcp,param_hdcpCertificate,param_employment,param_company,param_jobTitle,param_platformLink,param_industry,3,param_is_WebLogin,0,now(),0,now(),0,param_device_id,param_device_platform);
+INSERT INTO user_details (playerName,firstName,lastName,userName,email,contactNumber,gender,dob,password,homeCourse,vaccineStatus,hdcp,hdcpCertificate,employment,companyName,jobTitle,platformLink,industry,roleId,isWebUser,isFirstLogin,createdDate,isDeleted,updatedDate,isAccountVerified,device_id,device_platform,countryId,stateId)
+  VALUES ( concat(param_FirstName," ",param_LastName),param_FirstName,param_LastName,param_userName,param_email,param_contact,param_gender,param_dob,param_password,
+          param_HomeCourse,param_vaccineStatus,param_hdcp,param_hdcpCertificate,param_employment,param_company,param_jobTitle,param_platformLink,param_industry,param_roleId,param_is_WebLogin,0,now(),0,now(),0,param_device_id,param_device_platform,param_countryId,param_stateId);
 
   set err="";
   set msg="Player Created Successfully";
@@ -1466,7 +1465,7 @@ Declare isUserExist int;
 select count(*) into isUserExist from user_details where email=param_emailId And  password=param_password And isDeleted=0;
 if(isUserExist>0) then
 
-SELECT * from user_details INNER join  user_role on user_role.roleId=user_details.roleId WHERE email=param_emailId And  password=param_password And user_details.isDeleted=0; 
+SELECT * from user_details INNER join  user_role on user_role.roleId=user_details.roleId WHERE email=param_emailId And  password=param_password And user_details.roleId=1 and  user_details.isDeleted=0; 
 Set err="";
 Set msg="User login successfully";
 
@@ -1761,19 +1760,7 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`tourID`, `tournamentName`, `eventType`, `numRounds`, `is_Deleted`, `startDate`, `endDate`, `created_Date`, `modified_Date`, `created_By`, `modified_By`, `flag`, `holes`) VALUES
-(1, 'golf club', '1', 3, 0, '2022-08-24 18:30:00', '2022-08-26 18:30:00', '2022-08-25 07:12:41', '2022-08-25 07:12:41', '', '', 0, 18),
-(2, 'golf plus', '6', 2, 0, '2022-08-26 18:30:00', '2022-08-27 18:30:00', '2022-08-25 09:06:56', '2022-08-25 09:06:56', '', '', 0, 18),
-(3, 'July test Tournament', '6', 1, 0, '2022-08-26 18:30:00', '2022-08-26 18:30:00', '2022-08-26 06:50:05', '2022-08-26 06:50:05', '', '', 0, 18),
-(4, 'test', '6', 1, 1, '2022-08-25 18:30:00', '2022-08-25 18:30:00', '2022-08-26 07:20:05', '2022-08-26 07:20:05', '', '', 0, 18),
-(5, 'test tour', '6', 1, 0, '2022-08-25 18:30:00', '2022-08-25 18:30:00', '2022-08-26 09:00:52', '2022-08-26 09:00:52', '', '', 0, 18),
-(6, 'test cd', '6', 1, 0, '2022-08-25 18:30:00', '2022-08-25 18:30:00', '2022-08-26 09:03:57', '2022-08-26 09:03:57', '', '', 0, 18),
-(7, 'test 12', '6', 7, 0, '2022-08-29 18:30:00', '2022-09-04 18:30:00', '2022-08-30 07:16:12', '2022-08-30 07:16:12', '', '', 0, 18),
-(8, 'aug 31', '6', 7, 0, '2022-08-30 18:30:00', '2022-09-05 18:30:00', '2022-08-31 06:20:56', '2022-08-31 06:20:56', '', '', 0, 18),
-(9, 'golf club2', 'Stroke Play', 2, 0, '2022-09-27 18:30:00', '2022-09-28 18:30:00', '2022-09-28 11:59:22', '2022-09-28 11:59:22', '', '', 0, 18),
-(10, 'ff', 'Stroke Play', 2, 1, '2022-09-27 18:30:00', '2022-09-28 18:30:00', '2022-09-28 12:04:39', '2022-09-28 12:04:39', '', '', 0, 18),
-(11, 'golf club5', 'Stroke Play', 1, 0, '2022-09-27 18:30:00', '2022-09-27 18:30:00', '2022-09-28 12:13:18', '2022-09-28 12:13:18', '', '', 0, 18),
-(12, 'aaaaaaaa', '1', 1, 1, '2022-09-27 18:30:00', '2022-09-27 18:30:00', '2022-09-28 12:24:09', '2022-09-28 12:24:09', '', '', 0, 18),
-(13, 'GOLFCLUB', '1', 2, 0, '2022-10-03 18:30:00', '2022-10-04 18:30:00', '2022-10-02 04:23:08', '2022-10-02 04:23:08', '', '', 0, 18);
+(1, 'Golfers guild', '7', 2, 0, '2022-11-15 18:30:00', '2022-11-28 18:30:00', '2022-10-16 14:42:30', '2022-10-16 14:42:30', '', '', 0, 18);
 
 -- --------------------------------------------------------
 
@@ -2111,37 +2098,8 @@ CREATE TABLE `round_details` (
 --
 
 INSERT INTO `round_details` (`round_Id`, `event_Date`, `cid`, `tourID`, `created_Date`, `modified_Date`, `round_name`) VALUES
-(1, '2022-08-25 00:00:00', 2, 1, '2022-08-25 07:12:41', '2022-08-25 07:12:41', 'Round1'),
-(2, ' 2022-08-26 00:00:00', 2, 1, '2022-08-25 07:12:41', '2022-08-25 07:12:41', 'Round2'),
-(3, ' 2022-08-27 00:00:00', 29, 1, '2022-08-25 07:12:41', '2022-08-25 07:12:41', 'Round3'),
-(4, '2022-08-27 00:00:00', 2, 2, '2022-08-25 09:06:56', '2022-08-25 09:06:56', 'Round1'),
-(5, ' 2022-08-28 00:00:00', 1, 2, '2022-08-25 09:06:56', '2022-08-25 09:06:56', 'Round2'),
-(6, '2022-08-27 00:00:00', 3, 3, '2022-08-26 06:50:05', '2022-08-26 06:50:05', 'Round1'),
-(7, '2022-08-26 00:00:00', 2, 4, '2022-08-26 07:20:05', '2022-08-26 07:20:05', 'Round1'),
-(8, '2022-08-26 00:00:00', 29, 5, '2022-08-26 09:00:52', '2022-08-26 09:00:52', 'Round1'),
-(9, '2022-08-26 00:00:00', 2, 6, '2022-08-26 09:03:57', '2022-08-26 09:03:57', 'Round1'),
-(10, '2022-08-30 00:00:00', 29, 7, '2022-08-30 07:16:12', '2022-08-30 07:16:12', 'Round1'),
-(11, ' 2022-08-31 00:00:00', 2, 7, '2022-08-30 07:16:12', '2022-08-30 07:16:12', 'Round2'),
-(12, ' 2022-09-01 00:00:00', 2, 7, '2022-08-30 07:16:12', '2022-08-30 07:16:12', 'Round3'),
-(13, ' 2022-09-02 00:00:00', 2, 7, '2022-08-30 07:16:12', '2022-08-30 07:16:12', 'Round4'),
-(14, ' 2022-09-03 00:00:00', 1, 7, '2022-08-30 07:16:12', '2022-08-30 07:16:12', 'Round5'),
-(15, ' 2022-09-04 00:00:00', 1, 7, '2022-08-30 07:16:12', '2022-08-30 07:16:12', 'Round6'),
-(16, ' 2022-09-05 00:00:00', 3, 7, '2022-08-30 07:16:12', '2022-08-30 07:16:12', 'Round7'),
-(17, '2022-08-31 00:00:00', 2, 8, '2022-08-31 06:20:56', '2022-08-31 06:20:56', 'Round1'),
-(18, ' 2022-09-01 00:00:00', 2, 8, '2022-08-31 06:20:56', '2022-08-31 06:20:56', 'Round2'),
-(19, ' 2022-09-02 00:00:00', 2, 8, '2022-08-31 06:20:56', '2022-08-31 06:20:56', 'Round3'),
-(20, ' 2022-09-03 00:00:00', 2, 8, '2022-08-31 06:20:56', '2022-08-31 06:20:56', 'Round4'),
-(21, ' 2022-09-04 00:00:00', 2, 8, '2022-08-31 06:20:56', '2022-08-31 06:20:56', 'Round5'),
-(22, ' 2022-09-05 00:00:00', 2, 8, '2022-08-31 06:20:56', '2022-08-31 06:20:56', 'Round6'),
-(23, ' 2022-09-06 00:00:00', 2, 8, '2022-08-31 06:20:56', '2022-08-31 06:20:56', 'Round7'),
-(24, '2022-09-28 00:00:00', 29, 9, '2022-09-28 11:59:22', '2022-09-28 11:59:22', 'Round1'),
-(25, ' 2022-09-29 00:00:00', 1, 9, '2022-09-28 11:59:22', '2022-09-28 11:59:22', 'Round2'),
-(26, '2022-09-28 00:00:00', 29, 10, '2022-09-28 12:04:39', '2022-09-28 12:04:39', 'Round1'),
-(27, ' 2022-09-29 00:00:00', 3, 10, '2022-09-28 12:04:39', '2022-09-28 12:04:39', 'Round2'),
-(28, '2022-09-28 00:00:00', 2, 11, '2022-09-28 12:13:18', '2022-09-28 12:13:18', 'Round1'),
-(29, '2022-09-28 00:00:00', 2, 12, '2022-09-28 12:24:09', '2022-09-28 12:24:09', 'Round1'),
-(30, '2022-10-04 00:00:00', 29, 13, '2022-10-02 04:23:08', '2022-10-02 04:23:08', 'Round1'),
-(31, ' 2022-10-05 00:00:00', 3, 13, '2022-10-02 04:23:08', '2022-10-02 04:23:08', 'Round2');
+(1, '2022-11-16 00:00:00', 29, 1, '2022-10-16 14:42:30', '2022-10-16 14:42:30', 'Round1'),
+(2, ' 2022-11-29 00:00:00', 3, 1, '2022-10-16 14:42:30', '2022-10-16 14:42:30', 'Round2');
 
 -- --------------------------------------------------------
 
@@ -2363,10 +2321,7 @@ CREATE TABLE `tournament_group_details` (
 --
 
 INSERT INTO `tournament_group_details` (`groupId`, `groupName`, `tee_Number`, `tee_Time`, `tourID`, `round_Id`) VALUES
-(3, 'Group1', 9, '12:11', 2, 5),
-(5, 'Group1', 12, '12:12', 1, 3),
-(12, 'Group1', 11, '12:10', 7, 16),
-(15, 'Group1', 14, '22:10', 8, 19);
+(1, 'Group1', 12, '12:10', 1, 1);
 
 --
 -- Triggers `tournament_group_details`
@@ -2445,7 +2400,8 @@ INSERT INTO `tournament_group_player_details` (`t_player_Id`, `tournamentId`, `g
 (12, 7, 'Group1', 6, '12:10', 0, 0, '16'),
 (13, 8, 'Group1', 6, '12:12', 0, 0, '17'),
 (14, 8, 'Group1', 6, '12:12', 0, 0, '18'),
-(15, 8, 'Group1', 6, '22:10', 0, 0, '19');
+(15, 8, 'Group1', 6, '22:10', 0, 0, '19'),
+(16, 1, 'Group1', 2, '12:10', 0, 0, '1');
 
 -- --------------------------------------------------------
 
@@ -2471,17 +2427,7 @@ CREATE TABLE `tournament_player_list` (
 --
 
 INSERT INTO `tournament_player_list` (`tour_player_id`, `tourID`, `playerID`, `isPlay`, `isInvited`, `isAccepted`, `isApproved`, `isRejected`, `isWithdraw`, `created_Date`) VALUES
-(4, 1, 6, 0, 0, 1, 1, 0, 0, '2022-08-25'),
-(5, 2, 6, 0, 1, 1, 1, 0, 0, '2022-08-25'),
-(6, 4, 6, 0, 1, 0, 0, 0, 0, '2022-08-26'),
-(7, 5, 6, 0, 1, 0, 0, 0, 0, '2022-08-26'),
-(8, 6, 6, 0, 1, 0, 0, 0, 0, '2022-08-26'),
-(9, 7, 6, 0, 1, 1, 1, 0, 0, '2022-08-30'),
-(10, 8, 6, 0, 1, 1, 1, 0, 0, '2022-08-31'),
-(11, 10, 6, 0, 1, 0, 0, 0, 0, '2022-09-28'),
-(12, 11, 6, 0, 1, 0, 0, 0, 0, '2022-09-28'),
-(13, 13, 36, 0, 1, 0, 0, 0, 0, '2022-10-02'),
-(14, 13, 12, 0, 1, 0, 0, 0, 0, '2022-10-02');
+(15, 1, 2, 0, 0, 0, 1, 0, 0, '2022-10-16');
 
 -- --------------------------------------------------------
 
@@ -2531,32 +2477,7 @@ CREATE TABLE `tournament_score_details` (
 --
 
 INSERT INTO `tournament_score_details` (`tour_score_id`, `p_id`, `tour_id`, `score1`, `score2`, `score3`, `score4`, `score5`, `score6`, `score7`, `score8`, `score9`, `score10`, `score11`, `score12`, `score13`, `score14`, `score15`, `score16`, `score17`, `score18`, `round_Id`, `hdcp`, `inn`, `outt`, `gross`, `net`, `birdie`, `holeNum`, `cid`, `scoreDifferential`, `createdDate`, `isDeleted`, `teeName`) VALUES
-(1, 6, 1, 5, 6, 4, 5, 6, 5, 4, 5, 6, 5, 4, 5, 6, 5, 4, 3, 2, 1, 1, 13.5, 35, 46, 81, 66, 3, 17, '2', '16.8', '2022-08-25', 0, ''),
-(2, 6, 2, 5, 4, 5, 4, 5, 4, 5, 6, 8, 5, 4, 6, 4, 4, 4, 6, 6, 5, 4, 13.5, 44, 46, 90, 78, 1, 17, '2', '16.2', '2022-08-25', 0, ''),
-(3, 6, 2, 5, 6, 4, 5, 6, 7, 6, 5, 4, 4, 4, 4, 5, 6, 6, 6, 5, 4, 5, 13.5, 44, 48, 92, 80, 3, 17, '1', '15.4', '2022-08-25', 0, ''),
-(4, 6, 1, 5, 4, 5, 6, 5, 6, 7, 7, 6, 5, 5, 6, 5, 6, 6, 5, 4, 5, 2, 13.5, 47, 51, 98, 84, 0, 17, '2', '27.9', '2022-08-25', 0, ''),
-(5, 6, 1, 5, 4, 5, 6, 7, 6, 5, 6, 7, 7, 7, 6, 5, 5, 5, 4, 4, 7, 3, 13.5, 50, 51, 101, 89, 1, 17, '29', '12.3', '2022-08-25', 0, ''),
-(6, 6, 7, 5, 4, 6, 5, 4, 3, 4, 5, 6, 4, 5, 6, 5, 4, 3, 4, 5, 6, 10, 13.5, 42, 42, 84, 72, 3, 17, '29', '23.4', '2022-08-30', 0, ''),
-(7, 6, 7, 5, 6, 5, 4, 5, 6, 6, 7, 7, 6, 5, 4, 4, 3, 4, 4, 3, 4, 11, 13.5, 37, 51, 88, 75, 3, 17, '2', '15.2', '2022-08-30', 0, ''),
-(8, 6, 7, 6, 5, 6, 7, 6, 5, 4, 5, 6, 6, 6, 5, 5, 5, 4, 4, 4, 4, 12, 13.5, 43, 50, 93, 81, 1, 17, '2', '22.4', '2022-08-30', 0, ''),
-(9, 6, 7, 6, 5, 6, 6, 2, 5, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 5, 4, 13, 13.5, 51, 51, 102, 89, 2, 17, '2', '32.3', '2022-08-30', 0, ''),
-(10, 6, 7, 6, 5, 4, 5, 4, 5, 4, 3, 4, 4, 5, 5, 5, 6, 5, 6, 6, 6, 14, 13.5, 48, 40, 88, 83, 2, 17, '1', '69.3', '2022-08-30', 0, ''),
-(11, 6, 7, 3, 2, 3, 3, 4, 4, 4, 3, 3, 3, 3, 4, 3, 3, 2, 2, 3, 3, 15, 13.5, 26, 29, 55, 43, 18, 17, '1', '33.6', '2022-08-30', 0, ''),
-(12, 6, 7, 5, 5, 5, 6, 5, 5, 5, 4, 5, 5, 5, 5, 4, 5, 5, 4, 5, 5, 16, 13.5, 43, 45, 88, 76, 2, 17, '3', '16.1', '2022-08-30', 0, ''),
-(13, 6, 5, 6, 5, 5, 5, 6, 6, 5, 5, 6, 5, 4, 5, 6, 6, 5, 7, 6, 5, 0, 13.5, 35, 45, 80, 70, 0, 0, '1', '17.5', '2022-08-30', 0, ''),
-(14, 6, 5, 6, 5, 5, 5, 6, 6, 5, 5, 6, 5, 4, 5, 6, 6, 5, 7, 6, 5, 0, 13.5, 35, 45, 80, 70, 0, 0, '1', '15.5', '2022-08-30', 0, ''),
-(15, 6, 0, 5, 6, 5, 4, 5, 6, 6, 7, 6, 5, 5, 4, 5, 5, 6, 6, 6, 6, 6, 13.5, 6, 4, 99, 88, 0, 18, '1', '18.9', '2022-08-30', 0, ''),
-(16, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 100, 90, 0, 18, '1', '12.3', '2022-08-30', 0, ''),
-(17, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 0, 0, 0, 0, '1', '13.4', '2022-08-30', 0, ''),
-(18, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 100, 90, 0, 18, '1', '12.3', '2022-08-30', 0, ''),
-(19, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 0, 0, 0, 0, '1', '13.4', '2022-08-30', 0, ''),
-(20, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 0, 0, 0, 0, '1', '14.7', '2022-08-30', 0, ''),
-(21, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 0, 0, 0, 0, 0, 0, '3', '18.9', '2022-08-30', 0, ''),
-(22, 6, 8, 4, 5, 6, 5, 5, 6, 6, 5, 5, 5, 5, 5, 5, 6, 5, 5, 3, 4, 17, 13.5, 43, 47, 90, 78, 1, 17, '2', '16.2', '2022-08-31', 0, ''),
-(23, 6, 8, 4, 5, 4, 4, 5, 4, 5, 4, 5, 4, 5, 4, 5, 6, 4, 4, 5, 4, 18, 13.5, 41, 40, 81, 67, 2, 17, '2', '6.8', '2022-08-31', 0, ''),
-(24, 6, 8, 5, 4, 5, 6, 5, 4, 6, 5, 7, 5, 6, 4, 4, 4, 5, 4, 4, 7, 19, 13.5, 43, 47, 90, 77, 1, 17, '2', '16.2', '2022-08-31', 0, ''),
-(25, 6, 0, 6, 5, 7, 7, 7, 6, 5, 5, 4, 6, 7, 5, 8, 5, 4, 5, 3, 5, 0, 18, 4, 4, 3, 6, 1, 18, '2', '15.5', '1999-05-21', 0, 'red'),
-(26, 6, 0, 4, 3, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5, 6, 4, 4, 1, 0, 18, '3', '4.5', '0000-00-00', 0, '1990-8-12');
+(1, 2, 1, 3, 3, 3, 5, 5, 4, 4, 3, 3, 2, 8, 8, 9, 8, 9, 8, 9, 8, 1, 0, 69, 33, 102, 102, 7, 17, '29', 'null', '2022-10-16', 0, '12');
 
 -- --------------------------------------------------------
 
@@ -2692,41 +2613,8 @@ CREATE TABLE `user_details` (
 --
 
 INSERT INTO `user_details` (`p_id`, `firstName`, `lastName`, `playerName`, `userName`, `contactNumber`, `email`, `password`, `dob`, `gender`, `homeCourse`, `hdcp`, `handicapIndex`, `hdcpCertificate`, `platformLink`, `vaccineStatus`, `employment`, `companyName`, `jobTitle`, `industry`, `profileImg`, `roleId`, `isDeleted`, `isWebUser`, `isFirstLogin`, `countryId`, `stateId`, `createdDate`, `updatedDate`, `isAccountVerified`, `device_id`, `device_platform`) VALUES
-(1, 'Meenakshi', NULL, '', 'superAdmin', 'h', 'meenakshi@echelonedge.com', 'Meen@1234', NULL, 'female', NULL, NULL, '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 1, 0, NULL, NULL, NULL, NULL, 0, '', ''),
-(6, 'test', ' testii', 'test mina testii', 'test@1234', '5544667788', 'er.minaxi18@gmail.com', 'testi@123456', '2000-01-01', 'male', 'test mnmjk', '13.50', '12.70', '', '', 1, 2, 'test test', 'manager', '2', NULL, 3, 0, 0, 0, NULL, NULL, '2022-01-19 00:00:00', '2022-01-21 00:00:00', 1, '', ''),
-(10, 'Rajiv', 'Ghumman', 'Rajiv Ghumman', 'RajivGhumman2', NULL, NULL, NULL, NULL, NULL, NULL, '15.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, NULL, 0, NULL, NULL, '2022-02-26 06:51:44', '2022-02-26 06:51:44', 1, '', ''),
-(11, 'Aseem', 'Vivek', 'Aseem Vivek', 'AseemVivek2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, NULL, 0, NULL, NULL, '2022-02-26 06:51:44', '2022-02-26 06:51:44', 1, '', ''),
-(12, 'Avneet', 'Vohra', 'Avneet Vohra', 'AvneetVohra2', '0', NULL, '0', NULL, NULL, NULL, '6.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 06:59:37', '2022-02-26 06:59:37', 1, '', ''),
-(13, 'Manjit', 'Bagri', 'Manjit Bagri', 'ManjitBagri2', '0', NULL, NULL, NULL, NULL, NULL, '7.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, 1, NULL, '2022-02-26 06:59:37', '2022-02-26 06:59:37', 1, '', ''),
-(14, 'Tarun', 'Mehrotra', 'Tarun Mehrotra', 'TarunMehrotra2', '0', NULL, NULL, NULL, NULL, NULL, '10.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, 1, NULL, '2022-02-26 07:04:16', '2022-02-26 07:04:16', 1, '', ''),
-(15, 'Bobby', 'Kochchar', 'Bobby Kochchar', 'BobbyKochchar2', NULL, NULL, NULL, NULL, NULL, NULL, '10.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, 1, NULL, '2022-02-26 07:04:16', '2022-02-26 07:04:16', 0, '', ''),
-(16, 'Tarun', 'Mehrotra', 'Tarun Mehrotra', 'TarunMehrotra2', '0', NULL, NULL, NULL, NULL, NULL, '10.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, 1, NULL, '2022-02-26 07:04:16', '2022-02-26 07:04:16', 1, '', ''),
-(17, 'Bobby', 'Kochchar', 'Bobby Kochchar', 'BobbyKochchar2', NULL, NULL, NULL, NULL, NULL, NULL, '10.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, 1, NULL, '2022-02-26 07:04:16', '2022-02-26 07:04:16', 1, '', ''),
-(18, 'Raman', 'Dua', 'Raman Dua', 'RamanDua2', '0', NULL, NULL, NULL, NULL, NULL, '11.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:06:56', '2022-02-26 07:06:56', 1, '', ''),
-(19, 'Gaurav', 'Gandhi', 'Gaurav Gandhi', 'GauravGandhi2', '0', NULL, NULL, NULL, NULL, NULL, '12.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:06:56', '2022-02-26 07:06:56', 1, '', ''),
-(20, 'Anand', 'Bansal', 'Anand Bansal', 'AnandBansal2', NULL, NULL, NULL, NULL, NULL, NULL, '12.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:08:55', '2022-02-26 07:08:55', 1, '', ''),
-(21, 'Azaad', 'Gill', 'Azaad Gill', 'AzaadGill2', NULL, NULL, NULL, NULL, NULL, NULL, '12.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:08:55', '2022-02-26 07:08:55', 1, '', ''),
-(22, 'Col. Manish', 'Dubey', 'Col. Manish Dubey', 'ColManishDubey2', NULL, NULL, NULL, NULL, NULL, NULL, '12.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:08:55', '2022-02-26 07:08:55', 1, '', ''),
-(23, 'Ashok', 'Singh', 'Ashok Singh', 'AshokSingh2', '0', NULL, NULL, NULL, NULL, NULL, '12.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:11:52', '2022-02-26 07:11:52', 1, '', ''),
-(24, 'Naresh', 'Kumar', 'Naresh Kumar', 'NareshKumar2', '0', NULL, NULL, NULL, NULL, NULL, '11.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:11:52', '2022-02-26 07:11:52', 1, '', ''),
-(25, 'Bobby', 'Tewari', 'Bobby Tewari', 'BobbyTewari2', '', NULL, NULL, NULL, NULL, NULL, '12.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:11:52', '2022-02-26 07:11:52', 1, '', ''),
-(26, 'Rohit', 'Shukla', 'Rohit Shukla', 'RohitShukla2', NULL, NULL, NULL, NULL, NULL, NULL, '8.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 1, 0, 0, NULL, NULL, '2022-02-26 07:16:03', '2022-02-26 07:16:03', 1, '', ''),
-(27, 'Mhirjit', 'Singh', 'Mhirjit Singh', 'MhirjitSingh2', NULL, NULL, NULL, NULL, NULL, NULL, '8.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:16:03', '2022-02-26 07:16:03', 1, '', ''),
-(28, 'Col. Azad S ', 'Ruhail', 'Col. Azad S Ruhail', 'AzadSRuhail', '0', NULL, NULL, NULL, NULL, NULL, '9.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:16:03', '2022-02-26 07:16:03', 1, '', ''),
-(29, 'Rishi', 'Poddar', 'Rishi Poddar', 'RishiPoddar2', '0', NULL, NULL, NULL, NULL, NULL, '9.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:16:03', '2022-02-26 07:16:03', 0, '', ''),
-(30, 'Rohit', 'Shukla', 'Rohit Shukla', 'RohitShukla2', NULL, NULL, NULL, NULL, NULL, NULL, '8.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:16:03', '2022-02-26 07:16:03', 1, '', ''),
-(31, 'Mhirjit', 'Singh', 'Mhirjit Singh', 'MhirjitSingh2', NULL, NULL, NULL, NULL, NULL, NULL, '8.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:16:03', '2022-02-26 07:16:03', 1, '', ''),
-(32, 'Col. Azad S ', 'Ruhail', 'Col. Azad S Ruhail', 'AzadSRuhail', '0', NULL, NULL, NULL, NULL, NULL, '9.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:16:03', '2022-02-26 07:16:03', 1, '', ''),
-(33, 'Rishi', 'Poddar', 'Rishi Poddar', 'RishiPoddar2', '0', NULL, NULL, NULL, NULL, NULL, '9.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, NULL, NULL, '2022-02-26 07:16:03', '2022-02-26 07:16:03', 1, '', ''),
-(34, 'Ranndeep', 'Chonker', 'Ranndeep Chonker', 'RanndeepChonker2', '0', NULL, NULL, NULL, NULL, NULL, '5.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 1, 0, 0, 1, NULL, '2022-02-26 07:20:24', '2022-02-26 07:20:24', 1, '', ''),
-(35, 'Simran', 'Gujral', 'Simran Gujral', 'SimranGujral2', NULL, NULL, NULL, NULL, NULL, NULL, '6.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, 1, NULL, '2022-02-26 07:20:24', '2022-02-26 07:20:24', 1, '', ''),
-(36, 'Aman', 'Guleria', 'Aman Guleria', 'AmanGuleria2', NULL, NULL, NULL, NULL, NULL, NULL, '5.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, 1, NULL, '2022-02-26 07:20:24', '2022-02-26 07:20:24', 1, '', ''),
-(37, 'Col. Rajesh', 'Bains', 'Col. Rajesh Bains', 'RajeshBains2', NULL, NULL, NULL, NULL, NULL, NULL, '12.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, 1, NULL, '2022-02-26 07:20:24', '2022-02-26 07:20:24', 1, '', ''),
-(38, 'garima', ' testii', 'garima  testii', 'test@1234', '5544667788', 'garima.kapoor@echelonedge.com', 'testis@1234', '2000-01-01', 'male', 'test mnmjk', '12.00', '0.00', '', '', 1, 2, 'test test', 'manager', '2', NULL, 3, 1, 0, 0, NULL, NULL, '2022-03-02 15:30:12', '2022-03-02 15:30:12', 1, '', ''),
-(39, 'tt', 'tt', 'tt tt', 'abc@123', '5554454', 'shivdra@echelonedge.com', '55555', '0000-00-00', 'male', 'itc', '12.00', '0.00', '', '', 0, 0, 'https://www.echelonedge.com/', '', '0', NULL, 3, 1, 0, 0, NULL, NULL, '2022-03-22 17:53:32', '2022-03-22 17:53:32', 0, '', ''),
-(40, 'device', ' testii', 'device  testii', 'test@1234', '5544667788', 'test123@gmail.com', 'test@1234', '2000-01-01', 'male', 'test mnmjk', '12.00', '0.00', '', '', 1, 2, 'test test', 'manager', '2', NULL, 3, 1, 0, 0, NULL, NULL, '2022-03-22 17:58:05', '2022-03-22 17:58:05', 0, '', ''),
-(41, 'device', ' testii', 'device  testii', 'test@1234', '6677889900', 'meenakshi2@echelonedge.com', 'test@1234', '2000-01-01', 'male', 'test mnmjk', '12.00', '0.00', '', '', 1, 2, 'test test', 'manager', '2', NULL, 3, 0, 0, 0, NULL, NULL, '2022-06-28 11:09:07', '2022-06-28 11:09:07', 0, NULL, NULL),
-(42, 'devicee', ' testii', 'devicee  testii', 'test@1234', '6677889900', 'meenakshi3@echelonedge.com', 'test@1234', '2000-01-01', 'male', 'test mnmjk', '12.00', '0.00', '', '', 1, 2, 'test test', 'manager', '2', NULL, 3, 0, 0, 0, NULL, NULL, '2022-06-29 15:20:06', '2022-06-29 15:20:06', 0, '', '');
+(1, 'Meenakshi', 'Dhariwal', 'Meenakshi Dhariwal', 'Meen1234', '8786567898', 'meenakshi@echelonedge.com', 'test123@A', '1994-01-07', 'female', 'undefined', '0.00', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 1, 0, 0, 0, NULL, NULL, '2022-10-15 16:13:19', '2022-10-15 16:13:19', 0, 'undefined', 'undefined'),
+(2, 'Ankit', 'Khandelwal', 'Ankit Khandelwal', 'ankit123', '8278767678', 'ankit.khandelwal@echelonedge.com', 'test123@A', '2022-07-31', 'male', 'undefined', '0.00', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 2, 0, 0, 0, 1, 25, '2022-10-16 20:00:45', '2022-10-16 20:00:45', 0, 'undefined', 'undefined');
 
 -- --------------------------------------------------------
 
@@ -2745,7 +2633,7 @@ CREATE TABLE `user_role` (
 --
 
 INSERT INTO `user_role` (`roleId`, `roleName`, `isDeleted`) VALUES
-(1, 'superAdmin', 0),
+(1, 'super Admin', 0),
 (2, 'admin', 0),
 (3, 'user', 0);
 
@@ -3012,7 +2900,7 @@ ALTER TABLE `employment`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `event_details`
@@ -3078,7 +2966,7 @@ ALTER TABLE `player_details`
 -- AUTO_INCREMENT for table `round_details`
 --
 ALTER TABLE `round_details`
-  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `score_details`
@@ -3120,25 +3008,25 @@ ALTER TABLE `tournament_details`
 -- AUTO_INCREMENT for table `tournament_group_details`
 --
 ALTER TABLE `tournament_group_details`
-  MODIFY `groupId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `groupId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tournament_group_player_details`
 --
 ALTER TABLE `tournament_group_player_details`
-  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tournament_player_list`
 --
 ALTER TABLE `tournament_player_list`
-  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `tournament_score_details`
 --
 ALTER TABLE `tournament_score_details`
-  MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tournament_winners`
@@ -3156,7 +3044,7 @@ ALTER TABLE `user_account_otp`
 -- AUTO_INCREMENT for table `user_details`
 --
 ALTER TABLE `user_details`
-  MODIFY `p_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `p_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user_role`
