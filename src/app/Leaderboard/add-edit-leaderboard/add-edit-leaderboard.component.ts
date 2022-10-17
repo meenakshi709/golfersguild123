@@ -95,7 +95,7 @@ export class AddEditLeaderboardComponent implements OnInit {
     public route: Router) { }
 
   ngOnInit(): void {
-    debugger;
+   
 
     // 
 
@@ -383,7 +383,7 @@ export class AddEditLeaderboardComponent implements OnInit {
           }
         }
       });
-      debugger;
+     
       this.summaryForm.controls.birdieTotal.setValue(this.class11);
       console.log("count of player", countPar)
     }
@@ -478,7 +478,7 @@ export class AddEditLeaderboardComponent implements OnInit {
 
 
         this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + round.cid).subscribe((APIResponse: any) => {
-        debugger;
+       
           if (APIResponse.error == '') {
             this.teeNameList = APIResponse.response.result;
           }
@@ -527,7 +527,7 @@ export class AddEditLeaderboardComponent implements OnInit {
   }
 
   onCourseChange(event: any) {
-    debugger;
+   
 
 
   }

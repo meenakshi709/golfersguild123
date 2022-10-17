@@ -45,7 +45,7 @@ company , jobTitle, industry, countryId, stateId , profileImg, is_FirstLogin, is
 usrCtrl.addUpdateUser = (req, res) => {
     try {
         const data = req.body;
-        let addUpdateSql = `Call save_user_details("${data.p_id}","${data.firstName}", "${data.lastName}", "${data.userName}","${data.email}", "${data.contactNumber}","${data.password}","${data.dob}","${data.gender}", "${data.homeCourse}", "${data.hdcp}","${data.hdcpCertificate}", "${data.platformLink}", "${data.vaccineStatus}",  "${data.employment}",  "${data.company}",  "${data.jobTitle}",  "${data.industry}",  "${data.countryId}",  "${data.stateId}",  "${data.profileImg}",  "${data.is_FirstLogin}",  "${data.is_WebLogin}" ,  "${data.device_id}" ,  "${data.device_platform}"   )`;
+        let addUpdateSql = `Call save_user_details("${data.playerId}","${data.firstName}", "${data.lastName}", "${data.roleId}", "${data.userName}","${data.email}", "${data.contactNumber}","${data.password}","${data.dob}","${data.gender}", "${data.homeCourse}", "${data.hdcp}","${data.hdcpCertificate}", "${data.platformLink}", "${data.vaccineStatus}",  "${data.employment}",  "${data.company}",  "${data.jobTitle}",  "${data.industry}",  "${data.countryId}",  "${data.stateId}",  "${data.profileImg}",  "${data.is_FirstLogin}",  "${data.is_WebLogin}" ,  "${data.device_id}" ,  "${data.device_platform}"   )`;
         connection.query(addUpdateSql, function (error, results) {
             releaseconnection();
             if (error) {
@@ -290,6 +290,27 @@ usrCtrl.deletePlayer = (req, res) => {
         res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
     }
 };
+
+
+
+usrCtrl.getUserRole = (req, res) => {
+    try {
+
+        let sql = `call getUserRole()`;
+        connection.query(sql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            } else {
+                res.end(JSON.stringify({ "error": "", "response":{result: results[0]} }));
+            }
+        });
+    }
+    catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
+};
+
 
 /**
  * Purpose connection release 

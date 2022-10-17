@@ -3,9 +3,15 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
+<<<<<<< HEAD
 -- Generation Time: Oct 14, 2022 at 02:34 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
+=======
+-- Generation Time: Oct 17, 2022 at 07:51 AM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 8.1.2
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -392,12 +398,6 @@ SELECT * FROM live_tournament_round_details
 inner join events on events.tourID=live_tournament_round_details.tour_id;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getPlayerListing` ()  BEGIN
-
-SELECT st.*,pd.*,cntry.*,DATE_FORMAT(dob, '%d/%m/%Y')  AS dateofbirth FROM user_details as pd LEFT JOIN state as st on st.state_Id=pd.stateId LEFT JOIN country as cntry on cntry.country_Id=pd.countryId where isDeleted=0 AND 
- roleID !=1 order by playerName asc;
-END$$
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getRoundDetails` (IN `param_tourID` VARCHAR(100))  BEGIN
 select * from round_details where tourID=param_tourID;
 END$$
@@ -628,6 +628,10 @@ where p_id=param_playerId and isDeleted=0 AND
  roleID !=1 ;
 
 
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserRole` ()  BEGIN
+SELECT * FROM user_role where isDeleted=0 order by roleName asc;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getWebTourDetails` (IN `param_tourID` VARCHAR(100))  BEGIN
@@ -1252,7 +1256,7 @@ END IF;
 Select err,msg from DUAL;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `save_user_details` (IN `param_p_id` VARCHAR(50), IN `param_FirstName` VARCHAR(100), IN `param_LastName` VARCHAR(150), IN `param_userName` VARCHAR(150), IN `param_email` VARCHAR(100), IN `param_contact` VARCHAR(250), IN `param_password` VARCHAR(100), IN `param_dob` DATE, IN `param_gender` VARCHAR(10), IN `param_HomeCourse` VARCHAR(255), IN `param_hdcp` INT(3), IN `param_hdcpCertificate` LONGTEXT, IN `param_platformLink` VARCHAR(255), IN `param_vaccineStatus` INT(2), IN `param_employment` INT(3), IN `param_company` VARCHAR(200), IN `param_jobTitle` VARCHAR(150), IN `param_industry` INT(200), IN `param_countryId` INT(10), IN `param_stateId` INT(10), IN `param_profileImg` LONGTEXT, IN `param_is_FirstLogin` INT, IN `param_is_WebLogin` INT, IN `param_device_id` VARCHAR(255), IN `param_device_platform` VARCHAR(255))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `save_user_details` (IN `param_p_id` VARCHAR(50), IN `param_FirstName` VARCHAR(100), IN `param_LastName` VARCHAR(150), IN `param_roleId` VARCHAR(50), IN `param_userName` VARCHAR(150), IN `param_email` VARCHAR(100), IN `param_contact` VARCHAR(250), IN `param_password` VARCHAR(100), IN `param_dob` DATE, IN `param_gender` VARCHAR(10), IN `param_HomeCourse` VARCHAR(255), IN `param_hdcp` INT(3), IN `param_hdcpCertificate` LONGTEXT, IN `param_platformLink` VARCHAR(255), IN `param_vaccineStatus` INT(2), IN `param_employment` INT(3), IN `param_company` VARCHAR(200), IN `param_jobTitle` VARCHAR(150), IN `param_industry` INT(200), IN `param_countryId` INT(10), IN `param_stateId` INT(10), IN `param_profileImg` LONGTEXT, IN `param_is_FirstLogin` INT, IN `param_is_WebLogin` INT, IN `param_device_id` VARCHAR(255), IN `param_device_platform` VARCHAR(255))  BEGIN
 DECLARE playerName varchar(200);
 Declare err varchar(2);
 Declare  msg varchar(100);
@@ -1264,8 +1268,9 @@ if (isRecordExist<1)
 THEN
 
 IF( isEmailExist=0) THEN
-INSERT INTO user_details (playerName,firstName,lastName,userName,email,contactNumber,gender,dob,password,homeCourse,vaccineStatus,hdcp,hdcpCertificate,employment,companyName,jobTitle,platformLink,industry,roleId,isWebUser,isFirstLogin,createdDate,isDeleted,updatedDate,isAccountVerified,device_id,device_platform)
-  VALUES ( concat(param_FirstName," ",param_LastName),param_FirstName,param_LastName,param_userName,param_email,param_contact,param_gender,param_dob,param_password,param_HomeCourse,param_vaccineStatus,param_hdcp,param_hdcpCertificate,param_employment,param_company,param_jobTitle,param_platformLink,param_industry,3,param_is_WebLogin,0,now(),0,now(),0,param_device_id,param_device_platform);
+INSERT INTO user_details (playerName,firstName,lastName,userName,email,contactNumber,gender,dob,password,homeCourse,vaccineStatus,hdcp,hdcpCertificate,employment,companyName,jobTitle,platformLink,industry,roleId,isWebUser,isFirstLogin,createdDate,isDeleted,updatedDate,isAccountVerified,device_id,device_platform,countryId,stateId)
+  VALUES ( concat(param_FirstName," ",param_LastName),param_FirstName,param_LastName,param_userName,param_email,param_contact,param_gender,param_dob,param_password,
+          param_HomeCourse,param_vaccineStatus,param_hdcp,param_hdcpCertificate,param_employment,param_company,param_jobTitle,param_platformLink,param_industry,param_roleId,param_is_WebLogin,0,now(),0,now(),0,param_device_id,param_device_platform,param_countryId,param_stateId);
 
   set err="";
   set msg="Player Created Successfully";
@@ -1461,7 +1466,7 @@ Declare isUserExist int;
 select count(*) into isUserExist from user_details where email=param_emailId And  password=param_password And isDeleted=0;
 if(isUserExist>0) then
 
-SELECT * from user_details INNER join  user_role on user_role.roleId=user_details.roleId WHERE email=param_emailId And  password=param_password And user_details.isDeleted=0; 
+SELECT * from user_details INNER join  user_role on user_role.roleId=user_details.roleId WHERE email=param_emailId And  password=param_password And user_details.roleId=1 and  user_details.isDeleted=0; 
 Set err="";
 Set msg="User login successfully";
 
@@ -1757,6 +1762,7 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`tourID`, `tournamentName`, `eventType`, `numRounds`, `is_Deleted`, `startDate`, `endDate`, `created_Date`, `modified_Date`, `created_By`, `modified_By`, `flag`, `holes`) VALUES
+<<<<<<< HEAD
 (1, 'golf club', '1', 3, 0, '2022-08-24 18:30:00', '2022-08-26 18:30:00', '2022-08-25 07:12:41', '2022-08-25 07:12:41', '', '', 0, 18),
 (2, 'golf plus', '6', 2, 0, '2022-08-26 18:30:00', '2022-08-27 18:30:00', '2022-08-25 09:06:56', '2022-08-25 09:06:56', '', '', 0, 18),
 (3, 'July test Tournament', '6', 1, 0, '2022-08-26 18:30:00', '2022-08-26 18:30:00', '2022-08-26 06:50:05', '2022-08-26 06:50:05', '', '', 0, 18),
@@ -1778,6 +1784,9 @@ INSERT INTO `events` (`tourID`, `tournamentName`, `eventType`, `numRounds`, `is_
 (19, 'oct14', '1', 3, 0, '2022-10-14 18:30:00', '2022-10-16 18:30:00', '2022-10-14 11:31:25', '2022-10-14 11:31:25', '', '', 0, 18),
 (20, 'abc', '1', 2, 1, '2022-10-14 18:30:00', '2022-10-15 18:30:00', '2022-10-14 12:04:42', '2022-10-14 12:04:42', '', '', 0, 18),
 (21, 'abc', '1', 3, 0, '2022-10-13 18:30:00', '2022-10-15 18:30:00', '2022-10-14 12:11:08', '2022-10-14 12:11:08', '', '', 0, 18);
+=======
+(1, 'Golfers guild', '7', 2, 0, '2022-11-15 18:30:00', '2022-11-28 18:30:00', '2022-10-16 14:42:30', '2022-10-16 14:42:30', '', '', 0, 18);
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 -- --------------------------------------------------------
 
@@ -2115,6 +2124,7 @@ CREATE TABLE `round_details` (
 --
 
 INSERT INTO `round_details` (`round_Id`, `event_Date`, `cid`, `tourID`, `created_Date`, `modified_Date`, `round_name`) VALUES
+<<<<<<< HEAD
 (1, '2022-08-25 00:00:00', 2, 1, '2022-08-25 07:12:41', '2022-08-25 07:12:41', 'Round1'),
 (2, ' 2022-08-26 00:00:00', 2, 1, '2022-08-25 07:12:41', '2022-08-25 07:12:41', 'Round2'),
 (3, ' 2022-08-27 00:00:00', 29, 1, '2022-08-25 07:12:41', '2022-08-25 07:12:41', 'Round3'),
@@ -2165,6 +2175,10 @@ INSERT INTO `round_details` (`round_Id`, `event_Date`, `cid`, `tourID`, `created
 (50, '2022-10-14 00:00:00', 1, 21, '2022-10-14 12:11:08', '2022-10-14 12:11:08', 'Round1'),
 (51, ' 2022-10-15 00:00:00', 2, 21, '2022-10-14 12:11:08', '2022-10-14 12:11:08', 'Round2'),
 (52, ' 2022-10-16 00:00:00', 1, 21, '2022-10-14 12:11:08', '2022-10-14 12:11:08', 'Round3');
+=======
+(1, '2022-11-16 00:00:00', 29, 1, '2022-10-16 14:42:30', '2022-10-16 14:42:30', 'Round1'),
+(2, ' 2022-11-29 00:00:00', 3, 1, '2022-10-16 14:42:30', '2022-10-16 14:42:30', 'Round2');
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 -- --------------------------------------------------------
 
@@ -2386,6 +2400,7 @@ CREATE TABLE `tournament_group_details` (
 --
 
 INSERT INTO `tournament_group_details` (`groupId`, `groupName`, `tee_Number`, `tee_Time`, `tourID`, `round_Id`) VALUES
+<<<<<<< HEAD
 (3, 'Group1', 9, '12:11', 2, 5),
 (5, 'Group1', 12, '12:12', 1, 3),
 (12, 'Group1', 11, '12:10', 7, 16),
@@ -2395,6 +2410,9 @@ INSERT INTO `tournament_group_details` (`groupId`, `groupName`, `tee_Number`, `t
 (23, 'Group1', 13, '00:12', 19, 45),
 (24, 'Group1', 9, '00:12', 21, 50),
 (25, 'Group1', 17, '00:20', 21, 50);
+=======
+(1, 'Group1', 12, '12:10', 1, 1);
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 --
 -- Triggers `tournament_group_details`
@@ -2479,6 +2497,7 @@ INSERT INTO `tournament_group_player_details` (`t_player_Id`, `tournamentId`, `g
 (13, 8, 'Group1', 6, '12:12', 0, 0, '17'),
 (14, 8, 'Group1', 6, '12:12', 0, 0, '18'),
 (15, 8, 'Group1', 6, '22:10', 0, 0, '19'),
+<<<<<<< HEAD
 (16, 15, 'Group1', 6, '12:10', 0, 0, '34'),
 (17, 15, 'Group1', 30, '00:12', 0, 0, '34'),
 (18, 15, 'Group2', 6, '00:20', 0, 0, '34'),
@@ -2492,6 +2511,9 @@ INSERT INTO `tournament_group_player_details` (`t_player_Id`, `tournamentId`, `g
 (26, 19, 'Group1', 6, '00:12', 0, 0, '45'),
 (27, 21, 'Group1', 11, '00:12', 0, 0, '50'),
 (28, 21, 'Group1', 6, '00:20', 0, 0, '50');
+=======
+(16, 1, 'Group1', 2, '12:10', 0, 0, '1');
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 -- --------------------------------------------------------
 
@@ -2517,6 +2539,7 @@ CREATE TABLE `tournament_player_list` (
 --
 
 INSERT INTO `tournament_player_list` (`tour_player_id`, `tourID`, `playerID`, `isPlay`, `isInvited`, `isAccepted`, `isApproved`, `isRejected`, `isWithdraw`, `created_Date`) VALUES
+<<<<<<< HEAD
 (4, 1, 6, 0, 0, 1, 1, 0, 0, '2022-08-25'),
 (5, 2, 6, 0, 1, 1, 1, 0, 0, '2022-08-25'),
 (6, 4, 6, 0, 1, 0, 0, 0, 0, '2022-08-26'),
@@ -2541,6 +2564,9 @@ INSERT INTO `tournament_player_list` (`tour_player_id`, `tourID`, `playerID`, `i
 (25, 21, 10, 0, 1, 1, 1, 0, 0, '2022-10-14'),
 (26, 21, 6, 0, 1, 1, 1, 0, 0, '2022-10-14'),
 (27, 21, 11, 0, 1, 1, 1, 0, 0, '2022-10-14');
+=======
+(15, 1, 2, 0, 0, 0, 1, 0, 0, '2022-10-16');
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 -- --------------------------------------------------------
 
@@ -2590,6 +2616,7 @@ CREATE TABLE `tournament_score_details` (
 --
 
 INSERT INTO `tournament_score_details` (`tour_score_id`, `p_id`, `tour_id`, `score1`, `score2`, `score3`, `score4`, `score5`, `score6`, `score7`, `score8`, `score9`, `score10`, `score11`, `score12`, `score13`, `score14`, `score15`, `score16`, `score17`, `score18`, `round_Id`, `hdcp`, `inn`, `outt`, `gross`, `net`, `birdie`, `holeNum`, `cid`, `scoreDifferential`, `createdDate`, `isDeleted`, `teeName`) VALUES
+<<<<<<< HEAD
 (1, 6, 1, 5, 6, 4, 5, 6, 5, 4, 5, 6, 5, 4, 5, 6, 5, 4, 3, 2, 1, 1, 13.5, 35, 46, 81, 66, 3, 17, '2', '16.8', '2022-08-25', 1, ''),
 (2, 6, 2, 5, 4, 5, 4, 5, 4, 5, 6, 8, 5, 4, 6, 4, 4, 4, 6, 6, 5, 4, 13.5, 44, 46, 90, 78, 1, 17, '2', '16.2', '2022-08-25', 0, ''),
 (3, 6, 2, 5, 6, 4, 5, 6, 7, 6, 5, 4, 4, 4, 4, 5, 6, 6, 6, 5, 4, 5, 13.5, 44, 48, 92, 80, 3, 17, '1', '15.4', '2022-08-25', 0, ''),
@@ -2627,6 +2654,9 @@ INSERT INTO `tournament_score_details` (`tour_score_id`, `p_id`, `tour_id`, `sco
 (38, 19, 0, 4, 5, 4, 3, 4, 4, 7, 6, 5, 4, 5, 5, 6, 5, 4, 3, 5, 4, 0, 14, 41, 42, 83, 69, 0, 17, '1', '10.1', '2022-09-11', 0, '17'),
 (39, 15, 0, 4, 5, 6, 5, 4, 5, 5, 4, 5, 6, 5, 4, 5, 6, 5, 4, 5, 6, 0, 10, 46, 43, 89, 79, 0, 17, '1', '15.8', '2022-10-11', 0, '17'),
 (40, 21, 0, 5, 3, 2, 5, 3, 4, 4, 5, 6, 4, 5, 4, 3, 4, 5, 6, 4, 6, 0, 12, 41, 37, 78, 66, 6, 17, '1', '4.4', '2022-10-11', 0, '17');
+=======
+(1, 2, 1, 3, 3, 3, 5, 5, 4, 4, 3, 3, 2, 8, 8, 9, 8, 9, 8, 9, 8, 1, 0, 69, 33, 102, 102, 7, 17, '29', 'null', '2022-10-16', 0, '12');
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 -- --------------------------------------------------------
 
@@ -2762,6 +2792,7 @@ CREATE TABLE `user_details` (
 --
 
 INSERT INTO `user_details` (`p_id`, `firstName`, `lastName`, `playerName`, `userName`, `contactNumber`, `email`, `password`, `dob`, `gender`, `homeCourse`, `hdcp`, `handicapIndex`, `hdcpCertificate`, `platformLink`, `vaccineStatus`, `employment`, `companyName`, `jobTitle`, `industry`, `profileImg`, `roleId`, `isDeleted`, `isWebUser`, `isFirstLogin`, `countryId`, `stateId`, `createdDate`, `updatedDate`, `isAccountVerified`, `device_id`, `device_platform`) VALUES
+<<<<<<< HEAD
 (1, 'Meenakshi', NULL, '', 'superAdmin', 'h', 'meenakshi@echelonedge.com', 'Meen@1234', NULL, 'female', NULL, NULL, '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 1, 0, NULL, NULL, NULL, NULL, 0, '', ''),
 (6, 'test', ' testii', 'test mina testii', 'test@1234', '5544667788', 'er.minaxi18@gmail.com', 'testi@123456', '2000-01-01', 'male', 'test mnmjk', '13.50', '12.70', '', '', 1, 2, 'test test', 'manager', '2', NULL, 3, 0, 0, 0, NULL, NULL, '2022-01-19 00:00:00', '2022-01-21 00:00:00', 1, '', ''),
 (10, 'ankit', 'khandelwal', 'ankit khandelwal', 'ankit khandelwal', NULL, 'ankit.khandelwal@echelonedge.com', NULL, NULL, NULL, NULL, '15.00', '0.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, NULL, 0, NULL, NULL, '2022-02-26 06:51:44', '2022-02-26 06:51:44', 1, '', ''),
@@ -2797,6 +2828,10 @@ INSERT INTO `user_details` (`p_id`, `firstName`, `lastName`, `playerName`, `user
 (40, 'device', ' testii', 'device  testii', 'test@1234', '5544667788', 'test123@gmail.com', 'test@1234', '2000-01-01', 'male', 'test mnmjk', '12.00', '0.00', '', '', 1, 2, 'test test', 'manager', '2', NULL, 3, 1, 0, 0, NULL, NULL, '2022-03-22 17:58:05', '2022-03-22 17:58:05', 0, '', ''),
 (41, 'device', ' testii', 'device  testii', 'test@1234', '6677889900', 'meenakshi2@echelonedge.com', 'test@1234', '2000-01-01', 'male', 'test mnmjk', '12.00', '0.00', '', '', 1, 2, 'test test', 'manager', '2', NULL, 3, 0, 0, 0, NULL, NULL, '2022-06-28 11:09:07', '2022-06-28 11:09:07', 0, NULL, NULL),
 (42, 'devicee', ' testii', 'devicee  testii', 'test@1234', '6677889900', 'meenakshi3@echelonedge.com', 'test@1234', '2000-01-01', 'male', 'test mnmjk', '12.00', '0.00', '', '', 1, 2, 'test test', 'manager', '2', NULL, 3, 0, 0, 0, NULL, NULL, '2022-06-29 15:20:06', '2022-06-29 15:20:06', 0, '', '');
+=======
+(1, 'Meenakshi', 'Dhariwal', 'Meenakshi Dhariwal', 'Meen1234', '8786567898', 'meenakshi@echelonedge.com', 'test123@A', '1994-01-07', 'female', 'undefined', '0.00', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 1, 0, 0, 0, NULL, NULL, '2022-10-15 16:13:19', '2022-10-15 16:13:19', 0, 'undefined', 'undefined'),
+(2, 'Ankit', 'Khandelwal', 'Ankit Khandelwal', 'ankit123', '8278767678', 'ankit.khandelwal@echelonedge.com', 'test123@A', '2022-07-31', 'male', 'undefined', '0.00', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 2, 0, 0, 0, 1, 25, '2022-10-16 20:00:45', '2022-10-16 20:00:45', 0, 'undefined', 'undefined');
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 -- --------------------------------------------------------
 
@@ -2815,7 +2850,7 @@ CREATE TABLE `user_role` (
 --
 
 INSERT INTO `user_role` (`roleId`, `roleName`, `isDeleted`) VALUES
-(1, 'superAdmin', 0),
+(1, 'super Admin', 0),
 (2, 'admin', 0),
 (3, 'user', 0);
 
@@ -3082,7 +3117,11 @@ ALTER TABLE `employment`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
+<<<<<<< HEAD
   MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+=======
+  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 --
 -- AUTO_INCREMENT for table `event_details`
@@ -3148,7 +3187,11 @@ ALTER TABLE `player_details`
 -- AUTO_INCREMENT for table `round_details`
 --
 ALTER TABLE `round_details`
+<<<<<<< HEAD
   MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+=======
+  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 --
 -- AUTO_INCREMENT for table `score_details`
@@ -3190,25 +3233,41 @@ ALTER TABLE `tournament_details`
 -- AUTO_INCREMENT for table `tournament_group_details`
 --
 ALTER TABLE `tournament_group_details`
+<<<<<<< HEAD
   MODIFY `groupId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+=======
+  MODIFY `groupId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 --
 -- AUTO_INCREMENT for table `tournament_group_player_details`
 --
 ALTER TABLE `tournament_group_player_details`
+<<<<<<< HEAD
   MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+=======
+  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 --
 -- AUTO_INCREMENT for table `tournament_player_list`
 --
 ALTER TABLE `tournament_player_list`
+<<<<<<< HEAD
   MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+=======
+  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 --
 -- AUTO_INCREMENT for table `tournament_score_details`
 --
 ALTER TABLE `tournament_score_details`
+<<<<<<< HEAD
   MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+=======
+  MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+>>>>>>> a057f077ba3e43db43646dbf4cacda3fc52e5500
 
 --
 -- AUTO_INCREMENT for table `tournament_winners`
@@ -3226,7 +3285,7 @@ ALTER TABLE `user_account_otp`
 -- AUTO_INCREMENT for table `user_details`
 --
 ALTER TABLE `user_details`
-  MODIFY `p_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `p_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user_role`

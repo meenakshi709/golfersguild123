@@ -1,4 +1,4 @@
-.mat-radio-button ~ .mat-radio-button {
+/* .mat-radio-button ~ .mat-radio-button {
     margin-left: 16px!important;
     font-size:12px!important;
   }
@@ -8,7 +8,7 @@
   }
 .mat-radio-group{
     margin-left: 1rem!important;
-}
+} */
 .header{
   background-color: #fff2f2!important;
   color: #fe0000 !important;
@@ -24,4 +24,42 @@
 }
 .header button:focus{
   background-color: transparent;
+}
+
+
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.btn1 {
+  border: 2px solid #1266FB;
+  background-color: white;
+  padding: 5px 15px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: bold;
+  color: #1266FB !important;
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px!important;
+}
+.mat-radio-label-content{
+  font-size: 0.7rem!important;
+
+}
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-accent .mat-radio-inner-circle, .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple{
+  background-color: #1266FB!important;
+}
+.mat-radio-button{
+  font-size: 0.7rem!important;
 }

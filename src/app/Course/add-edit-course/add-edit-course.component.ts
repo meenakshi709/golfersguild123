@@ -128,8 +128,6 @@ export class AddEditCourseComponent implements OnInit {
   }
 
   saveCourseDetails() {
-
-    ;
     const data = this.courseForm.getRawValue();
     const teeNameArr: any = [];
     data.teeFormArray.forEach((itemDetails: any) => {

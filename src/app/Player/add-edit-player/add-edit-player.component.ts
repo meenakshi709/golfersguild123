@@ -12,28 +12,28 @@ import Swal from 'sweetalert2';
 })
 export class AddEditPlayerComponent implements OnInit {
 
-  stateList:any=[];
+  stateList: any = [];
   hide = true;
-  countryList:any=[];
+  countryList: any = [];
   submitted = false;
 
   PlayerForm: FormGroup = new FormGroup({
-    p_id: new FormControl('', []),
-   // playerName:new FormControl('', []),
+    playerId: new FormControl('', []),
     userName: new FormControl('', [Validators.required]),
-    firstName:new FormControl('', [Validators.required]),
-    lastName:new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required]),
+    firstName: new FormControl('', [Validators.required]),
+    lastName: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.email, Validators.pattern('^[a-zA-Z0-9._]+@[a-zA-Z0-9_]+\\.[A-Za-z]{2,4}$')]),
+    roleId: new FormControl('', [Validators.required]),
     contactNumber: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$"),
-    Validators.minLength(10), Validators.maxLength(10)]),  
-    gender: new FormControl('', []),
+    Validators.minLength(10), Validators.maxLength(10)]),
+    gender: new FormControl('male', []),
     dob: new FormControl('', []),
-    country_Id :new FormControl('', [Validators.required]),
-    state_Id:new FormControl('', [Validators.required]),
-    profileImg:new FormControl('', []),
-    password:new FormControl('', [Validators.required]),
-    isWebUser:new FormControl(1, []),
-    isFirstLogin:new FormControl(0, [])
+    countryId: new FormControl('', [Validators.required]),
+    stateId: new FormControl('', [Validators.required]),
+    profileImg: new FormControl('', []),
+    password: new FormControl('', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')]),
+    isWebUser: new FormControl(1, []),
+    isFirstLogin: new FormControl(0, [])
   })
   constructor(
     public dialogRef: MatDialogRef<AddEditPlayerComponent>,
@@ -42,36 +42,35 @@ export class AddEditPlayerComponent implements OnInit {
     private service: CommonServiceService,
     public route: Router) { }
 
-    get f() { return this.PlayerForm.controls; }
+  get f() { return this.PlayerForm.controls; }
 
-    keyPress(event: any) {
-      const pattern = /[0-9\+\-\ ]/;
-   
-      let inputChar = String.fromCharCode(event.charCode);
-      if (event.keyCode != 8 && !pattern.test(inputChar)) {
-        event.preventDefault();
-      }
+  keyPress(event: any) {
+    const pattern = /[0-9\+\-\ ]/;
+
+    let inputChar = String.fromCharCode(event.charCode);
+    if (event.keyCode != 8 && !pattern.test(inputChar)) {
+      event.preventDefault();
     }
+  }
 
   ngOnInit(): void {
-    console.log("data=", this.data);
-   this.PlayerForm.controls.state_Id.disable();
+   
+    this.PlayerForm.controls.stateId.disable();
     this.getCountryList();
-    if (this.data) {
+    if (this.data.userDetails) {
       this.setPlayerDetails();
-       }
+    }
   }
 
 
 
   setPlayerDetails() {
-    
-    const keys = Object.keys(this.data);
+   
+    const keys = Object.keys(this.data.userDetails);
     const formGroup = this.PlayerForm.controls;
-    console.log(keys);
     for (let i = 0; i < keys.length; i++) {
       const keyName = keys[i];
-      formGroup[keyName].setValue(this.data[keyName])
+      formGroup[keyName].setValue(this.data.userDetails[keyName])
     }
   }
 
@@ -81,15 +80,15 @@ export class AddEditPlayerComponent implements OnInit {
   savePlayerDetails() {
     const data = this.PlayerForm.getRawValue();
     this.service.postAPIMethod('/addUpdateUser', data).subscribe(response => {
-      
-      console.log("player data",response.response)
+
+      console.log("player data", response.response)
       if (response.response.err != "X") {
         //  this.route.navigateByUrl("/course");
         this.dialogRef.close(true);
-        this.sweetAlertMsg('success',response.response.msg);
+        this.sweetAlertMsg('success', response.response.msg);
       }
       else {
-        this.sweetAlertMsg('error',response.response.msg);
+        this.sweetAlertMsg('error', response.response.msg);
       }
     });
 
@@ -108,33 +107,33 @@ export class AddEditPlayerComponent implements OnInit {
     });
   }
 
-    //get state details 
+  //get state details 
   getStatesList() {
 
-    this.service.getAPIMethod('/getStates?countryId='+this.PlayerForm.controls.country_Id.value).subscribe(response => {
-      const apliResponse:any=response.response;
-
-          if(apliResponse.error!='X')
-          {
-            this.PlayerForm.controls.state_Id.enable();
-            this.stateList=apliResponse.result;
-          }
+    this.service.getAPIMethod('/getStates?countryId=' + this.PlayerForm.controls.countryId.value).subscribe(response => {
+      const apiResponse: any = response.response;
+     
+      if (response.error == '') {
+        this.PlayerForm.controls.stateId.enable();
+        this.stateList = apiResponse.result;
+      } else {
+        this.sweetAlertMsg('error', response.msg)
+      }
 
     })
-   }
-   //get state details 
-   getCountryList() {
+  }
+  //get state details 
+  getCountryList() {
 
     this.service.getAPIMethod('/getCountryList').subscribe(response => {
-      const apliResponse:any=response.response;
-      console.log("country",apliResponse)
-          if(apliResponse.error!='X')
-          {
-            this.countryList=apliResponse.result;
-          }
+      const apliResponse: any = response.response;
+      console.log("country", apliResponse)
+      if (apliResponse.error != 'X') {
+        this.countryList = apliResponse.result;
+      }
 
     })
-   }
+  }
 
 
   validateAllFields(formGroup: FormGroup) {
@@ -148,48 +147,42 @@ export class AddEditPlayerComponent implements OnInit {
     });
   }
 
- closeDialogClick(): void {
+  closeDialogClick(): void {
     this.dialogRef.close();
   }
 
-//country change function
-  onCountryChange()
-  {
-    console.log("countjkjk",this.PlayerForm.controls.country_Id.value);
-    this.getStatesList();
-  }
 
-// uplaod file
-Uploadedfile:any;
-imageUrl:any='';
-uploadFile(event:any,fileInput:any) {
-  let reader = new FileReader(); // HTML5 FileReader API
-  let file = event.target.files[0];
-  if (event.target.files && event.target.files[0]) {
-    let fileType = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
-    if (fileType === "jpg" || fileType === "png" || fileType === "jpeg") {
-      if (file.size < 28097 && file.size > 1097) {
-        this.Uploadedfile=file;
-        reader.readAsDataURL(file);
-        // When file uploads set it to file formcontrol
-        reader.onload = () => {
-          this.imageUrl = reader.result;
-         
-          // this.companyForm.patchValue({
-          //   file: reader.result
-          // });
-          fileInput.value = "";  
+  // uplaod file
+  Uploadedfile: any;
+  imageUrl: any = '';
+  uploadFile(event: any, fileInput: any) {
+    let reader = new FileReader(); // HTML5 FileReader API
+    let file = event.target.files[0];
+    if (event.target.files && event.target.files[0]) {
+      let fileType = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
+      if (fileType === "jpg" || fileType === "png" || fileType === "jpeg") {
+        if (file.size < 28097 && file.size > 1097) {
+          this.Uploadedfile = file;
+          reader.readAsDataURL(file);
+          // When file uploads set it to file formcontrol
+          reader.onload = () => {
+            this.imageUrl = reader.result;
+
+            // this.companyForm.patchValue({
+            //   file: reader.result
+            // });
+            fileInput.value = "";
+          }
+        } else {
+          fileInput.value = "";
+          this.sweetAlertMsg('error', 'Please select image size greater than 1kb and less than 28kb');
         }
       } else {
         fileInput.value = "";
-        this.sweetAlertMsg('error', 'Please select image size greater than 1kb and less than 28kb');
+        this.sweetAlertMsg('error', 'Please choose this type of image format. jpg, png, jpeg');
       }
-    } else {
-      fileInput.value = "";
-      this.sweetAlertMsg('error', 'Please choose this type of image format. jpg, png, jpeg');
+
     }
- 
   }
-}
 
 }

@@ -33,7 +33,7 @@ export class AdminLoginComponent implements OnInit {
     if (this.loginForm.valid) {
       const data = this.loginForm.getRawValue();
       this.service.postAPIMethod('/userLogin', data).subscribe((res: any) => {
-        debugger;
+       
         const apiResponse = res.response;
         if (res.error == "") {
           const tokenKey = apiResponse.token;

@@ -2,7 +2,7 @@
 
     <div class="row headerBox">
         <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6 pt-3">
-            <h4 class="text-darkBlue " mat-dialog-title>{{!this.data?'Add Player':'Edit Player'}}</h4>
+            <h4 class="text-darkBlue " mat-dialog-title>{{!this.data.userDetails?'Create Player':'Edit Player'}}</h4>
         </div>
         <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6  pt-2">
             <button class="text-right" (click)="closeDialogClick()">X</button>
@@ -10,174 +10,182 @@
     </div>
 
     <div class="row">
-        <form [formGroup]="PlayerForm" >
+        <form [formGroup]="PlayerForm">
             <section class="container">
-                <div class="row">
-                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
-
-               
-                        <mat-form-field  appearance="outline">
+                <div class="row col-sm-12">
+                    <div class="col-sm-4">
+                        <mat-form-field appearance="outline">
                             <mat-label>First Name*</mat-label>
-                            <input matInput type="text" placeholder="First Name" formControlName="firstName" maxlength="50"
-                                id="firstName" />
-        
+                            <input appCharactersOnly matInput type="text" placeholder="First Name" formControlName="firstName"
+                                maxlength="50" id="firstName" />
                             <mat-error *ngIf="PlayerForm.controls['firstName'].errors?.required">
                                 Please enter first name
                             </mat-error>
                         </mat-form-field>
                     </div>
-                    <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
-
-               
-                     
-                        <mat-form-field  appearance="outline">
+                    <div class="col-sm-4">
+                        <mat-form-field appearance="outline">
                             <mat-label>Last Name*</mat-label>
-                            <input matInput type="text" placeholder="Last Name" formControlName="lastName" maxlength="50"
-                                id="lastName" />
-        
+                            <input  appCharactersOnly matInput type="text" placeholder="Last Name" formControlName="lastName"
+                                maxlength="50" id="lastName" />
                             <mat-error *ngIf="PlayerForm.controls['lastName'].errors?.required">
                                 Please enter last name
                             </mat-error>
                         </mat-form-field>
                     </div>
-               <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
-                    <mat-form-field  appearance="outline">
-                        <mat-label>User Name*</mat-label>
-                        <input matInput type="text" placeholder="Player Name" formControlName="userName" maxlength="50"
-                            id="userName" />
+                    <div class="col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>User Name*</mat-label>
+                            <input matInput type="text" oninput="this.value = this.value.replace(/[^A-Za-z1-9_]|^/g,'')" placeholder="Player Name" formControlName="userName"
+                                maxlength="50" id="userName" />
+                            <mat-error *ngIf="PlayerForm.controls['userName'].errors?.required">
+                                Please enter user name
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
 
-                        <mat-error *ngIf="PlayerForm.controls['userName'].errors?.required">
-                            Please enter user name
-                        </mat-error>
-                    </mat-form-field>
-            </div>
-            <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
-
-               
-                <mat-form-field  appearance="outline">
-                    <mat-label>Password*</mat-label>
-                    <input matInput type="password" placeholder="Password" formControlName="password" maxlength="50"
-                        id="password" />
-                      
-                    <mat-error *ngIf="PlayerForm.controls['password'].errors?.required">
-                        Please enter password
-                    </mat-error>
-                </mat-form-field>
-            </div> 
-            <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
-                <mat-form-field  appearance="outline">
-                    <mat-label>Email Id* </mat-label>
-                    <input matInput type="email" placeholder="Email Id" formControlName="email" maxlength="100"
-                        id="email" />
-
-                    <mat-error *ngIf="PlayerForm.controls['email'].errors?.required">
-                        Please enter email id
-                    </mat-error>
-                </mat-form-field>
-         </div>
-         <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
-            <mat-form-field  appearance="outline">
-                <mat-label>Phone* </mat-label>
-                <input matInput type="text"  placeholder="Phone" formControlName="contactNumber" maxlength="10"
-                    id="contactNumber" (keypress)="keyPress($event)" />
-
-                <mat-error *ngIf="PlayerForm.controls['contactNumber'].errors?.required">
-                   Please enter contact number
-                </mat-error>
-                <mat-error *ngIf="submitted && f.contactNumber.errors" class="invalid-feedback">
-             
-                    <mat-error *ngIf="f.contactNumber.errors.pattern || f.contactNumber.errors.maxlength || f.contactNumber.errors.minlength">Phone number must be at least 10 numbers </mat-error>
-               </mat-error>
-            </mat-form-field>
-     </div>
-     <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
-        <mat-form-field  appearance="outline">
-            <mat-label>Country* </mat-label>              
-           
-              <mat-select (selectionChange)="onCountryChange()" formControlName="country_Id" id="country_Id">
-                <mat-option *ngFor="let country of countryList" [value]="country.country_Id">
-                  {{country.country_name}}
-                </mat-option>
-              </mat-select>
-           
-              <mat-error *ngIf="PlayerForm.controls['country_Id'].errors?.required">
-                Please select country
-             </mat-error>
-        </mat-form-field>
- </div>
-
- <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
-    <mat-form-field  appearance="outline">
-        <mat-label>State* </mat-label>              
-          <mat-select formControlName="state_Id" id="state_Id">
-            <mat-option *ngFor="let state of stateList" [value]="state.state_Id">
-              {{state.state_name}}
-            </mat-option>
-          </mat-select>
-
-        
-       
-        <mat-error *ngIf="PlayerForm.controls['state_Id'].errors?.required">
-           Please select state
-        </mat-error>
-    </mat-form-field>
-</div>
-
- <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
-             
-            <mat-form-field class="col-sm-12 col-lg-12 col-xs-12 col-md-12 " appearance="outline">
-                    <mat-label>DOB </mat-label>
-                    <input matInput [matDatepicker]="picker"  formControlName="dob" id="dob">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
-      
- </div>
-
-        <div class="col-sm-4 col-lg-4 col-xs-12 col-md-4 ">
-                <p class="mt-3"><mat-label>Gender :</mat-label>
-                <mat-radio-group aria-label="Select an option" formControlName="gender" id="gender">
-                    <mat-radio-button value="male">Male </mat-radio-button>
-                <mat-radio-button value="female">Female </mat-radio-button>
-            </mat-radio-group></p>
-            <mat-error *ngIf="PlayerForm.controls['gender'].errors?.required">
-                Please select gender
-             </mat-error>
-        </div>
-
-        <div class="col-sm-3 col-lg-3 col-xs-12 col-md-3 ">
-            <p class="mt-3"><mat-label>Uplaod Profile Photo :</mat-label>      
-                <input  type="file" placeholder="upload" formControlName="profileImg"  id="profileImg" 
-                #fileInput
-                (change)="uploadFile($event,fileInput)"/>
-                <!-- matInput -->
-            </p>
-            
-
-        </div>
-
-
-</div>
-         
-              
-         
-     
-
-            <div class="row text-right">
-                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-                   
-
-                    <div mat-dialog-actions>
-                        <button mat-stroked-button  (click)="closeDialogClick()"  >Cancel</button>
-                       <button type="submit" class="btn btn-primary" [disabled]="!this.PlayerForm.valid"
-                        (click)="savePlayerDetails()">{{!this.data?'Add ':'Update'}}</button>
-                      </div>
-                 
-
-                   
                 </div>
-            </div>
-        </section>
+                <div class="row col-sm-12">
+
+                    <div class="col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Role* </mat-label>
+                            <mat-select formControlName="roleId" id="roleId">
+                                <mat-option *ngFor="let role of this.data.roleList" [value]="role.roleId">
+                                    {{role.roleName |titlecase }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="PlayerForm.controls['roleId'].errors?.required">
+                                Please select role
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-4 ">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Country* </mat-label>
+                            <mat-select (selectionChange)="getStatesList()" formControlName="countryId" id="countryId">
+                                <mat-option *ngFor="let country of countryList" [value]="country.country_Id">
+                                    {{country.country_name}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="PlayerForm.controls['countryId'].errors?.required">
+                                Please select country
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-4 ">
+                        <mat-form-field appearance="outline">
+                            <mat-label>State* </mat-label>
+                            <mat-select formControlName="stateId" id="stateId">
+                                <mat-option *ngFor="let state of stateList" [value]="state.state_Id">
+                                    {{state.state_name}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="PlayerForm.controls['stateId'].errors?.required">
+                                Please select state
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+
+
+                </div>
+
+                <div class="row col-sm-12">
+                    <div class="col-sm-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Email Id* </mat-label>
+                            <input matInput type="email" placeholder="Email Id" formControlName="email" maxlength="100"
+                                id="email" />
+
+                            <mat-error *ngIf="PlayerForm.controls['email'].errors?.required">
+                                Please enter email id
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 ">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Phone* </mat-label>
+                            <input matInput type="text" placeholder="Phone" formControlName="contactNumber"
+                                maxlength="10" id="contactNumber" (keypress)="keyPress($event)" />
+
+                            <mat-error *ngIf="PlayerForm.controls['contactNumber'].errors?.required">
+                                Please enter contact number
+                            </mat-error>
+                            <mat-error *ngIf="submitted && f.contactNumber.errors" class="invalid-feedback">
+
+                                <mat-error
+                                    *ngIf="f.contactNumber.errors.pattern || f.contactNumber.errors.maxlength || f.contactNumber.errors.minlength">
+                                    Phone number must be at least 10 numbers </mat-error>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 ">
+
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Password*</mat-label>
+                            <input matInput type="password" placeholder="Password" formControlName="password"
+                                maxlength="50" id="password" />
+
+                            <mat-error *ngIf="PlayerForm.controls['password'].errors?.required">
+                                Please enter password
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row col-sm-12">
+                    <div class="col-sm-4 col-xs-12 col-lg-4 col-md-4">
+
+                        <mat-form-field appearance="outline" class="col-sm-12">
+                            <mat-label>DOB </mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="dob" id="dob">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+
+                    </div>
+
+                    <div class="col-sm-5 col-xs-12 col-lg-5 col-md-5">
+                        <p class="mt-3">
+                            <mat-label>Gender : </mat-label>
+                            <mat-radio-group aria-label="Select an option" formControlName="gender" id="gender">
+                                <mat-radio-button value="male">Male </mat-radio-button>
+                                <mat-radio-button value="female">Female </mat-radio-button>
+                            </mat-radio-group>
+                        </p>
+                        <mat-error *ngIf="PlayerForm.controls['gender'].errors?.required">
+                            Please select gender
+                        </mat-error>
+                    </div>
+                    <div class="col-sm-3 col-xs-12 col-lg-3 col-md-3">
+                    <div class="upload-btn-wrapper mt-3">
+                        <button class="btn1">Upload a file</button>
+                        <input type="file" name="myfile" />
+                    </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="row text-right">
+                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+
+
+                        <div mat-dialog-actions>
+                            <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
+                            <button type="submit" class="btn btn-primary" [disabled]="!this.PlayerForm.valid"
+                                (click)="savePlayerDetails()">{{!this.data.userDetails?'Create ':'Update'}}</button>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </section>
         </form>
 
     </div>

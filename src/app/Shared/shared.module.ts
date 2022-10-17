@@ -41,6 +41,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { NumberWithDecimalDirective } from './directives/number-with-decimal.directive';
+import { CharactersOnlyDirective } from './directives/characters-only.directive';
 
 
 const materialModules = [
@@ -82,7 +83,7 @@ const materialModules = [
 ];
 
 @NgModule({
-  declarations: [CommonListComponent, NumberWithDecimalDirective,],
+  declarations: [CommonListComponent, NumberWithDecimalDirective, CharactersOnlyDirective,],
   imports: [
     CommonModule,
     ...materialModules,
@@ -97,7 +98,8 @@ const materialModules = [
     CommonListComponent,
     NgbModule,
     ReactiveFormsModule,
-    NumberWithDecimalDirective
+    NumberWithDecimalDirective,
+    CharactersOnlyDirective
   
     // TimepickerModule.forRoot(), PopoverModule.forRoot()
   ]

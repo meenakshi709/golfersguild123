@@ -74,7 +74,7 @@ export class AddEditTournamentComponent implements OnInit {
       }
     }
     else if (this.data.sectionName == 'coupon') {
-      debugger;
+     
       if (this.data.couponList.length > 0) {
 
         this.data.couponList.forEach((item: any) => {
@@ -90,6 +90,9 @@ export class AddEditTournamentComponent implements OnInit {
           this.groupRoundName.setValue(this.data.roundList[index + 1].round_Id);
         }
       });
+      if (!this.groupRoundName.value) {
+        this.groupRoundName.setValue(this.data.roundList[0].round_Id);
+      }
 
       this.groupTournamentName.setValue(this.data.details.tournamentName)
 
@@ -110,7 +113,7 @@ export class AddEditTournamentComponent implements OnInit {
         this.onShownRounds(this.eventFormGroup.controls.eventDetailsArr.controls[0]);
 
       } else {
-        debugger;
+       
         if (keyName == 'eventType') {
           formControl[keyName].setValue(Number(this.data.details[keyName]));
         } else if (keyName == 'holes') {
@@ -262,7 +265,6 @@ export class AddEditTournamentComponent implements OnInit {
           this.data.groupList.push(groupName);
         }
         let roundIndex = 0;
-
         this.data.roundList.forEach((round: any, index: any) => {
 
           if (round.round_Id == this.data.previousRoundDetails.roundId) {
@@ -270,10 +272,7 @@ export class AddEditTournamentComponent implements OnInit {
           }
 
         });
-
         this.groupFormGroup.controls.roundId.setValue(this.data.roundList[roundIndex].round_Id);
-
-
         this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + this.data.roundList[roundIndex].cid).subscribe((APIResponse: any) => {
           if (APIResponse.error == '') {
             this.teeNameList = APIResponse.response.result;
@@ -289,6 +288,7 @@ export class AddEditTournamentComponent implements OnInit {
 
     }
   }
+
   automaticGroupInit() {
     if (this.noPlayerGroup.value) {
       this.resetGroupForm();
@@ -400,14 +400,27 @@ export class AddEditTournamentComponent implements OnInit {
   saveGroupDetails() {
     const data = this.groupFormGroup.getRawValue();
     data.tourId = this.data.details.tourID;
-    this.service.postAPIMethod("/tournament/saveTournamentGroupDetails", data).subscribe((APIResponse: any) => {
-      if (APIResponse.error != 'X') {
-        this.sweetAlertMsg("success", APIResponse.response.result.msg);
-        this.closeDialogClick();
+    const grpArr: any = [];
+    if (data.groupDetailsArr.length > 0) {
+      data.groupDetailsArr.forEach((item: any) => {
+        grpArr.push(item.group);
+      });
+     
+      const filtered = grpArr.filter((el: any, index: any) => grpArr.indexOf(el) !== index);
+      if (filtered.length == 0) {
+        this.service.postAPIMethod("/tournament/saveTournamentGroupDetails", data).subscribe((APIResponse: any) => {
+          if (APIResponse.error != 'X') {
+            this.sweetAlertMsg("success", APIResponse.response.result.msg);
+            this.closeDialogClick();
+          } else {
+            this.sweetAlertMsg("error", APIResponse.response.msg);
+          }
+
+        })
       } else {
-        this.sweetAlertMsg("error", APIResponse.response.msg);
+        this.sweetAlertMsg("error", 'Group count must be one');
       }
-    });
+    }
   }
   // ###############################################################################################
 
