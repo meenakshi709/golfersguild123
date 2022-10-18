@@ -16,7 +16,8 @@ export class AddEditPlayerComponent implements OnInit {
   hide = true;
   countryList: any = [];
   submitted = false;
-
+  Uploadedfile: any;
+  imageUrl: any = '';
   PlayerForm: FormGroup = new FormGroup({
     playerId: new FormControl('', []),
     userName: new FormControl('', [Validators.required]),
@@ -54,23 +55,26 @@ export class AddEditPlayerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   
+
     this.PlayerForm.controls.stateId.disable();
     this.getCountryList();
-    if (this.data.userDetails) {
-      this.setPlayerDetails();
-    }
+
   }
 
 
 
   setPlayerDetails() {
-   
+
     const keys = Object.keys(this.data.userDetails);
     const formGroup = this.PlayerForm.controls;
     for (let i = 0; i < keys.length; i++) {
       const keyName = keys[i];
-      formGroup[keyName].setValue(this.data.userDetails[keyName])
+      if (keyName == 'dob') {
+        debugger;
+        formGroup[keyName].setValue(new Date(this.data.userDetails[keyName]))
+      } else {
+        formGroup[keyName].setValue(this.data.userDetails[keyName])
+      }
     }
   }
 
@@ -80,12 +84,10 @@ export class AddEditPlayerComponent implements OnInit {
   savePlayerDetails() {
     const data = this.PlayerForm.getRawValue();
     this.service.postAPIMethod('/addUpdateUser', data).subscribe(response => {
-
-      console.log("player data", response.response)
-      if (response.response.err != "X") {
+      if (response.error == "") {
         //  this.route.navigateByUrl("/course");
         this.dialogRef.close(true);
-        this.sweetAlertMsg('success', response.response.msg);
+        this.sweetAlertMsg('success', response.response[0].msg);
       }
       else {
         this.sweetAlertMsg('error', response.response.msg);
@@ -109,13 +111,13 @@ export class AddEditPlayerComponent implements OnInit {
 
   //get state details 
   getStatesList() {
-
     this.service.getAPIMethod('/getStates?countryId=' + this.PlayerForm.controls.countryId.value).subscribe(response => {
       const apiResponse: any = response.response;
-     
       if (response.error == '') {
         this.PlayerForm.controls.stateId.enable();
         this.stateList = apiResponse.result;
+        debugger;
+
       } else {
         this.sweetAlertMsg('error', response.msg)
       }
@@ -124,12 +126,17 @@ export class AddEditPlayerComponent implements OnInit {
   }
   //get state details 
   getCountryList() {
-
     this.service.getAPIMethod('/getCountryList').subscribe(response => {
       const apliResponse: any = response.response;
       console.log("country", apliResponse)
       if (apliResponse.error != 'X') {
         this.countryList = apliResponse.result;
+        if (this.data.userDetails) {
+          this.PlayerForm.controls.password.setValidators([]);
+          this.PlayerForm.updateValueAndValidity();
+          this.setPlayerDetails();
+          this.getStatesList();
+        }
       }
 
     })
@@ -153,8 +160,7 @@ export class AddEditPlayerComponent implements OnInit {
 
 
   // uplaod file
-  Uploadedfile: any;
-  imageUrl: any = '';
+ 
   uploadFile(event: any, fileInput: any) {
     let reader = new FileReader(); // HTML5 FileReader API
     let file = event.target.files[0];
@@ -167,10 +173,6 @@ export class AddEditPlayerComponent implements OnInit {
           // When file uploads set it to file formcontrol
           reader.onload = () => {
             this.imageUrl = reader.result;
-
-            // this.companyForm.patchValue({
-            //   file: reader.result
-            // });
             fileInput.value = "";
           }
         } else {

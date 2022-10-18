@@ -16,8 +16,8 @@
                     <div class="col-sm-4">
                         <mat-form-field appearance="outline">
                             <mat-label>First Name*</mat-label>
-                            <input appCharactersOnly matInput type="text" placeholder="First Name" formControlName="firstName"
-                                maxlength="50" id="firstName" />
+                            <input appCharactersOnly matInput type="text" placeholder="First Name"
+                                formControlName="firstName" maxlength="50" id="firstName" />
                             <mat-error *ngIf="PlayerForm.controls['firstName'].errors?.required">
                                 Please enter first name
                             </mat-error>
@@ -26,8 +26,8 @@
                     <div class="col-sm-4">
                         <mat-form-field appearance="outline">
                             <mat-label>Last Name*</mat-label>
-                            <input  appCharactersOnly matInput type="text" placeholder="Last Name" formControlName="lastName"
-                                maxlength="50" id="lastName" />
+                            <input appCharactersOnly matInput type="text" placeholder="Last Name"
+                                formControlName="lastName" maxlength="50" id="lastName" />
                             <mat-error *ngIf="PlayerForm.controls['lastName'].errors?.required">
                                 Please enter last name
                             </mat-error>
@@ -36,8 +36,8 @@
                     <div class="col-sm-4">
                         <mat-form-field appearance="outline">
                             <mat-label>User Name*</mat-label>
-                            <input matInput type="text" oninput="this.value = this.value.replace(/[^A-Za-z1-9_]|^/g,'')" placeholder="Player Name" formControlName="userName"
-                                maxlength="50" id="userName" />
+                            <input matInput type="text" oninput="this.value = this.value.replace(/[^A-Za-z1-9_]|^/g,'')"
+                                placeholder="Player Name" formControlName="userName" maxlength="50" id="userName" />
                             <mat-error *ngIf="PlayerForm.controls['userName'].errors?.required">
                                 Please enter user name
                             </mat-error>
@@ -122,7 +122,21 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
-                    <div class="col-sm-4 ">
+                    <div class="col-sm-4 col-xs-12 col-lg-4 col-md-4">
+
+                        <mat-form-field appearance="outline" class="col-sm-12">
+                            <mat-label>DOB </mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="dob" id="dob">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+
+                    </div>
+
+
+                </div>
+                <div class="row col-sm-12">
+                    <div class="col-sm-4 " *ngIf="!this.data.userDetails">
 
 
                         <mat-form-field appearance="outline">
@@ -135,19 +149,6 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
-                </div>
-                <div class="row col-sm-12">
-                    <div class="col-sm-4 col-xs-12 col-lg-4 col-md-4">
-
-                        <mat-form-field appearance="outline" class="col-sm-12">
-                            <mat-label>DOB </mat-label>
-                            <input matInput [matDatepicker]="picker" formControlName="dob" id="dob">
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
-                        </mat-form-field>
-
-                    </div>
-
                     <div class="col-sm-5 col-xs-12 col-lg-5 col-md-5">
                         <p class="mt-3">
                             <mat-label>Gender : </mat-label>
@@ -160,12 +161,12 @@
                             Please select gender
                         </mat-error>
                     </div>
-                    <div class="col-sm-3 col-xs-12 col-lg-3 col-md-3">
-                    <div class="upload-btn-wrapper mt-3">
-                        <button class="btn1">Upload a file</button>
-                        <input type="file" name="myfile" />
-                    </div>
-                    </div>
+                    <!-- <div class="col-sm-3 col-xs-12 col-lg-3 col-md-3" *ngIf="!this.data.userDetails">
+                        <div class="upload-btn-wrapper mt-3">
+                            <button class="btn1">Upload a file</button>
+                            <input type="file" name="myfile" />
+                        </div>
+                    </div> -->
                 </div>
 
 
@@ -177,7 +178,7 @@
 
                         <div mat-dialog-actions>
                             <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
-                            <button type="submit" class="btn btn-primary" [disabled]="!this.PlayerForm.valid"
+                            <button type="submit" class="btn btn-primary" [disabled]="!this.PlayerForm.valid && this.PlayerForm.dirty"
                                 (click)="savePlayerDetails()">{{!this.data.userDetails?'Create ':'Update'}}</button>
                         </div>
 
