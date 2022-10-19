@@ -38,7 +38,7 @@ export class PlayerListingComponent implements OnInit {
         //  this.roleList.url = '/getRolesList';
         this.playerList.miDataSource = new MatTableDataSource(data.response.result);
         this.playerList.columnLabels = ['UserName', 'Name', 'Email', 'Contact No', 'Gender', 'Role', 'State', 'Country', 'Action'];
-        this.playerList.displayedColumns = ['userName', 'playerName', 'email', 'contactNumber', 'gender', 'Role', 'state_name', 'country_name', 'Action'];
+        this.playerList.displayedColumns = ['userName', 'firstName', 'email', 'contactNumber', 'gender', 'roleName', 'state_name', 'country_name', 'Action'];
 
         this.playerList.miListMenu = new CommonListMenu();
         this.playerList.miListMenu.menuItems =
