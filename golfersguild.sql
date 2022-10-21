@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 19, 2022 at 12:30 PM
+-- Generation Time: Oct 21, 2022 at 09:02 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
 
@@ -392,7 +392,7 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getPlayerListing` ()  BEGIN
 
-SELECT p_id as playerId, userName,firstName,lastName,email,user_details.roleId,contactNumber,gender,DATE_FORMAT(dob, '%d/%m/%Y')  AS dob,user_details.countryId,country.country_name,user_details.stateId,profileImg,password,isWebUser,isFirstLogin, state.state_name,user_role.roleName  FROM user_details inner join user_role on user_role.roleId=user_details.roleId INNER join state on state.state_Id=user_details.stateId inner join country on country.country_Id=user_details.countryId where user_details.isDeleted=0 AND 
+SELECT *,p_id as playerId, userName,firstName,lastName,email,user_details.roleId,contactNumber,gender,DATE_FORMAT(dob, '%d/%m/%Y')  AS dob,user_details.countryId,country.country_name,user_details.stateId,profileImg,password,isWebUser,isFirstLogin, state.state_name,user_role.roleName  FROM user_details inner join user_role on user_role.roleId=user_details.roleId INNER join state on state.state_Id=user_details.stateId inner join country on country.country_Id=user_details.countryId where user_details.isDeleted=0 AND 
  user_details.roleID !=1 order by playerName asc;
 END$$
 
@@ -607,10 +607,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournmentScoreList` ()  BEGIN
 
 SELECT ev.tournamentName,rd.round_name,p.playerName, sd.* FROM tournament_score_details as sd 
 LEFT JOIN user_details as p on p.p_id=sd.p_id 
-inner join events as ev on sd.tour_id=ev.tourID
-inner join round_details as rd on rd.round_Id=sd.round_Id
-inner join tournament_group_details on tournament_group_details.round_id=rd.round_Id and tournament_group_details.tourID=rd.tourID
-inner join tournament_group_player_details on tournament_group_player_details.groupName=tournament_group_player_details.groupName and  tournament_group_player_details.tournamentId=tournament_group_details.tourID
+left join events as ev on sd.tour_id=ev.tourID
+left join round_details as rd on rd.round_Id=sd.round_Id
+left join tournament_group_details on tournament_group_details.round_id=rd.round_Id and tournament_group_details.tourID=rd.tourID
+left join tournament_group_player_details on tournament_group_player_details.groupName=tournament_group_player_details.groupName and  tournament_group_player_details.tournamentId=tournament_group_details.tourID
 where sd.isDeleted=0 order by sd.createdDate asc;
 
 
@@ -880,24 +880,17 @@ Declare err varchar(2);
 Declare  msg varchar(100);
 
 DECLARE isPlayerExist int;
-SELECT count(*) into isPlayerExist from tournament_score_details WHERE p_id=param_playerId and createdDate=param_tournamentDate; 
-	if(isPlayerExist=0) then
+SELECT count(*) into isPlayerExist from user_details WHERE p_id=param_playerId; 
+	if(isPlayerExist=1) then
 
 
-insert into tournament_score_details (tour_id ,p_id ,round_Id  ,score1 ,score2 ,score3 ,score4 ,score5 ,score6 ,score7 ,score8 ,score9 ,outt ,score10 ,score11 ,score12 ,score13 ,score14 ,score15 ,score16 ,score17 ,score18,inn ,gross ,net ,birdie,cid,hdcp,createdDate,holeNum,scoreDifferential,teeName,isDeleted ) 
-values ( "" , `param_playerId` , "" ,  `param_score1` , `param_score2` , `param_score3` , `param_score4` , `param_score5` , `param_score6` , `param_score7` , `param_score8` , `param_score9` , `param_outTotal` , `param_score10` , `param_score11` , `param_score12` , `param_score13` , `param_score14` , `param_score15` , `param_score16` , `param_score17` , `param_score18` , `param_inTotal` , `param_grossTotal` , `param_netTotal` , `param_birdieTotal`, `param_cid`,`param_hdcp`,`param_tournamentDate`,`param_enteredHoleCount`,`param_scoreDiff`,`param_teeName`,0);
+insert into tournament_score_details (tour_id ,p_id ,round_Id  ,score1 ,score2 ,score3 ,score4 ,score5 ,score6 ,score7 ,score8 ,score9 ,outt ,score10 ,score11 ,score12 ,score13 ,score14 ,score15 ,score16 ,score17 ,score18,inn ,gross ,net ,birdie,cid,hdcp,holeNum,scoreDifferential,teeName,isDeleted,createdDate ) 
+values ( "" , `param_playerId` , "" ,  `param_score1` , `param_score2` , `param_score3` , `param_score4` , `param_score5` , `param_score6` , `param_score7` , `param_score8` , `param_score9` , `param_outTotal` , `param_score10` , `param_score11` , `param_score12` , `param_score13` , `param_score14` , `param_score15` , `param_score16` , `param_score17` , `param_score18` , `param_inTotal` , `param_grossTotal` , `param_netTotal` , `param_birdieTotal`, `param_cid`,`param_hdcp`,`param_enteredHoleCount`,`param_scoreDiff`,`param_teeName`,0,`param_tournamentDate`);
 set err="";
 set msg="Score inserted successfully";
 
 
 
-ELSEif(isPlayerExist>0) then
-update  tournament_score_details set score1=param_score1, score2=param_score2,score3=param_score3,score4=param_score4,score5=param_score5,score6=param_score6,
-score7=param_score7,score8=param_score8,score9=param_score9,score10=param_score10,score11=param_score11,score12=param_score12,score13=param_score13,score14=param_score14,score15=param_score15,score16=param_score16,
-score17=param_score17,score18=param_score18, inn=param_inTotal, outt= param_outTotal,gross=param_grossTotal, net=param_netTotal, birdie=param_birdieTotal, hdcp=param_hdcp, teeName=param_teeName,holeNum=param_enteredHoleCount,scoreDifferential=param_scoreDiff where p_id=param_playerId and createdDate=param_tournamentDate;
-
-set err="";
-set msg="Score updated successfully";
 
  call CalculateHandicapIndex(param_playerId);
 ELSE
@@ -1768,7 +1761,7 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`tourID`, `tournamentName`, `eventType`, `numRounds`, `is_Deleted`, `startDate`, `endDate`, `created_Date`, `modified_Date`, `created_By`, `modified_By`, `flag`, `holes`) VALUES
-(1, 'Golfers guild', '7', 2, 0, '2022-11-15 18:30:00', '2022-11-28 18:30:00', '2022-10-16 14:42:30', '2022-10-16 14:42:30', '', '', 0, 18);
+(1, 'test tour', '6', 2, 0, '2022-10-20 18:30:00', '2022-10-21 18:30:00', '2022-10-21 06:32:43', '2022-10-21 06:32:43', '', '', 0, 18);
 
 -- --------------------------------------------------------
 
@@ -2106,8 +2099,8 @@ CREATE TABLE `round_details` (
 --
 
 INSERT INTO `round_details` (`round_Id`, `event_Date`, `cid`, `tourID`, `created_Date`, `modified_Date`, `round_name`) VALUES
-(1, '2022-11-16 00:00:00', 29, 1, '2022-10-16 14:42:30', '2022-10-16 14:42:30', 'Round1'),
-(2, ' 2022-11-29 00:00:00', 3, 1, '2022-10-16 14:42:30', '2022-10-16 14:42:30', 'Round2');
+(1, '2022-10-21 00:00:00', 2, 1, '2022-10-21 06:32:43', '2022-10-21 06:32:43', 'Round1'),
+(2, ' 2022-10-22 00:00:00', 1, 1, '2022-10-21 06:32:43', '2022-10-21 06:32:43', 'Round2');
 
 -- --------------------------------------------------------
 
@@ -2329,7 +2322,7 @@ CREATE TABLE `tournament_group_details` (
 --
 
 INSERT INTO `tournament_group_details` (`groupId`, `groupName`, `tee_Number`, `tee_Time`, `tourID`, `round_Id`) VALUES
-(1, 'Group1', 12, '12:10', 1, 1);
+(1, 'Group1', 13, '12:10', 1, 1);
 
 --
 -- Triggers `tournament_group_details`
@@ -2355,23 +2348,6 @@ CREATE TABLE `tournament_group_details_archive` (
   `round_Id` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `tournament_group_details_archive`
---
-
-INSERT INTO `tournament_group_details_archive` (`groupId`, `groupName`, `tee_Number`, `tee_Time`, `tourID`, `round_Id`) VALUES
-(1, 'Group1', 14, '00:12', 1, 1),
-(2, 'Group1', 15, '12:10', 2, 4),
-(4, 'Group1', 15, '12:12', 1, 2),
-(6, 'Group1', 12, '12:12', 7, 10),
-(7, 'Group1', 14, '12:12', 7, 11),
-(8, 'Group1', 15, '10:10', 7, 12),
-(9, 'Group1', 16, '00:12', 7, 13),
-(10, 'Group1', 9, '00:11', 7, 14),
-(11, 'Group1', 9, '22:00', 7, 15),
-(13, 'Group1', 13, '12:12', 8, 17),
-(14, 'Group1', 13, '12:12', 8, 18);
-
 -- --------------------------------------------------------
 
 --
@@ -2394,22 +2370,7 @@ CREATE TABLE `tournament_group_player_details` (
 --
 
 INSERT INTO `tournament_group_player_details` (`t_player_Id`, `tournamentId`, `groupName`, `playerId`, `tee_time`, `isPlay`, `isWithdraw`, `roundId`) VALUES
-(1, 1, 'Group1', 6, '00:12', 0, 0, '1'),
-(2, 2, 'Group1', 6, '12:10', 0, 0, '4'),
-(3, 2, 'Group1', 6, '12:11', 0, 0, '5'),
-(4, 1, 'Group1', 6, '12:12', 0, 0, '2'),
-(5, 1, 'Group1', 6, '12:12', 0, 0, '3'),
-(6, 7, 'Group1', 6, '12:12', 0, 0, '10'),
-(7, 7, 'Group1', 6, '12:12', 0, 0, '11'),
-(8, 7, 'Group1', 6, '10:10', 0, 0, '12'),
-(9, 7, 'Group1', 6, '00:12', 0, 0, '13'),
-(10, 7, 'Group1', 6, '00:11', 0, 0, '14'),
-(11, 7, 'Group1', 6, '22:00', 0, 0, '15'),
-(12, 7, 'Group1', 6, '12:10', 0, 0, '16'),
-(13, 8, 'Group1', 6, '12:12', 0, 0, '17'),
-(14, 8, 'Group1', 6, '12:12', 0, 0, '18'),
-(15, 8, 'Group1', 6, '22:10', 0, 0, '19'),
-(16, 1, 'Group1', 2, '12:10', 0, 0, '1');
+(1, 1, 'Group1', 2, '12:10', 1, 0, '1');
 
 -- --------------------------------------------------------
 
@@ -2435,7 +2396,7 @@ CREATE TABLE `tournament_player_list` (
 --
 
 INSERT INTO `tournament_player_list` (`tour_player_id`, `tourID`, `playerID`, `isPlay`, `isInvited`, `isAccepted`, `isApproved`, `isRejected`, `isWithdraw`, `created_Date`) VALUES
-(15, 1, 2, 0, 0, 0, 1, 0, 0, '2022-10-16');
+(1, 1, 2, 0, 1, 1, 1, 0, 0, '2022-10-21');
 
 -- --------------------------------------------------------
 
@@ -2485,7 +2446,8 @@ CREATE TABLE `tournament_score_details` (
 --
 
 INSERT INTO `tournament_score_details` (`tour_score_id`, `p_id`, `tour_id`, `score1`, `score2`, `score3`, `score4`, `score5`, `score6`, `score7`, `score8`, `score9`, `score10`, `score11`, `score12`, `score13`, `score14`, `score15`, `score16`, `score17`, `score18`, `round_Id`, `hdcp`, `inn`, `outt`, `gross`, `net`, `birdie`, `holeNum`, `cid`, `scoreDifferential`, `createdDate`, `isDeleted`, `teeName`) VALUES
-(1, 2, 1, 3, 3, 3, 5, 5, 4, 4, 3, 3, 2, 8, 8, 9, 8, 9, 8, 9, 8, 1, 0, 69, 33, 102, 102, 7, 17, '29', 'null', '2022-10-16', 0, '12');
+(1, 2, 1, 5, 4, 5, 4, 4, 3, 5, 6, 7, 6, 5, 5, 6, 7, 6, 5, 6, 6, 1, 0, 52, 43, 95, 95, 1, 17, '2', '20.4', '2022-10-21', 0, '13'),
+(2, 2, 0, 5, 5, 6, 5, 4, 5, 6, 5, 4, 5, 6, 5, 4, 5, 6, 5, 4, 5, 0, 0, 45, 45, 90, 90, 2, 17, '1', '15.5', '2022-10-21', 0, '17');
 
 -- --------------------------------------------------------
 
@@ -3022,19 +2984,19 @@ ALTER TABLE `tournament_group_details`
 -- AUTO_INCREMENT for table `tournament_group_player_details`
 --
 ALTER TABLE `tournament_group_player_details`
-  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tournament_player_list`
 --
 ALTER TABLE `tournament_player_list`
-  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tournament_score_details`
 --
 ALTER TABLE `tournament_score_details`
-  MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tournament_winners`
