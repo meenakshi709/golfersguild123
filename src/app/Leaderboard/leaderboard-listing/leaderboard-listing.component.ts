@@ -38,8 +38,8 @@ export class LeaderboardListingComponent implements OnInit {
       //  const getmonthNum = (new Date(data.tournament_date).getMonth() + 1).toString() + '-' + new Date(data.tournament_date).getFullYear().toString();
 
         this.scoreList.miDataSource = new MatTableDataSource(data.response.result);
-        this.scoreList.columnLabels = ['Tournament Name', 'Player Name', 'Score 1', 'Score 2', 'Score 3', 'Score 4', 'Score 5', 'Score 6', 'Score 7', 'Score 8', 'Score 9', 'Out Sum', 'Score 10', 'Score 11', 'Score 12', 'Score 13', 'Score 14', 'Score 15', 'Score 16', 'Score 17', 'Score 18', 'In sum', 'Gross', 'HDCP', 'Net Score', 'Birdie', 'Action'];
-        this.scoreList.displayedColumns = ['tournamentName', 'playerName',  'score1', 'score2', 'score3', 'score4', 'score5', 'score6', 'score7', 'score8', 'score9', 'outt', 'score10', 'score11', 'score12', 'score13', 'score14', 'score15', 'score16', 'score17', 'score18', 'inn', 'gross', 'hdcp', 'net', 'birdie', 'Action'];
+        this.scoreList.columnLabels = ['Tournament Name', 'Player Name', 'Gross', 'HDCP', 'Net Score', 'Birdie', 'Action'];
+        this.scoreList.displayedColumns = ['tournamentName', 'playerName',  'gross', 'hdcp', 'net', 'birdie', 'Action'];
 
         this.scoreList.miListMenu = new CommonListMenu();
         this.scoreList.miListMenu.menuItems =

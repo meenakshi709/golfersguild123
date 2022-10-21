@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { forkJoin } from 'rxjs';
 import { CommonServiceService } from 'src/app/Service/common.service';
 import Swal from 'sweetalert2';
 
@@ -95,13 +96,6 @@ export class AddEditLeaderboardComponent implements OnInit {
     public route: Router) { }
 
   ngOnInit(): void {
-   
-
-    // 
-
-
-    // }
-
     for (let i = 1; i <= 18; i++) {
       const agsKeyName = "ags" + i;
       const scoreKeyName = "score" + i;
@@ -109,6 +103,11 @@ export class AddEditLeaderboardComponent implements OnInit {
       if (!this.data.selectedRecordDetails) {
         this.scoreForm.controls[scoreKeyName].disable();
       }
+    }
+    if (this.data.selectedRecordDetails) {
+      debugger;
+      this.scoreForm.controls['tour_id'].setValue(this.data.selectedRecordDetails['tour_id']);
+      this.getRoundDetails();
     }
     this.scoreForm.controls['cid'].disable();
   }
@@ -118,13 +117,26 @@ export class AddEditLeaderboardComponent implements OnInit {
 
 
   setScoreDetails() {
-    const keys = Object.keys(this.data);
-    const formGroup = this.scoreForm.controls;
+    const keys = Object.keys(this.data.selectedRecordDetails);
+    // const formGroup: any = this.scoreForm;
 
     for (let i = 0; i < keys.length; i++) {
       const keyName = keys[i];
-      formGroup[keyName].setValue(this.data[keyName])
+      if (this.scoreForm.controls[keyName]) {
+        if (keyName.indexOf('score') > -1) {
+          this.scoreForm.controls[keyName].setValue(this.data.selectedRecordDetails[keyName]);
+          const digit: any = (keyName.slice(-1));
+          if (digit < 10) {
+            // this.calculateScoreOut(keyName)
+          } else {
+            //this.calculateScoreIn(keyName)
+          }
+        } else {
+          this.scoreForm.controls[keyName].setValue(this.data.selectedRecordDetails[keyName]);
+        }
+      }
     }
+
   }
 
   saveScoreDetails() {
@@ -383,7 +395,7 @@ export class AddEditLeaderboardComponent implements OnInit {
           }
         }
       });
-     
+
       this.summaryForm.controls.birdieTotal.setValue(this.class11);
       console.log("count of player", countPar)
     }
@@ -406,7 +418,7 @@ export class AddEditLeaderboardComponent implements OnInit {
     this.calculateScoreDifferential();
 
   }
-  // Toaster msg function
+  // Toaster msg functio
   sweetAlertMsg(typeIcon: any, msg: any) {
     Swal.fire({
       toast: true,
@@ -430,33 +442,15 @@ export class AddEditLeaderboardComponent implements OnInit {
       this.loader.stop();
       if (APIResponse.error == '') {
         this.roundList = APIResponse.response.result;
-        let currentIndex = 2;
+        // let currentIndex = 2;
         if (APIResponse.response.roundDetails) {
-          this.roundList.forEach((round: any, index: any) => {
+          debugger;
+          if (this.data.selectedRecordDetails) {
+            this.scoreForm.controls['round_Id'].setValue(this.data.selectedRecordDetails['round_Id']);
+            this.getGroupList();
+          }
 
-            // if (round.round_Id == APIResponse.response.roundDetails.round_Id) {
-
-            //   if (this.roundList.length[index + 1]) {
-            //     currentIndex = index + 1;
-            //   }
-            //   else{
-            //     currentIndex=this.roundList.length-1;
-            //   }
-            // }
-          });
         }
-
-        //   this.scoreForm.controls.round_Id.setValue(this.roundList[currentIndex].round_Id);
-        //    this.scoreForm.controls.cid.setValue(this.roundList[currentIndex].cid);
-
-        // this.data.courseListing.forEach((course: any) => {
-
-        //   if (course.cid == this.roundList[currentIndex].cid) {
-
-        //   }
-        // });
-
-
       }
     });
   }
@@ -465,33 +459,26 @@ export class AddEditLeaderboardComponent implements OnInit {
     this.roundList.forEach((round: any) => {
       if (round.round_Id == this.scoreForm.controls.round_Id.value) {
         this.scoreForm.controls.cid.setValue(round.cid);
-        // this.onCourseChange(round.cid);
-
         this.data.courseListing.forEach((course: any) => {
-
           if (course.cid == round.cid) {
             this.selectedCourse = course;
-           }
+          }
         });
-
-
-
-        this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + round.cid).subscribe((APIResponse: any) => {
-       
-          if (APIResponse.error == '') {
-            this.teeNameList = APIResponse.response.result;
+        const teeList = this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + round.cid);
+        const groupList = this.service.getAPIMethod("/tournament/getTournamentGroups?tourId=" + this.scoreForm.controls.tour_id.value + "&roundId=" + this.scoreForm.controls.round_Id.value)
+        forkJoin([teeList, groupList]).subscribe((res: any) => {
+          debugger;
+          if (res[0].error == '' && res[1].error == '') {
+            this.teeNameList = res[0].response.result;
+            this.groupList = res[1].response.result;
+          } else {
+            this.sweetAlertMsg('error', 'Please try again after sometime')
           }
         });
       }
     });
 
 
-    this.service.getAPIMethod("/tournament/getTournamentGroups?tourId=" + this.scoreForm.controls.tour_id.value + "&roundId=" + this.scoreForm.controls.round_Id.value).subscribe((APIResponse) => {
-      this.loader.stop();
-      if (APIResponse.error == '') {
-        this.groupList = APIResponse.response.result;
-      }
-    });
   }
 
   onChangeTeeName(event: any) {
@@ -526,7 +513,7 @@ export class AddEditLeaderboardComponent implements OnInit {
   }
 
   onCourseChange(event: any) {
-   
+
 
 
   }
