@@ -471,8 +471,7 @@ export class AddEditLeaderboardComponent implements OnInit {
 
           if (course.cid == round.cid) {
             this.selectedCourse = course;
-         
-          }
+           }
         });
 
 
