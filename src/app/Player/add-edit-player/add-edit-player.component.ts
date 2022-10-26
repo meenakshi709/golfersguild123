@@ -70,7 +70,7 @@ export class AddEditPlayerComponent implements OnInit {
     for (let i = 0; i < keys.length; i++) {
       const keyName = keys[i];
       if (keyName == 'dob') {
-        debugger;
+        
         formGroup[keyName].setValue(new Date(this.data.userDetails[keyName]))
       } else {
         formGroup[keyName].setValue(this.data.userDetails[keyName])
@@ -116,7 +116,7 @@ export class AddEditPlayerComponent implements OnInit {
       if (response.error == '') {
         this.PlayerForm.controls.stateId.enable();
         this.stateList = apiResponse.result;
-        debugger;
+        
 
       } else {
         this.sweetAlertMsg('error', response.msg)

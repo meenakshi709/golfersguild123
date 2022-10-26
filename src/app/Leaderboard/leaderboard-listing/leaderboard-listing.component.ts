@@ -27,19 +27,19 @@ export class LeaderboardListingComponent implements OnInit {
   }
   getScoreList() {
     this.loader.start();
-      this.service.getAPIMethod('/score').subscribe((Apiresponse) => {
-         this.loader.stop();
+    this.service.getAPIMethod('/score').subscribe((Apiresponse) => {
+      this.loader.stop();
       const data: any = Apiresponse;
       console.log(data.response);
       if (data.error == '') {
         this.isLoadingDone = true;
-    
+
         //  this.roleList.url = '/getRolesList';
-      //  const getmonthNum = (new Date(data.tournament_date).getMonth() + 1).toString() + '-' + new Date(data.tournament_date).getFullYear().toString();
+        //  const getmonthNum = (new Date(data.tournament_date).getMonth() + 1).toString() + '-' + new Date(data.tournament_date).getFullYear().toString();
 
         this.scoreList.miDataSource = new MatTableDataSource(data.response.result);
-        this.scoreList.columnLabels = ['Tournament Name', 'Player Name', 'Gross', 'HDCP', 'Net Score', 'Birdie', 'Action'];
-        this.scoreList.displayedColumns = ['tournamentName', 'playerName',  'gross', 'hdcp', 'net', 'birdie', 'Action'];
+        this.scoreList.columnLabels = ['Tournament Name', 'Player Name', 'Round',  'Group', 'Gross', 'HDCP', 'Net Score', 'Birdie', 'AGS', 'Action'];
+        this.scoreList.displayedColumns = ['tournamentName', 'playerName', 'round_name', 'groupName', 'gross', 'hdcp', 'net', 'birdie', 'scoreDifferential', 'Action'];
 
         this.scoreList.miListMenu = new CommonListMenu();
         this.scoreList.miListMenu.menuItems =
@@ -68,24 +68,26 @@ export class LeaderboardListingComponent implements OnInit {
     forkJoin([getTournamentListing, courseListing]).subscribe((APIResponse) => {
       this.loader.stop();
       if (APIResponse[0]['error'] != 'X' && APIResponse[1]['error'] != 'X') {
-      const dialogRef = this.dialog.open(AddEditLeaderboardComponent, {
+        const dialogRef = this.dialog.open(AddEditLeaderboardComponent, {
 
-        data: {
-          title: 'Score Details',        
-          sectionName: 'Score',
-          selectedRecordDetails: clickedRecordDetails,
-          tournamentList: APIResponse[0].response.result,
-          courseListing:APIResponse[1].response.result,
-        },
-        width: '80%',
-        height: '600px'
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.getScoreList();
-        }
-      });
-    }
+          data: {
+            title: 'Score Details',
+            sectionName: 'Score',
+            selectedRecordDetails: clickedRecordDetails,
+            tournamentList: APIResponse[0].response.result,
+            courseListing: APIResponse[1].response.result,
+
+          },
+          disableClose: true,
+          width: '80%',
+          height: '600px'
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.getScoreList();
+          }
+        });
+      }
     });
   }
 
@@ -95,13 +97,13 @@ export class LeaderboardListingComponent implements OnInit {
   onScoreActionClick(clickedRecord: any) {
 
     if (clickedRecord.name == 'Edit') {
-      if(clickedRecord.data.tournamentName){
+      if (clickedRecord.data.tournamentName) {
         this.saveScoreDetails(clickedRecord.data)
       }
-      else{
-        this.sweetAlertMsg('error','Tournament details does not exist')
+      else {
+        this.sweetAlertMsg('error', 'Tournament details does not exist')
       }
-   
+
     }
     else if (clickedRecord.name == 'Delete') {
       this.deleteScore(clickedRecord.data)
@@ -110,35 +112,35 @@ export class LeaderboardListingComponent implements OnInit {
   }
 
 
-// for history scores
+  // for history scores
 
-savePastScoreDetails(clickedRecordDetails: any) {
+  savePastScoreDetails(clickedRecordDetails: any) {
 
-  const getPlayerListing = this.service.getAPIMethod("/players");
-  const courseListing = this.service.getAPIMethod("/courseList");
-  forkJoin([getPlayerListing, courseListing]).subscribe((APIResponse) => {
-    this.loader.stop();
-    if (APIResponse[0]['error'] != 'X' && APIResponse[1]['error'] != 'X') {
-    const dialogRef = this.dialog.open(AddEditOldScoreComponent, {
+    const getPlayerListing = this.service.getAPIMethod("/players");
+    const courseListing = this.service.getAPIMethod("/courseList");
+    forkJoin([getPlayerListing, courseListing]).subscribe((APIResponse) => {
+      this.loader.stop();
+      if (APIResponse[0]['error'] != 'X' && APIResponse[1]['error'] != 'X') {
+        const dialogRef = this.dialog.open(AddEditOldScoreComponent, {
 
-      data: {
-        title: 'Score Details',        
-        sectionName: 'Score',
-        selectedRecordDetails: clickedRecordDetails,
-       playerListing: APIResponse[0].response.result,
-        courseListing:APIResponse[1].response.result,
-      },
-      width: '80%',
-      height: '600px'
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.getScoreList();
+          data: {
+            title: 'Score Details',
+            sectionName: 'Score',
+            selectedRecordDetails: clickedRecordDetails,
+            playerListing: APIResponse[0].response.result,
+            courseListing: APIResponse[1].response.result,
+          },
+          width: '80%',
+          height: '600px'
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.getScoreList();
+          }
+        });
       }
     });
   }
-  });
-}
 
 
 
@@ -158,7 +160,7 @@ savePastScoreDetails(clickedRecordDetails: any) {
 
 
 
-  
+
   deleteScore(clickedrecord: any) {
 
     Swal.fire({
@@ -176,9 +178,9 @@ savePastScoreDetails(clickedRecordDetails: any) {
           this.loader.stop();
           if (success.error === 'X') {
             this.sweetAlertMsg('error', success.response.result.msg);
-           
+
           } else {
-           
+
             this.sweetAlertMsg('success', success.response.result.msg);
 
             this.isLoadingDone = false;
@@ -192,9 +194,9 @@ savePastScoreDetails(clickedRecordDetails: any) {
 
 
 
-  
+
   addEditEventDetails(clickedRecordDetails: any) {
-    
+
     this.service.getCourseApi().subscribe((APIresponse) => {
       const apiResponse: any = APIresponse;
 

@@ -163,17 +163,17 @@ export class LeaderboardComponent implements OnInit {
             let diff = (scoreValue - value);
             if (this.tournamentDetails.eventType == 1) {
               for (let i = 0; i < this.stableFordList.length; i++) {
-                debugger
+               
                 if (diff == this.stableFordList[i].netScorePoints) {
 
                   if (hdcpValue <= item.hdcp) {
-                    debugger
+                   
                     let total = (this.stableFordList[i].points + 1);
                     stfArr.push(total);
                     break;
                   }
                   else {
-                    debugger
+                   
                     stfArr.push(this.stableFordList[i].points);
                     break;
                   }
@@ -283,7 +283,7 @@ export class LeaderboardComponent implements OnInit {
                 }
               }
             });
-            debugger
+           
             this.scoreData = uni;
           }
 
@@ -307,7 +307,7 @@ export class LeaderboardComponent implements OnInit {
 
   getTourDetail(tourId: string): void {
     this.service.getAPIMethod(`/tournament/tournamentScoreById?tournamentId=${tourId}&playerId=0`).subscribe((APTres: any) => {
-      debugger
+     
       this.tourDetail = APTres?.response?.result[0];
       if (this.tourDetail) {
         console.log(this.tourDetail)

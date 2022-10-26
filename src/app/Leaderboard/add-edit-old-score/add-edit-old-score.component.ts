@@ -131,7 +131,7 @@ export class AddEditOldScoreComponent implements OnInit {
     data1.grossTotal = this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value;
     data1.netTotal = (this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value) - (this.scoreForm.controls.hdcp.value);
     data.createdDate = new Date((data.createdDate.getMonth() + 1) + '/' + (data.createdDate.getDate() + 1) + '/' + data.createdDate.getFullYear());
-    debugger
+   
     let enteredHoleCount = 0;
     for (let i = 0; i < data.holeNum; i++) {
       const controlName = 'score' + i;
@@ -458,7 +458,7 @@ export class AddEditOldScoreComponent implements OnInit {
   getCourseList() {
 
     this.data.courseListing.forEach((course: any) => {
-      debugger
+     
       if (course.cid == this.scoreForm.controls.cid.value) {
         this.selectedCourse = course;
       }

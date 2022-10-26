@@ -6,14 +6,12 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { forkJoin } from 'rxjs';
 import { CommonServiceService } from 'src/app/Service/common.service';
 import Swal from 'sweetalert2';
-
 @Component({
   selector: 'app-add-edit-leaderboard',
   templateUrl: './add-edit-leaderboard.component.html',
   styleUrls: ['./add-edit-leaderboard.component.css']
 })
 export class AddEditLeaderboardComponent implements OnInit {
-
   class11: any = 0;
   playerList: any = [];
   submitted = false;
@@ -28,6 +26,7 @@ export class AddEditLeaderboardComponent implements OnInit {
   courseRate: any = 0;
   slopeRate: any = 0;
   public scoreForm: FormGroup = new FormGroup({
+    tour_score_Id: new FormControl('', []),
     tour_id: new FormControl('', [Validators.required]),
     round_Id: new FormControl('', [Validators.required]),
     groupId: new FormControl('', [Validators.required]),
@@ -73,7 +72,6 @@ export class AddEditLeaderboardComponent implements OnInit {
     ags17: new FormControl('', []),
     ags18: new FormControl('', []),
   });
-
   summaryForm: FormGroup = new FormGroup({
     agsTotal: new FormControl(0, []),
     inTotal: new FormControl(0, []),
@@ -83,10 +81,6 @@ export class AddEditLeaderboardComponent implements OnInit {
     birdieTotal: new FormControl(0, []),
     scoreDiff: new FormControl(0, []),
   });
-
-
-
-
   constructor(
     public dialogRef: MatDialogRef<AddEditLeaderboardComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -94,7 +88,6 @@ export class AddEditLeaderboardComponent implements OnInit {
     private formBuilder: FormBuilder,
     private service: CommonServiceService,
     public route: Router) { }
-
   ngOnInit(): void {
     for (let i = 1; i <= 18; i++) {
       const agsKeyName = "ags" + i;
@@ -105,191 +98,118 @@ export class AddEditLeaderboardComponent implements OnInit {
       }
     }
     if (this.data.selectedRecordDetails) {
-      debugger;
+      this.scoreForm.controls['tour_score_Id'].setValue(this.data.selectedRecordDetails['tour_score_id']);
       this.scoreForm.controls['tour_id'].setValue(this.data.selectedRecordDetails['tour_id']);
       this.getRoundDetails();
     }
     this.scoreForm.controls['cid'].disable();
   }
-
-
-
-
-
   setScoreDetails() {
     const keys = Object.keys(this.data.selectedRecordDetails);
-    // const formGroup: any = this.scoreForm;
-
     for (let i = 0; i < keys.length; i++) {
       const keyName = keys[i];
       if (this.scoreForm.controls[keyName]) {
+        this.scoreForm.controls[keyName].disable();
         if (keyName.indexOf('score') > -1) {
+          this.scoreForm.controls[keyName].enable();
           this.scoreForm.controls[keyName].setValue(this.data.selectedRecordDetails[keyName]);
-          const digit: any = (keyName.slice(-1));
-          if (digit < 10) {
-            // this.calculateScoreOut(keyName)
+          const digit: any = (keyName.replace('score', ''));
+          if (Number(digit) < 10) {
+            this.calculateScoreOut(keyName)
           } else {
-            //this.calculateScoreIn(keyName)
+            this.calculateScoreIn(keyName)
           }
-        } else {
-          this.scoreForm.controls[keyName].setValue(this.data.selectedRecordDetails[keyName]);
         }
       }
     }
-
+    this.summaryForm.controls.scoreDiff.setValue(Number(this.data.selectedRecordDetails.scoreDifferential));
+    this.scoreForm.controls['hdcp'].setValue(this.data.selectedRecordDetails['hdcp']);
   }
-
   saveScoreDetails() {
-
     this.calculateScoreDifferential();
-
     const data = this.scoreForm.getRawValue();
     const data1 = this.summaryForm.getRawValue();
     data1.grossTotal = this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value;
     data1.netTotal = (this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value) - (this.scoreForm.controls.hdcp.value);
-
     let enteredHoleCount = 0;
     for (let i = 0; i < data.holeNum; i++) {
       const controlName = 'score' + i;
-
       if (data[controlName] > 0) {
         enteredHoleCount++;
-
       }
       data.enteredHoleCount = enteredHoleCount;
-      console.log("hole count", data.enteredHoleCount)
-
     }
-
-    console.log("finalData", data)
     let finalData = { ...data, ...data1 };
     this.service.postAPIMethod('/tournament/savetournamentScore', finalData).subscribe(APIresponse => {
-      // console.log("final",response);
-      debugger
-      if (APIresponse.error != 'X') {
-        //  this.route.navigateByUrl("/course");
-        this.closeDialogClick();
-        this.sweetAlertMsg("success", APIresponse.response.result.msg)
+      if (APIresponse.error == '') {
+        this.sweetAlertMsg("success", APIresponse.response.result.msg);
+        this.dialogRef.close(true);
       }
       else {
         this.sweetAlertMsg("error", APIresponse.response.msg);
       }
     });
-
   }
-
-
-
   calculateResult() {
-    //this.leaderboardForm.controls.playername.value,
-    //  const data: any = this.leaderboardForm.getRawValue();
-    // console.log(this.scoreForm.controls.playername.value,);
     let class11: any;
     this.service.getCourseApi().subscribe({
       next: (response: any) => {
-
-        let respns;
         if (response && response.response.length > 0) {
-
-
           var dataa = response.response;
-          // console.log(dataa);
           var diff = 0;
           var cid = this.scoreForm.value;
-
           dataa.forEach((element: any) => {
             if (cid == element.cid) {
               var parkeyName;
               var scoreName;
               var parValue;
               var scoreValue;
-
               for (let indexNumber = 1; indexNumber < 19; indexNumber++) {
                 parkeyName = 'par' + indexNumber;
                 scoreName = 'score' + indexNumber;
-
-                //var z=parkeyName.replace(/['"]+/g, '');
-
-
-                // element.parkeyName=parkeyName;
                 parValue = element[parkeyName];
                 scoreValue = element[scoreName];
-
                 if (scoreValue > 0) {
                   this.holeCount = this.holeCount + 1;
                 }
-
-
                 diff = parseInt(scoreValue) - parseInt(parValue);
-
                 switch (diff) {
                   case -1:
-
                     class11 = class11 + 1;
                     break;
                   case -2:
-
                     class11 = class11 + 2;
                     break;
                   case 0:
                     class11 = class11 + 0;
-
                     break;
                   case 1:
                     class11 = class11 + 0;
-
                     break;
                   case 2:
                     class11 = class11 + 0;
-
                     break;
                   case 3:
                     class11 = class11 + 0;
                     break;
-
                   default:
-
                     class11 = class11 + 0;
-
-
                 }
-
-
-
               }
-
-
-
-
-
-
-
             }
           });
-
-
-
-
-
         }
-
-
       },
       error: (error) => { },
       complete: () => {
       }
     });
-
-    console.log("hole count=", this.holeCount)
+    // console.log("hole count=", this.holeCount)
   }
-
-
   onSubmit() {
     // TODO: Use EventEmitter with form value
     this.submitted = true;
-
   }
-
   validateAllFields(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach((field) => {
       let fieldName = formGroup.get(field);
@@ -303,12 +223,9 @@ export class AddEditLeaderboardComponent implements OnInit {
   closeDialogClick(): void {
     this.dialogRef.close(false);
   }
-
-
   outHoleTotal = 0;
   // score in total
   calculateScoreOut(fieldName: any) {
-
     const scoreInValue = Number(this.scoreForm.value.score1) +
       Number(this.scoreForm.value.score2) +
       Number(this.scoreForm.value.score3) +
@@ -318,20 +235,14 @@ export class AddEditLeaderboardComponent implements OnInit {
       Number(this.scoreForm.value.score7) +
       Number(this.scoreForm.value.score8) +
       Number(this.scoreForm.value.score9);
-
-
-
     // const scoreOutValue=Number(this.scoreForm.value.score1)+Number(this.scoreForm.value.score2)+Number(this.scoreForm.value.score3)+Number(this.scoreForm.value.score4)+Number(this.scoreForm.value.score5)+Number(this.scoreForm.value.score6);Number(this.scoreForm.value.score7)+Number(this.scoreForm.value.score8)+Number(this.scoreForm.value.score9);
     this.summaryForm.controls.outTotal.setValue(scoreInValue);
     //  this.scoreForm.controls.pout.setValue(scoreOutValue);
-
     this.calculateBirdie(fieldName);
     this.calculateScoreDifferential();
-
   }
   onChangeHoles() {
     const value: any = this.scoreForm.value['holeNum'];
-
     for (let i = 1; i <= 18; i++) {
       if ((value == 9 && i < 9) || (value == 18)) {
         const keyName = 'score' + i;
@@ -344,10 +255,8 @@ export class AddEditLeaderboardComponent implements OnInit {
         controlName.setValue('');
         controlName.disable();
       }
-
     }
   }
-
   calculateBirdie(fieldName: any) {
     // var class11 = 0;
     var countPar = 0;
@@ -357,7 +266,7 @@ export class AddEditLeaderboardComponent implements OnInit {
       let totalBirdie = 0;
       keysArr.forEach(keyName => {
         if (keyName.indexOf("score") >= 0) {
-          console.log('keyName', keyName);
+          // console.log('keyName', keyName);
           const scoreValue = this.scoreForm.controls[keyName].value;
           if (scoreValue && keyName == fieldName) {
             let field = keyName;
@@ -367,42 +276,29 @@ export class AddEditLeaderboardComponent implements OnInit {
             const actualParValue = scoreValue - parValue;
             const hdcpKey = "hdcp" + field;
             const hdcpValue = this.selectedCourse[hdcpKey];
-
-
             this.calculateAgs(fieldName, parValue, hdcpValue, scoreValue);
-
             switch (actualParValue) {
               case -1:
-
                 this.class11 = this.class11 + 1;
                 break;
               case -2:
-
                 this.class11 = this.class11 + 2;
                 break;
               case 0:
                 this.class11 = this.class11 + 0;
                 countPar = countPar + 1;
-
                 break;
-
-
               default:
                 this.class11 = this.class11 + 0;
             }
-
-
           }
         }
       });
-
       this.summaryForm.controls.birdieTotal.setValue(this.class11);
-      console.log("count of player", countPar)
+      // console.log("count of player", countPar)
     }
   }
-
   calculateScoreIn(fieldName: any) {
-
     const scoreOutValue = Number(this.scoreForm.value.score10) + Number(this.scoreForm.value.score11) + Number(this.scoreForm.value.score12) +
       Number(this.scoreForm.value.score13) +
       Number(this.scoreForm.value.score14) +
@@ -413,10 +309,8 @@ export class AddEditLeaderboardComponent implements OnInit {
     // const scoreOutValue=Number(this.scoreForm.value.score1)+Number(this.scoreForm.value.score2)+Number(this.scoreForm.value.score3)+Number(this.scoreForm.value.score4)+Number(this.scoreForm.value.score5)+Number(this.scoreForm.value.score6);Number(this.scoreForm.value.score7)+Number(this.scoreForm.value.score8)+Number(this.scoreForm.value.score9);
     this.summaryForm.controls.inTotal.setValue(scoreOutValue);
     //  this.scoreForm.controls.pout.setValue(scoreOutValue);
-
     this.calculateBirdie(fieldName);
     this.calculateScoreDifferential();
-
   }
   // Toaster msg functio
   sweetAlertMsg(typeIcon: any, msg: any) {
@@ -429,14 +323,8 @@ export class AddEditLeaderboardComponent implements OnInit {
       title: msg,
     });
   }
-
-
-
   // ------------------------------------
-
-
   getRoundDetails() {
-
     this.loader.start();
     this.service.getAPIMethod("/tournament/getTournamentRoundDetails?tourId=" + this.scoreForm.controls.tour_id.value).subscribe((APIResponse) => {
       this.loader.stop();
@@ -444,17 +332,14 @@ export class AddEditLeaderboardComponent implements OnInit {
         this.roundList = APIResponse.response.result;
         // let currentIndex = 2;
         if (APIResponse.response.roundDetails) {
-          debugger;
           if (this.data.selectedRecordDetails) {
             this.scoreForm.controls['round_Id'].setValue(this.data.selectedRecordDetails['round_Id']);
             this.getGroupList();
           }
-
         }
       }
     });
   }
-
   getGroupList() {
     this.roundList.forEach((round: any) => {
       if (round.round_Id == this.scoreForm.controls.round_Id.value) {
@@ -467,20 +352,28 @@ export class AddEditLeaderboardComponent implements OnInit {
         const teeList = this.service.getAPIMethod(`/course/getCourseTeeList?courseId=` + round.cid);
         const groupList = this.service.getAPIMethod("/tournament/getTournamentGroups?tourId=" + this.scoreForm.controls.tour_id.value + "&roundId=" + this.scoreForm.controls.round_Id.value)
         forkJoin([teeList, groupList]).subscribe((res: any) => {
-          debugger;
           if (res[0].error == '' && res[1].error == '') {
             this.teeNameList = res[0].response.result;
             this.groupList = res[1].response.result;
+            if (this.data.selectedRecordDetails) {
+              this.scoreForm.controls['groupId'].setValue(this.data.selectedRecordDetails['groupId']);
+              this.scoreForm.controls['teeName'].setValue(Number(this.data.selectedRecordDetails['teeName']));
+              this.teeNameList.forEach((item: any) => {
+
+                if (item.cRatingId == this.data.selectedRecordDetails['teeName']) {
+                  this.slopeRate = item.slopeRating;
+                  this.courseRate = item.courseRating;
+                }
+              });
+              this.getPlayerList();
+            }
           } else {
             this.sweetAlertMsg('error', 'Please try again after sometime')
           }
         });
       }
     });
-
-
   }
-
   onChangeTeeName(event: any) {
     for (let i = 1; i <= 18; i++) {
       const scoreKeyName = "score" + i;
@@ -496,56 +389,41 @@ export class AddEditLeaderboardComponent implements OnInit {
   getPlayerList() {
     this.service.getAPIMethod("/tournament/getTournamentGroupPlayerList?tourId=" + this.scoreForm.controls.tour_id.value + "&roundId=" + this.scoreForm.controls.round_Id.value + "&groupId=" + this.scoreForm.controls.groupId.value).subscribe((APIResponse) => {
       if (APIResponse.error != 'X') {
-
         this.playerList = APIResponse.response.result;
+        if (this.data.selectedRecordDetails) {
+          this.scoreForm.controls['p_id'].setValue(this.data.selectedRecordDetails['p_id']);
+          this.setScoreDetails();
+        }
       }
-
     })
   }
-
   onPlayerSelection() {
     this.playerList.forEach((player: any) => {
       if (player.playerId == this.scoreForm.controls.p_id.value) {
         this.scoreForm.controls.hdcp.setValue(player.hdcp);
       }
     });
-
   }
-
   onCourseChange(event: any) {
-
-
-
   }
-
-
   calculateScoreDifferential() {
 
-
-    let ags = Number(this.scoreForm.value.ags1) + Number(this.scoreForm.value.ags2) +
-      Number(this.scoreForm.value.ags3) + Number(this.scoreForm.value.ags4) +
-      Number(this.scoreForm.value.ags5) + Number(this.scoreForm.value.ags6) +
-      Number(this.scoreForm.value.ags7) + Number(this.scoreForm.value.ags8) +
-      Number(this.scoreForm.value.ags9) + Number(this.scoreForm.value.ags10) +
-      Number(this.scoreForm.value.ags11) + Number(this.scoreForm.value.ags12) +
-      Number(this.scoreForm.value.ags13) + Number(this.scoreForm.value.ags14) +
-      Number(this.scoreForm.value.ags15) + Number(this.scoreForm.value.ags16) +
-      Number(this.scoreForm.value.ags17) + Number(this.scoreForm.value.ags18);
-
+    let ags = Number(this.scoreForm.controls.ags1.value) + Number(this.scoreForm.controls.ags2.value) +
+      Number(this.scoreForm.controls.ags3.value) + Number(this.scoreForm.controls.ags4.value) +
+      Number(this.scoreForm.controls.ags5.value) + Number(this.scoreForm.controls.ags6.value) +
+      Number(this.scoreForm.controls.ags7.value) + Number(this.scoreForm.controls.ags8.value) +
+      Number(this.scoreForm.controls.ags9.value) + Number(this.scoreForm.controls.ags10.value) +
+      Number(this.scoreForm.controls.ags11.value) + Number(this.scoreForm.controls.ags12.value) +
+      Number(this.scoreForm.controls.ags13.value) + Number(this.scoreForm.controls.ags14.value) +
+      Number(this.scoreForm.controls.ags15.value) + Number(this.scoreForm.controls.ags16.value) +
+      Number(this.scoreForm.controls.ags17.value) + Number(this.scoreForm.controls.ags18.value);
     var Diff1 = (ags - this.courseRate) * 113;
     var socreAvg = Diff1 / this.slopeRate;
     var rounded = Math.round(socreAvg * 10) / 10
-    console.log("differnece", Diff1);
-    console.log("after divide", socreAvg);
 
     this.summaryForm.controls.scoreDiff.setValue(rounded);
-
   }
-
-
-
   calculateAgs(fieldName: any, parValue: any, hdcpValue: any, scoreValue: any) {
-
     let hdcp = 0;
     let ags = 0;
     this.playerList.forEach((element: any) => {
@@ -554,20 +432,8 @@ export class AddEditLeaderboardComponent implements OnInit {
       }
     });
     const actualParValue = scoreValue - parValue;
-    // if (hdcpValue <= hdcp) {
-    //   if (actualParValue > 2) {
-    //     ags = parValue + 3;
-    //   }
-    //   else {
-    //     ags = scoreValue;
-    //   }
-    // } else {
-    //   ags = scoreValue;
-    // }
-
 
     if (actualParValue > 2) {
-
       if (hdcpValue <= hdcp) {
         ags = parValue + 3;
       }
@@ -575,21 +441,11 @@ export class AddEditLeaderboardComponent implements OnInit {
         ags = parValue + 2;
       }
     }
-
     else {
       ags = scoreValue;
     }
-
-
-
-
-
     const fieldNum = fieldName.replace("score", '');
     const newFieldName = "ags" + fieldNum;
     this.scoreForm.controls[newFieldName].setValue(ags);
   }
-
 }
-
-
-

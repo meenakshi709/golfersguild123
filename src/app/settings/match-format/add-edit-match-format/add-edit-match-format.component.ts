@@ -56,7 +56,7 @@ export class AddEditMatchFormatComponent implements OnInit {
     
     
   
- debugger
+
     this.service.postAPIMethod('/tournament/addEditTournamentFormat', data).subscribe(APIresponse => {
       // console.log("final",response);
 debugger

@@ -2,7 +2,7 @@
 
     <div class="row headerBox">
         <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6 pt-3">
-            <h4 class="text-darkBlue" mat-dialog-title>Score</h4>
+            <h4 class="text-darkBlue" mat-dialog-title>{{this.data.selectedRecordDetails?'Edit Score':'Add Score'}}</h4>
         </div>
         <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6  pt-2">
             <button class="text-right" (click)="closeDialogClick()">X</button>
@@ -65,56 +65,6 @@
                         </div>
 
                 </div>
-                <!-- <div class="row">
-                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
-                        <div class="smallBox">
-                            <h2 id="outt">
-                                {{this.summaryForm.controls.outTotal.value?this.summaryForm.controls.outTotal.value:00}}
-                            </h2>
-                            <p>Out Holes</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
-                        <div class="smallBox">
-                            <h2 id="inn">
-                                {{this.summaryForm.controls.inTotal.value?this.summaryForm.controls.inTotal.value:00}}
-                            </h2>
-                            <p>In Holes</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
-                        <div class="smallBox">
-                            <h2>{{ this.summaryForm.controls.inTotal.value+this.summaryForm.controls.outTotal.value}}
-                            </h2>
-                            <p>Gross</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
-                        <div class="smallBox">
-                            <h2>{{this.scoreForm.controls.hdcp.value?this.scoreForm.controls.hdcp.value:0}}</h2>
-                            <p>HDCP</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
-                        <div class="smallBox">
-                            <h2>{{(this.summaryForm.controls.inTotal.value+this.summaryForm.controls.outTotal.value)-(this.scoreForm.controls.hdcp.value)}}
-                            </h2>
-                            <p>Net</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
-                        <div class="smallBox">
-                            <h2>{{this.summaryForm.controls.birdieTotal.value}}</h2>
-                            <p>Birdie</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-sm-2 col-xs-3 col-md-2">
-                        <div class="smallBox">
-                            <h2>{{this.summaryForm.controls.scoreDiff.value}}</h2>
-                            <p>AGS</p>
-                        </div>
-                    </div>
-                </div> -->
             </div>
         </div>
     </form>
@@ -162,7 +112,7 @@
                             <mat-label>Group* </mat-label>
                             <mat-select formControlName="groupId" id="groupId" (selectionChange)="getPlayerList()">
                                 <option value="" selected></option>
-                                <mat-option *ngFor="let player of groupList" [value]="player.groupId">{{player.group}}
+                                <mat-option *ngFor="let group of groupList" [value]="group.groupId">{{group.group}}
                                 </mat-option>
                             </mat-select>
 
@@ -677,8 +627,8 @@
 
                         <div mat-dialog-actions>
                             <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
-                            <button type="submit" class="btn btn-primary" [disabled]="!this.scoreForm.valid"
-                                (click)="saveScoreDetails()">Submit</button>
+                            <button type="submit" class="btn btn-primary" [disabled]="!this.scoreForm.valid || !this.scoreForm.dirty"
+                                (click)="saveScoreDetails()">{{this.data.selectedRecordDetails?"Update":'Add'}}</button>
 
                             <!-- <button type="submit" class="btn btn-danger" [disabled]="!this.scoreForm.valid"
                         (click)="calculateResult();" id="calculateResult">Calculate</button> -->
