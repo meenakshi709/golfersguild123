@@ -860,6 +860,22 @@ tourCtrl.savePastScores = (req, res) => {
     }
 };
 
+//invited player list 
+tourCtrl.getInvitedPlayerList= (req, res) => {
+    try {
+        let sql = `call getInvitedPlayerList(${req.query.tourID})`;
+        connection.query(sql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            } else {
+                res.send(JSON.stringify({ "error": "", "response": { result: results[0] } }));
+            }
+        });
+    } catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
+};
 
 
 

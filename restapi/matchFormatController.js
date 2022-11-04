@@ -152,7 +152,7 @@ formatCtrl.getHandicapScores = (req, res) => {
                     res.send(JSON.stringify({ "error": "", "response": { result: results[2],scoreCount:results[1][0] } }));
                 }
                 else{
-                    res.send(JSON.stringify({ "error": "", "response": { result: [],scoreCount:0 } }));
+                    res.send(JSON.stringify({ "error": "", "response": { result: [],scoreCount:{scoreCount:0} } }));
                 }
                
             }

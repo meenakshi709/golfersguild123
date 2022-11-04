@@ -49,11 +49,12 @@ export class TournamentListingComponent implements OnInit {
         this.courseList.miListMenu.menuItems =
           [
 
-            new CommonListMenuItem('Edit', 1, true, false, null, 'edit_icon'),
-            new CommonListMenuItem('Group', 1, true, false, null, 'group'),
-            new CommonListMenuItem('Approval', 1, true, false, null, 'approval'),
-            new CommonListMenuItem('Coupon', 1, true, false, null, 'card_giftcard'),
-            new CommonListMenuItem('Delete', 2, true, true, null, 'delete_icon'),
+            new CommonListMenuItem( 'Edit',1, true, false, null, 'edit_icon'),
+            new CommonListMenuItem('InvitedList', 2, true, false, null, 'insert_invitation'),
+            new CommonListMenuItem('Group', 3, true, false, null, 'group'),
+            new CommonListMenuItem('Approval', 4, true, false, null, 'approval'),
+            new CommonListMenuItem('Coupon', 5, true, false, null, 'card_giftcard'),
+            new CommonListMenuItem('Delete', 6, true, true, null, 'delete_icon'),
           ];
       }
     });
@@ -71,6 +72,9 @@ export class TournamentListingComponent implements OnInit {
     if (clickedRecord.name == 'Edit') {
 
       this.addEditEventDetails(clickedRecord.data, '')
+    }
+    else if (clickedRecord.name == 'InvitedList') {
+      this.addEditInvitedList(clickedRecord.data)
     }
     else if (clickedRecord.name == 'Group') {
       this.addEditGroupDetails(clickedRecord.data)
@@ -108,7 +112,7 @@ export class TournamentListingComponent implements OnInit {
             selectedRound: apiResponse[2]?.response?.result?.length > 0 ? apiResponse[2].response.result : [],
             sectionName: 'tournament',
             eventType: apiResponse[1]?.response?.result?.length > 0 ? apiResponse[1].response.result : [],
-            roundsList: ['1', '2', '3', '4', '5', '6', '7'],
+            roundsList: ['1', '2', '3', '4', '5', '6', '7','8','9','10'],
             courseList: apiResponse[0].response.result,
             isTournamentAdd: true
           },
@@ -288,11 +292,48 @@ export class TournamentListingComponent implements OnInit {
 
 
 
+
+
+
+  // approved list status
+
+  addEditInvitedList(clickedRecordDetails: any) {
+
+
+    this.loader.start();
+
+    this.service.getAPIMethod('/tournament/getInvitedPlayerList?tourID=' + clickedRecordDetails.tourID ).subscribe((response: any) => {
+
+debugger
+      this.loader.stop();
+      if (response['error'] != 'X') {
+
+        const dialogRef = this.dialog.open(AddEditTournamentComponent, {
+          data: {
+            title: 'Invited Player List',
+            details: clickedRecordDetails,
+            sectionName: 'invite',
+            invitedplayerList: response.response.result,
+
+          },
+          width: '950px',
+          height: '400px'
+        });
+        dialogRef.afterClosed().subscribe(result => {
+         
+          if (result) {
+            this.getTournamentList();
+          }
+        });
+      }
+    });
+
+  }
+
+
 }
-
-
-
 function roundDetails(data: any, roundDetails: any) {
   throw new Error('Function not implemented.');
 }
+
 

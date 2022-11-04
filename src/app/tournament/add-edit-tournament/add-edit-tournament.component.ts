@@ -18,6 +18,7 @@ export class AddEditTournamentComponent implements OnInit {
   todayDate = new Date();
   isButtonDisable: boolean = false;
   approvalStatus: any = 1;
+  inviteStatus:any=1;
   approvedPlayerList: any = [];
   tourID: any;
   playerList: any = [];
@@ -143,9 +144,13 @@ export class AddEditTournamentComponent implements OnInit {
   roundFormGroupInit(rounds: any) {
     let eventDate: any;
     if (rounds?.TournamentDate) {
+
       const dateNum = new Date(rounds.TournamentDate).getDate() + 1;
       eventDate = new Date(rounds.TournamentDate);
-      eventDate = new Date(eventDate.setDate(dateNum));
+      debugger;
+      // if(rounds){
+      // eventDate = new Date(eventDate.setDate(dateNum));
+      // }
     }
     const roundFormGroup: FormGroup = new FormGroup({
       round_Id: new FormControl(rounds ? rounds.round_Id : ''),
@@ -611,7 +616,8 @@ export class AddEditTournamentComponent implements OnInit {
       }
       else {
         this.playerList = res.response.result;
-        this.data.sectionName = 'sendInvite'
+        this.data.sectionName = 'sendInvite';
+        this.data.sectionName='invite'
 
       }
 
@@ -724,6 +730,40 @@ export class AddEditTournamentComponent implements OnInit {
     });
   }
 
+
+
+
+
+  getInvitedPlayersStatus(event: any, value: any) {
+
+    if (event.checked) {
+      this.acceptRejectPlayerList.push(value);
+    }
+    else {
+      const index = this.acceptRejectPlayerList.indexOf(value);
+      this.acceptRejectPlayerList.splice(index, 1);
+    }
+
+
+  }
+
+  InvitedPlayerList() {
+
+
+    this.service.getAPIMethod('/tournament/getAcceptedDenyPlayerList?tourId=' + this.data.details.tourID ).subscribe((res: any) => {
+
+      if (res.err == 'X') {
+
+      }
+      else {
+    
+        this.data.invitedplayerList = res.response.result;
+
+
+      }
+
+    })
+  }
 
 
 

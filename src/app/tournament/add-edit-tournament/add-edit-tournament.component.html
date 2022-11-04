@@ -597,3 +597,86 @@
         </div>
     </div>
 </div>
+
+
+<!-- ----------------------- section for Approval lsit ---------------------------------- -->
+
+<div *ngIf="this.data.sectionName=='invite'" class="p-3">
+    <mat-tab-group mat-align-tabs="start">
+        <mat-tab label="First">Content 1</mat-tab>
+        <mat-tab label="Second">Content 2</mat-tab>
+        <mat-tab label="Third">Content 3</mat-tab>
+      </mat-tab-group>
+      
+<!--       
+<div *ngIf="this.data.sectionName=='invite'" class="p-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3">
+                <a    [class.active]="inviteStatus === 1"  class="borderClass ml-3" (click)="InvitedPlayerList();inviteStatus=1;">
+                    Invited Players </a> 
+                    <a   [class.active]="inviteStatus === 2" class="borderClass ml-3" (click)=" getPlayerList();inviteStatus=2">
+                        Send Invite </a> 
+               
+             <hr>
+            </div>
+
+      
+
+
+        </div>
+        <div class="row">
+            <section>
+                <form>
+
+                    <div>
+                        <div>
+                            <div>
+
+                                <div class="row">
+                                    <div class="col-lg-4 col-xs-6 col-sm-4 col-md-4 listBox">
+
+                                        <mat-label *ngFor="let item of this.data.playerList;let i=index"
+                                            class="list-field">
+                                            <div>
+                                                <mat-checkbox *ngIf="inviteStatus==2"
+                                                    (change)="getInvitedPlayersStatus($event,item.playerID)"> &nbsp;
+                                                    {{item.playerName}} </mat-checkbox>
+                                            </div>
+                                            <div *ngIf="inviteStatus!=2">{{item.playerName}}</div>
+                                        </mat-label>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                   
+
+                </form>
+                <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12 mt-1 tournament-Edit ">
+
+                    <div  class="text-right">
+                        <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
+                        <button type="button" class="btn btn-primary"
+                            (click)="saveApprovedPlayerList()">Approve</button>
+
+                    </div>
+                </div>
+            </section>
+
+
+
+
+        </div>
+    </div>
+</div>
+      
+    
+</div> -->

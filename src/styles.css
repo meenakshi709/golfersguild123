@@ -502,13 +502,11 @@ mat-label {
     color: #6b6b6b !important;
     font-size: 15px!important;
     height: 20px !important;
-    width: 20px!important;float: left!important;
+    width: 20px!important;
 }
 .edit_icon:hover{
     color: #3d4fd7 !important;
-    font-size: 15px!important;
-    height: 20px !important;
-    width: 20px!important;
+ 
 }
 
 .delete_icon {
@@ -552,4 +550,15 @@ mat-label {
 
 .mat-dialog-container {
     background-color: #F3F8FF!important;
+}
+.insert_invitation{
+    color: #6b6b6b !important;
+    font-size: 16px!important; 
+    height: 20px !important;
+    width: 20px!important;
+}
+
+.insert_invitation:hover{
+    color: #3d4fd7 !important;
+
 }
