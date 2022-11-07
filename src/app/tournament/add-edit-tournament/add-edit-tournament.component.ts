@@ -18,7 +18,7 @@ export class AddEditTournamentComponent implements OnInit {
   todayDate = new Date();
   isButtonDisable: boolean = false;
   approvalStatus: any = 1;
-  inviteStatus:any=1;
+  inviteStatus: any = 1;
   approvedPlayerList: any = [];
   tourID: any;
   playerList: any = [];
@@ -45,6 +45,7 @@ export class AddEditTournamentComponent implements OnInit {
   noPlayerGroup = new FormControl('', [Validators.required]);
   groupTournamentName = new FormControl('', [Validators.required]);
   groupRoundName = new FormControl('', [Validators.required]);
+  invitedPlayerList: any;
   constructor(
     public dialogRef: MatDialogRef<AddEditTournamentComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -60,7 +61,7 @@ export class AddEditTournamentComponent implements OnInit {
   ngOnInit(): void {
     console.log("data=", this.data);
 
-
+    debugger;
 
 
     if (this.data.sectionName == 'tournament') {
@@ -75,7 +76,7 @@ export class AddEditTournamentComponent implements OnInit {
       }
     }
     else if (this.data.sectionName == 'coupon') {
-     
+
       if (this.data.couponList.length > 0) {
 
         this.data.couponList.forEach((item: any) => {
@@ -98,6 +99,9 @@ export class AddEditTournamentComponent implements OnInit {
       this.groupTournamentName.setValue(this.data.details.tournamentName)
 
     }
+    if (this.data.sectionName == 'invite') {
+      this.tourID = this.data.details.tourID
+    }
 
   }
 
@@ -114,7 +118,7 @@ export class AddEditTournamentComponent implements OnInit {
         this.onShownRounds(this.eventFormGroup.controls.eventDetailsArr.controls[0]);
 
       } else {
-       
+
         if (keyName == 'eventType') {
           formControl[keyName].setValue(Number(this.data.details[keyName]));
         } else if (keyName == 'holes') {
@@ -410,7 +414,7 @@ export class AddEditTournamentComponent implements OnInit {
       data.groupDetailsArr.forEach((item: any) => {
         grpArr.push(item.group);
       });
-     
+
       const filtered = grpArr.filter((el: any, index: any) => grpArr.indexOf(el) !== index);
       if (filtered.length == 0) {
         this.service.postAPIMethod("/tournament/saveTournamentGroupDetails", data).subscribe((APIResponse: any) => {
@@ -617,7 +621,7 @@ export class AddEditTournamentComponent implements OnInit {
       else {
         this.playerList = res.response.result;
         this.data.sectionName = 'sendInvite';
-        this.data.sectionName='invite'
+        this.data.sectionName = 'invite'
 
       }
 
@@ -627,7 +631,7 @@ export class AddEditTournamentComponent implements OnInit {
 
 
   getInvitedPlayerList(event: any, value: any) {
-
+    debugger;
     if (event.checked) {
       this.invitedplayersList.push(value);
     }
@@ -642,13 +646,9 @@ export class AddEditTournamentComponent implements OnInit {
   sendInviteLink() {
     const data = { tournamentId: this.tourID, selectedPlayerList: this.invitedplayersList }
     this.service.postAPIMethod('/tournamentInvitation', data).subscribe((APIResponse) => {
-
-
-      if (APIResponse.error != 'X') {
+      if (APIResponse.error == '') {
         this.sweetAlertMsg("success", APIResponse.response.result.msg);
         this.dialogRef.close(true);
-
-
       } else {
         this.sweetAlertMsg("error", APIResponse.response.msg);
       }
@@ -747,23 +747,16 @@ export class AddEditTournamentComponent implements OnInit {
 
   }
 
-  InvitedPlayerList() {
-
-
-    this.service.getAPIMethod('/tournament/getAcceptedDenyPlayerList?tourId=' + this.data.details.tourID ).subscribe((res: any) => {
-
-      if (res.err == 'X') {
-
-      }
-      else {
-    
-        this.data.invitedplayerList = res.response.result;
-
-
-      }
-
-    })
-  }
+  // InvitedPlayerList() {
+  //   this.service.getAPIMethod('/tournament/getInvitedPlayerList?tourId=' + this.data.details.tourID).subscribe((res: any) => {
+  //     if (res.err == '') {
+  //       this.data.invitedPlayerList = res.response.result;
+  //     }
+  //     else {
+  //       this.sweetAlertMsg("error", res.response.msg);
+  //     }
+  //   });
+  // }
 
 
 

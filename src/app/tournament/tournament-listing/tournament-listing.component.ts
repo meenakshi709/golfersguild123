@@ -49,7 +49,7 @@ export class TournamentListingComponent implements OnInit {
         this.courseList.miListMenu.menuItems =
           [
 
-            new CommonListMenuItem( 'Edit',1, true, false, null, 'edit_icon'),
+            new CommonListMenuItem('Edit', 1, true, false, null, 'edit_icon'),
             new CommonListMenuItem('InvitedList', 2, true, false, null, 'insert_invitation'),
             new CommonListMenuItem('Group', 3, true, false, null, 'group'),
             new CommonListMenuItem('Approval', 4, true, false, null, 'approval'),
@@ -112,7 +112,7 @@ export class TournamentListingComponent implements OnInit {
             selectedRound: apiResponse[2]?.response?.result?.length > 0 ? apiResponse[2].response.result : [],
             sectionName: 'tournament',
             eventType: apiResponse[1]?.response?.result?.length > 0 ? apiResponse[1].response.result : [],
-            roundsList: ['1', '2', '3', '4', '5', '6', '7','8','9','10'],
+            roundsList: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
             courseList: apiResponse[0].response.result,
             isTournamentAdd: true
           },
@@ -180,7 +180,7 @@ export class TournamentListingComponent implements OnInit {
     const playerList = this.service.getAPIMethod('/tournament/getTournamentCouponList?tourId=' + clickedRecordDetails.tourID + '&roundId=' + '');
 
     forkJoin([roundList, playerList]).subscribe(res => {
-    
+
       this.loader.stop();
       if (res[0].error == "" && res[1].error == "") {
         const dialogRef = this.dialog.open(AddEditTournamentComponent, {
@@ -195,7 +195,7 @@ export class TournamentListingComponent implements OnInit {
           height: '300px'
         });
         dialogRef.afterClosed().subscribe(result => {
-         
+
           if (result) {
             this.getTournamentList();
           }
@@ -280,7 +280,7 @@ export class TournamentListingComponent implements OnInit {
           height: '400px'
         });
         dialogRef.afterClosed().subscribe(result => {
-         
+
           if (result) {
             this.getTournamentList();
           }
@@ -302,29 +302,32 @@ export class TournamentListingComponent implements OnInit {
 
     this.loader.start();
 
-    this.service.getAPIMethod('/tournament/getInvitedPlayerList?tourID=' + clickedRecordDetails.tourID ).subscribe((response: any) => {
-
-debugger
+    const invitedPlayerList = this.service.getAPIMethod('/tournament/getInvitedPlayerList?tourID=' + clickedRecordDetails.tourID);
+    const sendInvitePlayerList = this.service.getAPIMethod(' /tournament/getSendInvitePlayerList?tourID=' + clickedRecordDetails.tourID);
+    forkJoin([invitedPlayerList, sendInvitePlayerList]).subscribe((response: any) => {
       this.loader.stop();
-      if (response['error'] != 'X') {
-
+      debugger;
+      if (response[0]['error'] == '' && response[1]['error'] == '') {
         const dialogRef = this.dialog.open(AddEditTournamentComponent, {
           data: {
             title: 'Invited Player List',
             details: clickedRecordDetails,
             sectionName: 'invite',
-            invitedplayerList: response.response.result,
+            invitedPlayerList: response[0].response.result,
+            sendInvitePlayerList: response[1].response.result,
 
           },
           width: '950px',
           height: '400px'
         });
         dialogRef.afterClosed().subscribe(result => {
-         
+
           if (result) {
             this.getTournamentList();
           }
         });
+      } else {
+        this.sweetAlertMsg('error', 'Error occur please try again');
       }
     });
 

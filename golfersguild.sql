@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.3
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 21, 2022 at 09:02 AM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.2.34
+-- Generation Time: Nov 07, 2022 at 09:38 AM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 8.1.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -250,11 +250,13 @@ if(isRecordExist>0) THEN
 
 if( param_value=1) then 
 
-SELECT playerID, playerName,tourID, "Accepted" as Status from tournament_player_list INNER JOIN user_details on user_details.p_id=tournament_player_list.playerID  WHERE tourID=param_tournamentId and isAccepted=1 and isDeleted=0;
+SELECT playerID, playerName,tourID, "Accepted" as Status from tournament_player_list INNER JOIN user_details on user_details.p_id=tournament_player_list.playerID   WHERE tourID=param_tournamentId and isAccepted=1 and isApproved=0 and  isDeleted=0;
 elseif( param_value=2) then 
 
  SELECT playerID, playerName,tourID, "Pending" as Status   from tournament_player_list INNER JOIN user_details on user_details.p_id=tournament_player_list.playerID  WHERE tourID=param_tournamentId and isRejected=0 and isAccepted=0 and isDeleted=0;
- 
+ elseif( param_value=3) then 
+
+SELECT playerID, playerName,tourID, "Approved" as Status from tournament_player_list INNER JOIN user_details on user_details.p_id=tournament_player_list.playerID  WHERE tourID=param_tournamentId and isApproved=1 and isDeleted=0;
  else
  SELECT playerID, playerName,tourID, "Deny" as Status   from tournament_player_list INNER JOIN user_details on user_details.p_id=tournament_player_list.playerID  WHERE tourID=param_tournamentId and isRejected=1 and isDeleted=0;
 
@@ -343,27 +345,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getHandicapScores` (IN `param_playe
 Declare scoreCount varchar(1000);
 Declare handicapIndex varchar(1000);
 set handicapIndex=0;
-SELECT count(*) into scoreCount FROM `tournament_score_details`where p_Id=param_player_Id;
+SELECT count(*) into scoreCount FROM `tournament_score_details`where p_id=param_player_Id;
 if(scoreCount>=5 AND scoreCount<10) THEN
 SELECT  *  FROM(
-select tournament_score_details.tour_score_id, tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=param_player_Id order by createdDate desc   limit 5)result order by  CONVERT(result.scoreDifferential,Decimal(10,2)) asc  limit 1;
+select tournament_score_details.tour_score_id, tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_id=param_player_Id order by createdDate desc   limit 5)result order by  CONVERT(result.scoreDifferential,Decimal(10,2)) asc  limit 1;
 ELSE IF (scoreCount>=10 AND scoreCount<15) THEN
 select *  from (
 SELECT  * FROM(
-select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=param_player_Id order by createdDate desc   limit 10
+select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_id=param_player_Id order by createdDate desc   limit 10
 )result   order by  CONVERT(result.scoreDifferential,Decimal(10,2))  limit 3 )result1;
 
 ELSE IF (scoreCount>=15 AND scoreCount<20) THEN
 
 select *  from (
 SELECT   * FROM(
-select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=param_player_Id order by createdDate desc   limit 15
+select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_id=param_player_Id order by createdDate desc   limit 15
 )result   order by  CONVERT(result.scoreDifferential,Decimal(10,2))  limit 6 )result1;
 ELSE IF (scoreCount>=20) THEN
 
 select *  from (
 SELECT   * FROM(
-select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=param_player_Id order by createdDate desc   limit 20
+select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_id=param_player_Id order by createdDate desc   limit 20
 )result   order by  CONVERT(result.scoreDifferential,Decimal(10,2))  limit 10 )result1;
 
 
@@ -373,9 +375,9 @@ END IF;
 END IF;
 SELECT CASE when scoreCount>20 then '20' else scoreCount END as scoreCount; 
 if (isRecentScore=1) then 
-select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=param_player_Id order by createdDate desc  limit 20;
+select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_id=param_player_Id order by createdDate desc  limit 20;
 else 
-select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_Id=param_player_Id order by createdDate desc ;
+select  tournament_score_details.tour_score_id ,tournament_score_details.gross,tournament_score_details.scoreDifferential,courses.cname, tournament_score_details.createdDate from  `tournament_score_details` inner join courses on courses.cid=tournament_score_details.cid where p_id=param_player_Id order by createdDate desc ;
 end if;
 END$$
 
@@ -392,7 +394,7 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getPlayerListing` ()  BEGIN
 
-SELECT *,p_id as playerId, userName,firstName,lastName,email,user_details.roleId,contactNumber,gender,DATE_FORMAT(dob, '%d/%m/%Y')  AS dob,user_details.countryId,country.country_name,user_details.stateId,profileImg,password,isWebUser,isFirstLogin, state.state_name,user_role.roleName  FROM user_details inner join user_role on user_role.roleId=user_details.roleId INNER join state on state.state_Id=user_details.stateId inner join country on country.country_Id=user_details.countryId where user_details.isDeleted=0 AND 
+SELECT *,p_id as playerId, userName,firstName,lastName,email,user_details.roleId,contactNumber,gender,DATE_FORMAT(dob, '%d/%m/%Y')  AS dob,user_details.countryId,country.country_name,user_details.stateId,profileImg,password,isWebUser,isFirstLogin, state.state_name,user_role.roleName  FROM user_details inner join user_role on user_role.roleId=user_details.roleId left join state on state.state_Id=user_details.stateId left join country on country.country_Id=user_details.countryId where user_details.isDeleted=0 AND 
  user_details.roleID !=1 order by playerName asc;
 END$$
 
@@ -574,6 +576,37 @@ inner JOIN user_details  on user_details.p_id=tournament_group_player_details.pl
 WHERE tournament_group_player_details.tournamentId=param_tour_id AND round_Id=param_round_id and groupid=param_group_id and isWithdraw=0 ORDER by user_details.p_id DESC;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournamentInvitedPlayerList` (IN `param_tournamentId` VARCHAR(50))  BEGIN
+Declare err varchar(2);
+Declare  msg varchar(100);
+DECLARE isRecordExist int;
+
+SELECT count(*) into isRecordExist from tournament_player_list WHERE tourID=param_tournamentId;
+if(isRecordExist>0) THEN
+SELECT playerID, playerName,tourID from tournament_player_list INNER JOIN user_details on user_details.p_id=tournament_player_list.playerID   WHERE tourID=param_tournamentId and isInvited=1  and isDeleted=0 ;
+ELSE
+set err="X";
+set msg="Record not found";
+END IF;
+select err,msg from dual;
+ END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournamentPlayerList` (IN `param_tournamentId` VARCHAR(50))  BEGIN
+Declare err varchar(2);
+Declare  msg varchar(100);
+DECLARE isRecordExist int;
+
+SELECT count(*) into isRecordExist from tournament_player_list WHERE tourID=param_tournamentId;
+if(isRecordExist>0) THEN
+SELECT p_id, playerName,param_tournamentId as tourId,false as checked from user_details where p_id not in ( select playerID  from tournament_player_list  
+WHERE tournament_player_list.tourID=param_tournamentId and isInvited=1 and isDeleted=0 ) and user_details.roleId !=1;
+ELSE
+set err="X";
+set msg="Record not found";
+END IF;
+select err,msg from dual;
+ END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournamentWinners` (IN `param_tourId` VARCHAR(100), IN `param_p_id` VARCHAR(100))  BEGIN
 DECLARE isWinnerExist int;
 Declare err varchar(2);
@@ -604,13 +637,10 @@ select err,msg from dual;
  END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournmentScoreList` ()  BEGIN
-
 SELECT ev.tournamentName,rd.round_name,p.playerName, sd.* FROM tournament_score_details as sd 
 LEFT JOIN user_details as p on p.p_id=sd.p_id 
 left join events as ev on sd.tour_id=ev.tourID
 left join round_details as rd on rd.round_Id=sd.round_Id
-left join tournament_group_details on tournament_group_details.round_id=rd.round_Id and tournament_group_details.tourID=rd.tourID
-left join tournament_group_player_details on tournament_group_player_details.groupName=tournament_group_player_details.groupName and  tournament_group_player_details.tournamentId=tournament_group_details.tourID
 where sd.isDeleted=0 order by sd.createdDate asc;
 
 
@@ -1187,20 +1217,20 @@ INSERT INTO tournament_player_list (tourID,playerID,isPlay,isInvited,isAccepted,
   
  END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `saveTournamentScores` (IN `param_tourId` VARCHAR(50), IN `param_playerId` VARCHAR(50), IN `param_roundId` VARCHAR(50), IN `param_groupId` VARCHAR(50), IN `param_score1` INT(10), IN `param_score2` INT(50), IN `param_score3` INT(50), IN `param_score4` INT(50), IN `param_score5` INT(10), IN `param_score6` INT(10), IN `param_score7` INT(10), IN `param_score8` INT(10), IN `param_score9` INT(10), IN `param_outTotal` INT(10), IN `param_score10` INT(10), IN `param_score11` INT(10), IN `param_score12` INT(10), IN `param_score13` INT(10), IN `param_score14` INT(10), IN `param_score15` INT(10), IN `param_score16` INT(10), IN `param_score17` INT(10), IN `param_score18` INT(10), IN `param_inTotal` INT(10), IN `param_grossTotal` INT(10), IN `param_netTotal` INT(10), IN `param_birdieTotal` INT(10), IN `param_cid` VARCHAR(50), IN `param_hdcp` INT(50), IN `param_enteredHoleCount` INT(50), IN `param_scoreDiff` VARCHAR(250), IN `param_teeName` VARCHAR(250))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `saveTournamentScores` (IN `param_tour_score_Id` VARCHAR(50), IN `param_tourId` VARCHAR(50), IN `param_playerId` VARCHAR(50), IN `param_roundId` VARCHAR(50), IN `param_groupId` VARCHAR(50), IN `param_score1` INT(10), IN `param_score2` INT(50), IN `param_score3` INT(50), IN `param_score4` INT(50), IN `param_score5` INT(10), IN `param_score6` INT(10), IN `param_score7` INT(10), IN `param_score8` INT(10), IN `param_score9` INT(10), IN `param_outTotal` INT(10), IN `param_score10` INT(10), IN `param_score11` INT(10), IN `param_score12` INT(10), IN `param_score13` INT(10), IN `param_score14` INT(10), IN `param_score15` INT(10), IN `param_score16` INT(10), IN `param_score17` INT(10), IN `param_score18` INT(10), IN `param_inTotal` INT(10), IN `param_grossTotal` INT(10), IN `param_netTotal` INT(10), IN `param_birdieTotal` INT(10), IN `param_cid` VARCHAR(50), IN `param_hdcp` INT(50), IN `param_enteredHoleCount` INT(50), IN `param_scoreDiff` VARCHAR(250), IN `param_teeName` VARCHAR(250))  BEGIN
 Declare err varchar(2);
 Declare  msg varchar(100);
 DECLARE isRecordExist int;
-DECLARE isPlayerExist int;
+DECLARE isSoreExist int;
 
 SELECT count(*) into isRecordExist from tournament_group_details WHERE tourID=param_tourId and round_Id=param_roundId and groupId=param_groupId;
 if(isRecordExist>0) THEN
 
-SELECT count(*) into isPlayerExist from tournament_score_details WHERE p_id=param_playerId and tour_id=param_tourId and round_Id=param_roundId; 
-	if(isPlayerExist=0) then
+SELECT count(*) into isSoreExist from tournament_score_details WHERE p_id=param_playerId and tour_id=param_tourId and round_Id=param_roundId and tour_score_id=param_tour_score_Id; 
+	if(isSoreExist=0) then
 
 
-insert into tournament_score_details (tour_id ,p_id ,round_Id  ,score1 ,score2 ,score3 ,score4 ,score5 ,score6 ,score7 ,score8 ,score9 ,outt ,score10 ,score11 ,score12 ,score13 ,score14 ,score15 ,score16 ,score17 ,score18,inn ,gross ,net ,birdie,cid,hdcp,createdDate,holeNum,scoreDifferential,teeName ) values ( `param_tourId` , `param_playerId` , `param_roundId` ,  `param_score1` , `param_score2` , `param_score3` , `param_score4` , `param_score5` , `param_score6` , `param_score7` , `param_score8` , `param_score9` , `param_outTotal` , `param_score10` , `param_score11` , `param_score12` , `param_score13` , `param_score14` , `param_score15` , `param_score16` , `param_score17` , `param_score18` , `param_inTotal` , `param_grossTotal` , `param_netTotal` , `param_birdieTotal`, `param_cid`,`param_hdcp`,now(),`param_enteredHoleCount`,`param_scoreDiff`,param_teeName);
+insert into tournament_score_details (tour_id ,p_id ,round_Id  ,score1 ,score2 ,score3 ,score4 ,score5 ,score6 ,score7 ,score8 ,score9 ,outt ,score10 ,score11 ,score12 ,score13 ,score14 ,score15 ,score16 ,score17 ,score18,inn ,gross ,net ,birdie,cid,hdcp,createdDate,holeNum,scoreDifferential,teeName,groupId ) values ( `param_tourId` , `param_playerId` , `param_roundId` ,  `param_score1` , `param_score2` , `param_score3` , `param_score4` , `param_score5` , `param_score6` , `param_score7` , `param_score8` , `param_score9` , `param_outTotal` , `param_score10` , `param_score11` , `param_score12` , `param_score13` , `param_score14` , `param_score15` , `param_score16` , `param_score17` , `param_score18` , `param_inTotal` , `param_grossTotal` , `param_netTotal` , `param_birdieTotal`, `param_cid`,`param_hdcp`,now(),`param_enteredHoleCount`,`param_scoreDiff`,param_teeName,param_groupId);
 set err="";
 set msg="Score inserted successfully";
 
@@ -1208,7 +1238,7 @@ set msg="Score inserted successfully";
 ELSE
 update  tournament_score_details set score1=param_score1, score2=param_score2,score3=param_score3,score4=param_score4,score5=param_score5,score6=param_score6,
 score7=param_score7,score8=param_score8,score9=param_score9,score10=param_score10,score11=param_score11,score12=param_score12,score13=param_score13,score14=param_score14,score15=param_score15,score16=param_score16,
-score17=param_score17,score18=param_score18, inn=param_inTotal, outt= param_outTotal,gross=param_grossTotal, net=param_netTotal, birdie=param_birdieTotal, hdcp=param_hdcp, teeName=param_teeName,holeNum=param_enteredHoleCount,scoreDifferential=param_scoreDiff where tour_id=param_tourId and round_Id=param_roundId and p_id=param_playerId;
+score17=param_score17,score18=param_score18, inn=param_inTotal, outt= param_outTotal,gross=param_grossTotal, net=param_netTotal, birdie=param_birdieTotal, hdcp=param_hdcp, teeName=param_teeName,holeNum=param_enteredHoleCount,scoreDifferential=param_scoreDiff,groupId=param_groupId where tour_id=param_tourId and round_Id=param_roundId and p_id=param_playerId and  tour_score_id=param_tour_score_Id;
 
 set err="";
 set msg="Score updated successfully";
@@ -1761,7 +1791,9 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`tourID`, `tournamentName`, `eventType`, `numRounds`, `is_Deleted`, `startDate`, `endDate`, `created_Date`, `modified_Date`, `created_By`, `modified_By`, `flag`, `holes`) VALUES
-(1, 'test tour', '6', 2, 0, '2022-10-20 18:30:00', '2022-10-21 18:30:00', '2022-10-21 06:32:43', '2022-10-21 06:32:43', '', '', 0, 18);
+(1, 'test tour', '6', 2, 0, '2022-10-20 18:30:00', '2022-10-21 18:30:00', '2022-10-21 06:32:43', '2022-10-21 06:32:43', '', '', 0, 18),
+(2, 'Test_today', '7', 3, 0, '2022-10-31 18:30:00', '2022-11-03 18:30:00', '2022-11-01 07:54:24', '2022-11-03 06:34:06', '', '', 0, 18),
+(3, 'test21', '6', 2, 0, '2022-11-02 18:30:00', '2022-11-03 18:30:00', '2022-11-03 06:35:12', '2022-11-03 06:43:13', '', '', 0, 18);
 
 -- --------------------------------------------------------
 
@@ -2100,7 +2132,12 @@ CREATE TABLE `round_details` (
 
 INSERT INTO `round_details` (`round_Id`, `event_Date`, `cid`, `tourID`, `created_Date`, `modified_Date`, `round_name`) VALUES
 (1, '2022-10-21 00:00:00', 2, 1, '2022-10-21 06:32:43', '2022-10-21 06:32:43', 'Round1'),
-(2, ' 2022-10-22 00:00:00', 1, 1, '2022-10-21 06:32:43', '2022-10-21 06:32:43', 'Round2');
+(2, ' 2022-10-22 00:00:00', 1, 1, '2022-10-21 06:32:43', '2022-10-21 06:32:43', 'Round2'),
+(6, '2022-11-01 00:00:00', 2, 2, '2022-11-03 06:34:06', '2022-11-03 06:34:06', 'Round1'),
+(7, ' 2022-11-02 00:00:00', 2, 2, '2022-11-03 06:34:06', '2022-11-03 06:34:06', 'Round2'),
+(8, ' 2022-11-04 00:00:00', 1, 2, '2022-11-03 06:34:06', '2022-11-03 06:34:06', 'Round3'),
+(11, '2022-11-03 00:00:00', 2, 3, '2022-11-03 06:43:13', '2022-11-03 06:43:13', 'Round1'),
+(12, ' 2022-11-04 00:00:00', 2, 3, '2022-11-03 06:43:13', '2022-11-03 06:43:13', 'Round2');
 
 -- --------------------------------------------------------
 
@@ -2322,7 +2359,9 @@ CREATE TABLE `tournament_group_details` (
 --
 
 INSERT INTO `tournament_group_details` (`groupId`, `groupName`, `tee_Number`, `tee_Time`, `tourID`, `round_Id`) VALUES
-(1, 'Group1', 13, '12:10', 1, 1);
+(1, 'Group1', 13, '12:10', 1, 1),
+(2, 'Group1', 14, '12:12', 3, 11),
+(3, 'Group2', 13, '12:30', 3, 11);
 
 --
 -- Triggers `tournament_group_details`
@@ -2370,7 +2409,10 @@ CREATE TABLE `tournament_group_player_details` (
 --
 
 INSERT INTO `tournament_group_player_details` (`t_player_Id`, `tournamentId`, `groupName`, `playerId`, `tee_time`, `isPlay`, `isWithdraw`, `roundId`) VALUES
-(1, 1, 'Group1', 2, '12:10', 1, 0, '1');
+(1, 1, 'Group1', 2, '12:10', 1, 0, '1'),
+(2, 3, 'Group1', 4, '12:12', 0, 0, '11'),
+(3, 3, 'Group2', 2, '12:30', 0, 0, '11'),
+(4, 3, 'Group1', 3, '12:22', 0, 0, '11');
 
 -- --------------------------------------------------------
 
@@ -2396,7 +2438,12 @@ CREATE TABLE `tournament_player_list` (
 --
 
 INSERT INTO `tournament_player_list` (`tour_player_id`, `tourID`, `playerID`, `isPlay`, `isInvited`, `isAccepted`, `isApproved`, `isRejected`, `isWithdraw`, `created_Date`) VALUES
-(1, 1, 2, 0, 1, 1, 1, 0, 0, '2022-10-21');
+(1, 1, 2, 0, 1, 1, 1, 0, 0, '2022-10-21'),
+(2, 2, 2, 0, 1, 0, 0, 0, 0, '2022-11-01'),
+(5, 3, 2, 0, 1, 1, 1, 0, 0, '2022-11-03'),
+(6, 3, 3, 0, 1, 1, 1, 0, 0, '2022-11-03'),
+(7, 3, 4, 0, 1, 1, 1, 0, 0, '2022-11-03'),
+(8, 1, 3, 0, 1, 0, 0, 0, 0, '2022-11-07');
 
 -- --------------------------------------------------------
 
@@ -2438,16 +2485,17 @@ CREATE TABLE `tournament_score_details` (
   `scoreDifferential` varchar(250) NOT NULL,
   `createdDate` date DEFAULT NULL,
   `isDeleted` int(11) NOT NULL DEFAULT 0,
-  `teeName` varchar(250) NOT NULL
+  `teeName` varchar(250) NOT NULL,
+  `groupId` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tournament_score_details`
 --
 
-INSERT INTO `tournament_score_details` (`tour_score_id`, `p_id`, `tour_id`, `score1`, `score2`, `score3`, `score4`, `score5`, `score6`, `score7`, `score8`, `score9`, `score10`, `score11`, `score12`, `score13`, `score14`, `score15`, `score16`, `score17`, `score18`, `round_Id`, `hdcp`, `inn`, `outt`, `gross`, `net`, `birdie`, `holeNum`, `cid`, `scoreDifferential`, `createdDate`, `isDeleted`, `teeName`) VALUES
-(1, 2, 1, 5, 4, 5, 4, 4, 3, 5, 6, 7, 6, 5, 5, 6, 7, 6, 5, 6, 6, 1, 0, 52, 43, 95, 95, 1, 17, '2', '20.4', '2022-10-21', 0, '13'),
-(2, 2, 0, 5, 5, 6, 5, 4, 5, 6, 5, 4, 5, 6, 5, 4, 5, 6, 5, 4, 5, 0, 0, 45, 45, 90, 90, 2, 17, '1', '15.5', '2022-10-21', 0, '17');
+INSERT INTO `tournament_score_details` (`tour_score_id`, `p_id`, `tour_id`, `score1`, `score2`, `score3`, `score4`, `score5`, `score6`, `score7`, `score8`, `score9`, `score10`, `score11`, `score12`, `score13`, `score14`, `score15`, `score16`, `score17`, `score18`, `round_Id`, `hdcp`, `inn`, `outt`, `gross`, `net`, `birdie`, `holeNum`, `cid`, `scoreDifferential`, `createdDate`, `isDeleted`, `teeName`, `groupId`) VALUES
+(1, 4, 3, 5, 6, 5, 6, 7, 8, 7, 6, 5, 4, 5, 6, 6, 7, 8, 8, 7, 5, 11, 10, 56, 55, 111, 101, 0, 17, '2', '26.2', '2022-11-03', 0, '14', '2'),
+(2, 2, 0, 6, 7, 5, 4, 5, 6, 7, 6, 5, 4, 5, 3, 6, 5, 3, 4, 8, 6, 0, 10, 44, 51, 95, 85, 2, 17, '2', '16.2', '2022-11-01', 0, '14', '');
 
 -- --------------------------------------------------------
 
@@ -2584,7 +2632,9 @@ CREATE TABLE `user_details` (
 
 INSERT INTO `user_details` (`p_id`, `firstName`, `lastName`, `playerName`, `userName`, `contactNumber`, `email`, `password`, `dob`, `gender`, `homeCourse`, `hdcp`, `handicapIndex`, `hdcpCertificate`, `platformLink`, `vaccineStatus`, `employment`, `companyName`, `jobTitle`, `industry`, `profileImg`, `roleId`, `isDeleted`, `isWebUser`, `isFirstLogin`, `countryId`, `stateId`, `createdDate`, `updatedDate`, `isAccountVerified`, `device_id`, `device_platform`) VALUES
 (1, 'Meenakshi', 'Dhariwal', 'Meenakshi Dhariwal', 'Meen1234', '8786567898', 'meenakshi@echelonedge.com', 'test123@A', '1994-01-07', 'female', 'undefined', '0.00', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 1, 0, 0, 0, NULL, NULL, '2022-10-15 16:13:19', '2022-10-15 16:13:19', 0, 'undefined', 'undefined'),
-(2, 'Ankit', 'Khandelwal', 'Ankit Khandelwal', 'ankit123', '8278767678', 'ankit.khandelwal@echelonedge.com', 'test123@A', '2022-07-31', 'male', 'undefined', '0.00', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 2, 0, 0, 0, 1, 25, '2022-10-16 20:00:45', '2022-10-16 20:00:45', 0, 'undefined', 'undefined');
+(2, 'Ankit', 'Khandelwal', 'Ankit Khandelwal', 'ankit123', '8278767678', 'ankit.khandelwal@echelonedge.com', 'test123@A', '2022-07-31', 'male', 'undefined', '0.00', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 2, 0, 0, 0, 1, 25, '2022-10-16 20:00:45', '2022-10-16 20:00:45', 0, 'undefined', 'undefined'),
+(3, 'anuj', 'chauhan', 'anuj chauhan', 'anujc', '7010112233', 'anuj.chauhan@echelonedge.com', 'Anuj@1234', '2000-04-07', 'male', 'undefined', '0.00', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 3, 0, 0, 0, 1, 6, '2022-11-03 12:10:23', '2022-11-03 12:10:23', 0, 'undefined', 'undefined'),
+(4, 'shivani', 'singh', 'shivani singh', 'shivaniSingh', '7010112233', 'shivani.singh@echelonedge.com', 'Shivi@1234', '1999-09-10', 'male', 'undefined', '0.00', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 3, 0, 0, 0, 1, 37, '2022-11-03 12:12:19', '2022-11-03 12:12:19', 0, 'undefined', 'undefined');
 
 -- --------------------------------------------------------
 
@@ -2870,7 +2920,7 @@ ALTER TABLE `employment`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `event_details`
@@ -2936,7 +2986,7 @@ ALTER TABLE `player_details`
 -- AUTO_INCREMENT for table `round_details`
 --
 ALTER TABLE `round_details`
-  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `score_details`
@@ -2978,19 +3028,19 @@ ALTER TABLE `tournament_details`
 -- AUTO_INCREMENT for table `tournament_group_details`
 --
 ALTER TABLE `tournament_group_details`
-  MODIFY `groupId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `groupId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tournament_group_player_details`
 --
 ALTER TABLE `tournament_group_player_details`
-  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tournament_player_list`
 --
 ALTER TABLE `tournament_player_list`
-  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tournament_score_details`
@@ -3014,7 +3064,7 @@ ALTER TABLE `user_account_otp`
 -- AUTO_INCREMENT for table `user_details`
 --
 ALTER TABLE `user_details`
-  MODIFY `p_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `p_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user_role`
