@@ -134,8 +134,7 @@
                     <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
                         <div mat-dialog-actions>
                             <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
-                            <button type="button" class="btn btn-primary"
-                                *ngIf="this.data.isTournamentAdd "
+                            <button type="button" class="btn btn-primary" *ngIf="this.data.isTournamentAdd "
                                 [disabled]="!this.eventFormGroup.valid||this.isButtonDisable"
                                 (click)="saveTournamentDetails()">{{!this.data.details?'Add ':'Update'}}</button>
                         </div>
@@ -243,7 +242,7 @@
                     <mat-form-field appearance="outline" class="ml-11">
                         <mat-label>Tournament Name</mat-label>
                         <input matInput type="text" placeholder="Tournament Name" readonly
-                        [formControl]="groupTournamentName" maxlength="100" id="tournamentName" />
+                            [formControl]="groupTournamentName" maxlength="100" id="tournamentName" />
 
                     </mat-form-field>
                 </div>
@@ -267,8 +266,10 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3">
-                    <button mat-stroked-button class="ml-3" (click)="manualGroupInit()" [disabled]="!this.noPlayerGroup.value">Manual Group </button>
-                    <button mat-raised-button color="primary" (click)="automaticGroupInit()" [disabled]="!this.noPlayerGroup.value">Generate Group </button>
+                    <button mat-stroked-button class="ml-3" (click)="manualGroupInit()"
+                        [disabled]="!this.noPlayerGroup.value">Manual Group </button>
+                    <button mat-raised-button color="primary" (click)="automaticGroupInit()"
+                        [disabled]="!this.noPlayerGroup.value">Generate Group </button>
                 </div>
             </div>
         </div>
@@ -500,15 +501,18 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3">
-                <a    [class.active]="approvalStatus === 3"  class="borderClass ml-3" (click)="getAcceptRejectPlayerList('3');approvalStatus=3;">
-                    Approved </a> 
-                    <a   [class.active]="approvalStatus === 1" class="borderClass ml-3" (click)="getAcceptRejectPlayerList('1');approvalStatus=1">
-                        Accepted </a> 
-               
-                <a  [class.active]="approvalStatus === 2" class="borderClass ml-3 mr-2"
+                <a [class.active]="approvalStatus === 3" class="borderClass ml-3"
+                    (click)="getAcceptRejectPlayerList('3');approvalStatus=3;">
+                    Approved </a>
+                <a [class.active]="approvalStatus === 1" class="borderClass ml-3"
+                    (click)="getAcceptRejectPlayerList('1');approvalStatus=1">
+                    Accepted </a>
+
+                <a [class.active]="approvalStatus === 2" class="borderClass ml-3 mr-2"
                     (click)="getAcceptRejectPlayerList('2');approvalStatus=2;">Pending </a>
-                    <a  [class.active]="approvalStatus === 0" class="borderClass ml-3 mr-2"
-                    (click)="getAcceptRejectPlayerList('0');approvalStatus=0;" >Deny </a><hr>
+                <a [class.active]="approvalStatus === 0" class="borderClass ml-3 mr-2"
+                    (click)="getAcceptRejectPlayerList('0');approvalStatus=0;">Deny </a>
+                <hr>
             </div>
 
             <!-- <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 mb-3">
@@ -577,12 +581,12 @@
 
                     </div>
 
-                   
+
 
                 </form>
                 <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12 mt-1 tournament-Edit ">
 
-                    <div  class="text-right">
+                    <div class="text-right">
                         <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
                         <button type="button" class="btn btn-primary"
                             (click)="saveApprovedPlayerList()">Approve</button>
@@ -603,12 +607,37 @@
 
 <div *ngIf="this.data.sectionName=='invite'" class="p-3">
     <mat-tab-group mat-align-tabs="start">
-        <mat-tab label="First">Content 1</mat-tab>
-        <mat-tab label="Second">Content 2</mat-tab>
-        <mat-tab label="Third">Content 3</mat-tab>
-      </mat-tab-group>
-      
-<!--       
+        <mat-tab label="Invited Player">
+
+            <div *ngFor="let item of this.data.invitedPlayerList;let i=index" class="list-field">
+                <span>{{item.playerName}}</span>
+
+            </div>
+        </mat-tab>
+        <mat-tab label="Send Invite">
+
+            <div *ngFor="let item of this.data.sendInvitePlayerList;let i=index" class="list-field">
+
+                <mat-checkbox (change)="getInvitedPlayerList($event,item.p_id)"> &nbsp;
+                    {{item.playerName}} </mat-checkbox>
+            </div>
+
+            <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12 mt-1 tournament-Edit ">
+
+                <div mat-dialog-actions class="text-right">
+                    <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
+                    <button type="button" class="btn btn-primary" (click)="sendInviteLink()"
+                        [disabled]="this.invitedplayersList.length==0">Send
+                        Invite</button>
+
+                </div>
+            </div>
+        </mat-tab>
+
+
+    </mat-tab-group>
+
+    <!--       
 <div *ngIf="this.data.sectionName=='invite'" class="p-3">
     <div class="container">
         <div class="row">

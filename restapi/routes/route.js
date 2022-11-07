@@ -96,6 +96,8 @@ router.get("/tournament/getStablefordPoints",formatCtrl.getStablefordPoints);
 router.post("/tournament/addEditStablefordPoints",formatCtrl.addEditStablefordPoints);
 router.get("/tournament/deleteStablefordPoint",formatCtrl.deleteStablefordPoint);
 router.get("/tournament/getInvitedPlayerList",tourCtrl.getInvitedPlayerList);
+router.get("/tournament/getSendInvitePlayerList",tourCtrl.getSendInvitePlayerList);
+
 
 
 module.exports = router;
