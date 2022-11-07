@@ -88,7 +88,7 @@ mail.sendEmail = (email, options) => {
                         STARTTLS: true,
                         auth: {
                      user: "meenakshi@echelonedge.com",
-                            pass: "nvrfvrcjqvgwgvvv"
+                            pass: "mqqlldpxkxmfmsbm"
                 
                         },
                   
