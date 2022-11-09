@@ -29,27 +29,6 @@ export class AddEditOldScoreComponent implements OnInit {
   scoreDiff: any = 0;
   courseRate: any = 0;
   slopeRate: any = 0;
-  constructor(
-    public dialogRef: MatDialogRef<AddEditLeaderboardComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public loader: NgxUiLoaderService,
-    private formBuilder: FormBuilder,
-    private service: CommonServiceService,
-    public route: Router) { }
-
-  ngOnInit(): void {
-
-    console.log("data=", this.data);
-    if (this.data) {
-      //  this.scoreForm.controls.cname.disable();
-      //  this.setScoreDetails();
-
-    }
-    // this.scoreForm.controls.round_Id.disable();teeDetails
-    //  this.scoreForm.controls.cid.disable();
-
-  }
-
   public scoreForm: FormGroup = new FormGroup({
     tour_id: new FormControl(''),
     round_Id: new FormControl(''),
@@ -107,6 +86,28 @@ export class AddEditOldScoreComponent implements OnInit {
     birdieTotal: new FormControl(0, []),
     scoreDiff: new FormControl(0, []),
   });
+  constructor(
+    public dialogRef: MatDialogRef<AddEditLeaderboardComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public loader: NgxUiLoaderService,
+    private formBuilder: FormBuilder,
+    private service: CommonServiceService,
+    public route: Router) { }
+
+  ngOnInit(): void {
+    for (let i = 1; i <= 18; i++) {
+      const agsKeyName = "ags" + i;
+     // const scoreKeyName = "score" + i;
+      this.scoreForm.controls[agsKeyName].disable();
+      // if (!this.data.selectedRecordDetails) {
+      //   this.scoreForm.controls[scoreKeyName].disable();
+      // }
+    }
+ 
+
+  }
+
+  
 
 
 
@@ -145,7 +146,7 @@ export class AddEditOldScoreComponent implements OnInit {
     this.service.postAPIMethod('/tournament/savePastScores', finalData).subscribe(APIresponse => {
 
       if (APIresponse.error != 'X') {
-        this.closeDialogClick();
+        this.dialogRef.close(true);
         this.sweetAlertMsg("success", APIresponse.response.result.msg)
       }
       else {
@@ -502,28 +503,20 @@ export class AddEditOldScoreComponent implements OnInit {
 
   calculateScoreDifferential() {
 
-    //let ags = (this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value);
-    let ags = Number(this.scoreForm.value.ags1) + Number(this.scoreForm.value.ags2) +
-      Number(this.scoreForm.value.ags3) + Number(this.scoreForm.value.ags4) +
-      Number(this.scoreForm.value.ags5) + Number(this.scoreForm.value.ags6) +
-      Number(this.scoreForm.value.ags7) + Number(this.scoreForm.value.ags8) +
-      Number(this.scoreForm.value.ags9) + Number(this.scoreForm.value.ags10) +
-      Number(this.scoreForm.value.ags11) + Number(this.scoreForm.value.ags12) +
-      Number(this.scoreForm.value.ags13) + Number(this.scoreForm.value.ags14) +
-      Number(this.scoreForm.value.ags15) + Number(this.scoreForm.value.ags16) +
-      Number(this.scoreForm.value.ags17) + Number(this.scoreForm.value.ags18);
-
-
-
-
-    let Diff1 = (ags - this.courseRate) * 113;
-    let socreAvg = Diff1 / this.slopeRate;
-    let rounded = Math.round(socreAvg * 10) / 10;
-    console.log("differnece", Diff1);
-    console.log("after divide", socreAvg);
+    let ags = Number(this.scoreForm.controls.ags1.value) + Number(this.scoreForm.controls.ags2.value) +
+      Number(this.scoreForm.controls.ags3.value) + Number(this.scoreForm.controls.ags4.value) +
+      Number(this.scoreForm.controls.ags5.value) + Number(this.scoreForm.controls.ags6.value) +
+      Number(this.scoreForm.controls.ags7.value) + Number(this.scoreForm.controls.ags8.value) +
+      Number(this.scoreForm.controls.ags9.value) + Number(this.scoreForm.controls.ags10.value) +
+      Number(this.scoreForm.controls.ags11.value) + Number(this.scoreForm.controls.ags12.value) +
+      Number(this.scoreForm.controls.ags13.value) + Number(this.scoreForm.controls.ags14.value) +
+      Number(this.scoreForm.controls.ags15.value) + Number(this.scoreForm.controls.ags16.value) +
+      Number(this.scoreForm.controls.ags17.value) + Number(this.scoreForm.controls.ags18.value);
+    var Diff1 = (ags - this.courseRate) * 113;
+    var socreAvg = Diff1 / this.slopeRate;
+    var rounded = Math.round(socreAvg * 10) / 10
 
     this.summaryForm.controls.scoreDiff.setValue(rounded);
-
   }
 
   // calculateAgs(fieldName: any, finalValue: any) {

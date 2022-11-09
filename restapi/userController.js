@@ -14,18 +14,23 @@ const mail = require('../restapi/utilities/mailService');
 usrCtrl.userlogin = (req, res) => {
     try {
         const data = req.body;
-        let sql = `Call user_login("${data.email}", "${data.password}")`;
+        let sql = `Call user_login("${data.email}", "${data.password}","")`;
+        if (data.isWebLogin==1) {
+             sql = `Call user_login("${data.email}", "${data.password}",${data.isWebLogin})`;
+        }
+
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             } else {
-                if (results[0] && results[0][0].err == 'X') {
-                    res.end(JSON.stringify({ "error": "X", "response": {  msg: results[0][0].msg } }));
-                } else {
+                if (results[1][0]?.err == '') {
+                  
                     const key = config.JWTSECRET;
                     let token = auth.generateJwt(results[0][0], key);
                     res.end(JSON.stringify({ "error": "", "response": { result: results[0], msg: results[1].msg, "token": token, "sessionKey": key } }));
+                } else {
+                    res.end(JSON.stringify({ "error": "X", "response": { msg: results[0][0].msg } }));
                 }
             }
         });
@@ -302,7 +307,7 @@ usrCtrl.getUserRole = (req, res) => {
             if (error) {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             } else {
-                res.end(JSON.stringify({ "error": "", "response":{result: results[0]} }));
+                res.end(JSON.stringify({ "error": "", "response": { result: results[0] } }));
             }
         });
     }

@@ -20,9 +20,8 @@ const auth = require("../utilities/authService");
 
 //Define user routes.
 router.post("/userRegistration", usrCtrl.addUpdateUser);
-router.get("/user/getUserRole", usrCtrl.getUserRole);
-
 router.post("/userLogin", usrCtrl.userlogin);
+router.get("/user/getUserRole", usrCtrl.getUserRole);
 router.post('/forgotPassword',  usrCtrl.forgotPassword);
 router.get('/refreshToken', auth.verifyAuthToken, usrCtrl.refreshToken);
 router.post('/verifyUserAccount', auth.verifyAuthToken, usrCtrl.verifyUserAccount);
@@ -58,7 +57,7 @@ router.get("/tournament/getTournamentGroups",tourCtrl.getTournamentGroups);
 router.get("/tournament/getPlayerDetailForScore",tourCtrl.getPlayerDetailForScore);
 router.post("/tournament/savetournamentScore",tourCtrl.savetournamentScore);
 router.get("/courseList", commonCtrl.courseList);
-router.get("/tournament/tourDetails", commonCtrl.tourDetails);
+router.get("/tourDetails", commonCtrl.tourDetails);
 router.get("/tournament/groupList", tourCtrl.getTournamentGroupList);
 router.get("/tournament/getTournamentGroupPlayerList", tourCtrl.getTournamentGroupPlayerList);
 router.get("/score/deleteScore",commonCtrl.deleteScore);
@@ -95,8 +94,6 @@ router.get("/tournament/getHandicapScores",formatCtrl.getHandicapScores);
 router.get("/tournament/getStablefordPoints",formatCtrl.getStablefordPoints);
 router.post("/tournament/addEditStablefordPoints",formatCtrl.addEditStablefordPoints);
 router.get("/tournament/deleteStablefordPoint",formatCtrl.deleteStablefordPoint);
-router.get("/tournament/getInvitedPlayerList",tourCtrl.getInvitedPlayerList);
-router.get("/tournament/getSendInvitePlayerList",tourCtrl.getSendInvitePlayerList);
 
 
 

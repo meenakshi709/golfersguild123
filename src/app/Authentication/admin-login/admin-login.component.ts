@@ -32,6 +32,7 @@ export class AdminLoginComponent implements OnInit {
 
     if (this.loginForm.valid) {
       const data = this.loginForm.getRawValue();
+      data.isWebLogin=1;
       this.service.postAPIMethod('/userLogin', data).subscribe((res: any) => {
        
         const apiResponse = res.response;

@@ -622,7 +622,10 @@
                     {{item.playerName}} </mat-checkbox>
             </div>
 
-            <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12 mt-1 tournament-Edit ">
+            <div *ngIf=" this.data.sendInvitePlayerList==0">
+<span>No Record founds</span>
+            </div>
+            <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12 mt-1 tournament-Edit " *ngIf=" this.data.sendInvitePlayerList>0">
 
                 <div mat-dialog-actions class="text-right">
                     <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>

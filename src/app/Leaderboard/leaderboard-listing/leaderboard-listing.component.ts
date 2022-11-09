@@ -38,8 +38,8 @@ export class LeaderboardListingComponent implements OnInit {
         //  const getmonthNum = (new Date(data.tournament_date).getMonth() + 1).toString() + '-' + new Date(data.tournament_date).getFullYear().toString();
 
         this.scoreList.miDataSource = new MatTableDataSource(data.response.result);
-        this.scoreList.columnLabels = ['Tournament Date','Tournament Name', 'Player Name', 'Round',  'Group', 'Gross', 'HDCP', 'Net Score', 'Birdie', 'AGS', 'Action'];
-        this.scoreList.displayedColumns = ['createdDate','tournamentName', 'playerName', 'round_name', 'groupName', 'gross', 'hdcp', 'net', 'birdie', 'scoreDifferential', 'Action'];
+        this.scoreList.columnLabels = ['Tournament Name', 'Player Name', 'Round',  'Group', 'Tournament Date','Gross', 'HDCP', 'Net Score', 'Birdie', 'AGS', 'Action'];
+        this.scoreList.displayedColumns = ['tournamentName', 'playerName', 'round_name', 'groupName','ScoreCreatedDate', 'gross', 'hdcp', 'net', 'birdie', 'scoreDifferential', 'Action'];
 
         this.scoreList.miListMenu = new CommonListMenu();
         this.scoreList.miListMenu.menuItems =
