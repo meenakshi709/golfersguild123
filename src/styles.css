@@ -562,3 +562,8 @@ mat-label {
     color: #3d4fd7 !important;
 
 }
+.mat-tab-body-content{
+    margin-top: 1rem!important;
+font-size: 0.9rem!important;
+color:rgb(99, 98, 98)!important;
+  }

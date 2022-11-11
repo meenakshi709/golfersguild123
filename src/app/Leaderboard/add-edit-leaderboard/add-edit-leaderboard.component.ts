@@ -142,8 +142,12 @@ export class AddEditLeaderboardComponent implements OnInit {
     let finalData = { ...data, ...data1 };
     this.service.postAPIMethod('/tournament/savetournamentScore', finalData).subscribe(APIresponse => {
       if (APIresponse.error == '') {
-        this.sweetAlertMsg("success", APIresponse.response.result.msg);
-        this.dialogRef.close(true);
+        if (APIresponse.response.result.err == '') {
+          this.sweetAlertMsg("success", APIresponse.response.result.msg);
+          this.dialogRef.close(true);
+        } else {
+          this.sweetAlertMsg("error", APIresponse.response.result.msg);
+        }
       }
       else {
         this.sweetAlertMsg("error", APIresponse.response.msg);
@@ -400,7 +404,8 @@ export class AddEditLeaderboardComponent implements OnInit {
   onPlayerSelection() {
     this.playerList.forEach((player: any) => {
       if (player.playerId == this.scoreForm.controls.p_id.value) {
-        this.scoreForm.controls.hdcp.setValue(player.hdcp);
+        debugger;
+        this.scoreForm.controls.hdcp.setValue(Math.round(player.hdcp));
       }
     });
   }

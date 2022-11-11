@@ -417,7 +417,9 @@ export class AddEditTournamentComponent implements OnInit {
 
       const filtered = grpArr.filter((el: any, index: any) => grpArr.indexOf(el) !== index);
       if (filtered.length == 0) {
+
         this.service.postAPIMethod("/tournament/saveTournamentGroupDetails", data).subscribe((APIResponse: any) => {
+      
           if (APIResponse.error != 'X') {
             this.sweetAlertMsg("success", APIResponse.response.result.msg);
             this.closeDialogClick();
@@ -621,7 +623,7 @@ export class AddEditTournamentComponent implements OnInit {
       else {
         this.playerList = res.response.result;
         this.data.sectionName = 'sendInvite';
-        this.data.sectionName = 'invite'
+      //  this.data.sectionName = 'invite'
 
       }
 

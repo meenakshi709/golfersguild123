@@ -94,6 +94,9 @@ router.get("/tournament/getHandicapScores",formatCtrl.getHandicapScores);
 router.get("/tournament/getStablefordPoints",formatCtrl.getStablefordPoints);
 router.post("/tournament/addEditStablefordPoints",formatCtrl.addEditStablefordPoints);
 router.get("/tournament/deleteStablefordPoint",formatCtrl.deleteStablefordPoint);
+router.post("/tournament/savePastScores",tourCtrl.savePastScores);
+router.get("/tournament/getInvitedPlayerList",tourCtrl.getInvitedPlayerList);
+router.get("/tournament/getSendInvitePlayerList",tourCtrl.getSendInvitePlayerList);
 
 
 

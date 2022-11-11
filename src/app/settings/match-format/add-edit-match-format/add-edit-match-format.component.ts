@@ -33,12 +33,13 @@ export class AddEditMatchFormatComponent implements OnInit {
 
 
   public formatForm: FormGroup = new FormGroup({
-    formatId: new FormControl(''),
+    formatKey: new FormControl(''),
     formatName: new FormControl('', [Validators.required]),
 
   });
 
   setFormatDetails() {
+    debugger
     const keys = Object.keys(this.data);
     const formGroup = this.formatForm.controls;
 
@@ -52,11 +53,6 @@ export class AddEditMatchFormatComponent implements OnInit {
   saveFormatDetails() {  
     
     const data = this.formatForm.getRawValue();
-   
-    
-    
-  
-
     this.service.postAPIMethod('/tournament/addEditTournamentFormat', data).subscribe(APIresponse => {
       // console.log("final",response);
 debugger

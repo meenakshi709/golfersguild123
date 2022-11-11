@@ -619,13 +619,14 @@
             <div *ngFor="let item of this.data.sendInvitePlayerList;let i=index" class="list-field">
 
                 <mat-checkbox (change)="getInvitedPlayerList($event,item.p_id)"> &nbsp;
-                    {{item.playerName}} </mat-checkbox>
+                    {{item.playerName}}  </mat-checkbox>
             </div>
 
             <div *ngIf=" this.data.sendInvitePlayerList==0">
-<span>No Record founds</span>
+                <span>No Record founds</span>
             </div>
-            <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12 mt-1 tournament-Edit " *ngIf=" this.data.sendInvitePlayerList>0">
+            <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12 mt-1 tournament-Edit "
+                *ngIf="this.data.sendInvitePlayerList.length>0">
 
                 <div mat-dialog-actions class="text-right">
                     <button mat-stroked-button (click)="closeDialogClick()">Cancel</button>
