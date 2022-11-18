@@ -97,6 +97,7 @@ router.get("/tournament/deleteStablefordPoint",formatCtrl.deleteStablefordPoint)
 router.post("/tournament/savePastScores",tourCtrl.savePastScores);
 router.get("/tournament/getInvitedPlayerList",tourCtrl.getInvitedPlayerList);
 router.get("/tournament/getSendInvitePlayerList",tourCtrl.getSendInvitePlayerList);
+router.get("/tournament/getTournamentWinnersByTourId",tourCtrl.getTournamentWinnersByTourId);
 
 
 

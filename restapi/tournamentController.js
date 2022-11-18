@@ -896,6 +896,30 @@ tourCtrl.getSendInvitePlayerList= (req, res) => {
 
 
 
+
+tourCtrl.getTournamentWinnersByTourId = (req, res) => {
+
+    try {
+
+        let sql = `call get_tournament_winner(${req.query.tour_id},${req.query.isLead})`;
+        connection.query(sql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            } else {
+                res.send(JSON.stringify({ "error": "", "response": { grossWinner: results[0],netWinner:results[1],birdieWinner:results[2][0] }}));
+            }
+        });
+    } catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
+};
+
+
+
+
+
+
 function releaseconnection() {
     connection.getConnection(function (err, result) {
         result.release();

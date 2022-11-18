@@ -43,7 +43,7 @@ export class StablefordListingComponent implements OnInit {
 
         this.matchPlayList.miDataSource = new MatTableDataSource(data.response.result);
         this.matchPlayList.columnLabels = ['Format Id', 'Score Name','Score Point',  'Action'];
-        this.matchPlayList.displayedColumns = ['sno', 'netScoreName','netScorePoints',  'Action'];
+        this.matchPlayList.displayedColumns = ['sno', 'netScoreName','points',  'Action'];
 
         this.matchPlayList.miListMenu = new CommonListMenu();
         this.matchPlayList.miListMenu.menuItems =
@@ -81,8 +81,8 @@ export class StablefordListingComponent implements OnInit {
   deletePoints(clickedrecord: any) {
 debugger
     Swal.fire({
-      title: 'Delete Tournament Format',
-      text: 'Are you sure you want to delete Tournament Format?',
+      title: 'Delete Stableford Point',
+      text: 'Are you sure you want to delete Stableford Point?',
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: 'Yes, Delete',
@@ -91,7 +91,7 @@ debugger
     }).then((result) => {
       if (result.isConfirmed) {
         this.loader.start();
-        this.service.getAPIMethod('/tournament/deleteStablefordPoint?ponitId=' + clickedrecord.sno).subscribe((success) => {
+        this.service.getAPIMethod('/tournament/deleteStablefordPoint?pointId=' + clickedrecord.sno).subscribe((success) => {
           this.loader.stop();
           if (success.error === 'X') {
             this.sweetAlertMsg('error', success.response.result.msg);

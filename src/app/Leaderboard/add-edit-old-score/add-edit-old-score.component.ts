@@ -134,7 +134,7 @@ export class AddEditOldScoreComponent implements OnInit {
     data.createdDate = new Date((data.createdDate.getMonth() + 1) + '/' + (data.createdDate.getDate() + 1) + '/' + data.createdDate.getFullYear());
    
     let enteredHoleCount = 0;
-    for (let i = 0; i < data.holeNum; i++) {
+    for (let i = 1; i <= data.holeNum; i++) {
       const controlName = 'score' + i;
       if (data[controlName] > 0) {
         enteredHoleCount++;

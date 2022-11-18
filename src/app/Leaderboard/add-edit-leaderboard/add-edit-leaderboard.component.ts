@@ -132,7 +132,7 @@ export class AddEditLeaderboardComponent implements OnInit {
     data1.grossTotal = this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value;
     data1.netTotal = (this.summaryForm.controls.inTotal.value + this.summaryForm.controls.outTotal.value) - (this.scoreForm.controls.hdcp.value);
     let enteredHoleCount = 0;
-    for (let i = 0; i < data.holeNum; i++) {
+    for (let i = 1; i <= data.holeNum; i++) {
       const controlName = 'score' + i;
       if (data[controlName] > 0) {
         enteredHoleCount++;

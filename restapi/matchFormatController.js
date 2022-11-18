@@ -53,7 +53,7 @@ formatCtrl.getStablefordPoints= (req, res) => {
 //delete tournament format details
 formatCtrl.deleteStablefordPoint = (req, res) => {
     try {
-        let sql = `call delete_stablefordPoint("${req.query.ponitId}")`;
+        let sql = `call delete_stablefordPoint("${req.query.pointId}")`;
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {

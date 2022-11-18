@@ -221,7 +221,7 @@ usrCtrl.getUserDetails = (req, res) => {
             if (error) {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             } else {
-                res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
+                res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] ,scoreDiff:results[1][0]} }));
             }
         });
     } catch (error) {

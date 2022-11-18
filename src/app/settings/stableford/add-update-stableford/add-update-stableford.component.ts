@@ -35,9 +35,9 @@ export class AddUpdateStablefordComponent implements OnInit {
 
 
   public pointsForm: FormGroup = new FormGroup({
-    pointId: new FormControl(''),
+    sno: new FormControl(''),
     netScoreName: new FormControl('', [Validators.required]),
-    ponits:new FormControl('', [Validators.required]),
+    points:new FormControl('', [Validators.required]),
     netScorePoints:new FormControl('', [Validators.required]) 
   });
 

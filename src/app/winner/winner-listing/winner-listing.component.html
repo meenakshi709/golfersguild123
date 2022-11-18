@@ -1,33 +1,167 @@
+<div class="container-fluid">
 
-
-
-  <div class="container-fluid">
-                     
     <div class="row">
-        <div class="col-lg-7 col-md-7 col-xs-6 col-sm-7">
-            <h5 class="mt-3 mb-3 text-darkBlue">Tournament Details</h5>
-        </div>
-        <div class="col-lg-5 col-md-5 col-xs-6 col-sm-5 text-right">
+      
+        <div class="col-lg-8 col-md-8 col-xs-12 col-sm-8">
+            <h5 class="mt-3 mb-3 text-darkBlue">Tournament Winners</h5>
+            </div>
+        <div class="col-lg-4 col-md-4 col-xs-12 col-sm-4 text-right m-0">
+          
             <mat-form-field appearance="outline">
-               
-               
-                <input matInput (keyup)="applyFilter($event)" placeholder="Search Tournament" #input >
-                <mat-icon matSuffix>search</mat-icon>
-              </mat-form-field>
-           
-            <!-- <button class="btn btn-red text-right" [routerLink]="['/course/addCourse']">Add Course</button> -->
-            <button mat-button  class="btn btn-primary  text-right mt-1" (click)="addEditEventDetails('','')">  <mat-icon>add_circle_outline</mat-icon> Add Tour</button>
- 
+                <mat-label>Tournament Name* </mat-label>
+                <mat-select id="tour_id" [formControl]="tournament" (selectionChange)="onChangeTournament()">
+                    <mat-option *ngFor="let tournament of tournamentList" [value]="tournament.tourID">
+                        {{tournament.tournamentName}}</mat-option>
+                </mat-select>
+
+            </mat-form-field>
+
+
         </div>
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-            
-            <div *ngIf="this.isLoadingDone">
-                 <app-common-list [CommonListProperties]="courseList" (onMenuItemClick)="onCourseActionClick($event)"></app-common-list> 
+            <div class="grosswinner">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-xs-12 col-sm-3">
+                        Score
+                      </div>
+                    <div class="col-lg-4 col-md-4 col-xs-6 col-sm-4">
+                        Player  Name
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-sm-3">
+                            Category
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12 col-sm-2">
+                            Holes
+                        </div>
+                       
+                    </div>
+                   
             </div>
+            </div>
+          
+    
+        </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <div class="netWinner">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-xs-12 col-sm-3 ">
+                        <span class="scoreClass">
+                        {{this.winnerObj?.grossWinner?.[0]?.['TotalGross'] }}</span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-xs-6 col-sm-4">
+                        {{this.winnerObj?.grossWinner?.[0]?.['playerName']| titlecase }}
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-sm-3">
+                            Gross Winner
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12 col-sm-2">
+                            {{this.winnerObj?.grossWinner?.[0]?.['Totalholes'] }}
+                        </div>
+                       
+                    </div>
+                  
+            </div>
+            </div>
+          
+    
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <div class="netWinner">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-xs-12 col-sm-3 ">
+                        <span class="scoreClass"> {{this.winnerObj?.grossWinner?.[1]?.['TotalGross'] }}</span> 
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-xs-6 col-sm-4 ">
+                        {{this.winnerObj?.grossWinner?.[1]?.['playerName'] | titlecase}}
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-sm-3">
+                            Gross Runner-up
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12 col-sm-2">
+                            {{this.winnerObj?.grossWinner?.[1]?.['Totalholes'] }}
+                        </div>
+                       
+                    </div>
+                
+                
+              
+            </div>
+    
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <div class="netWinner">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-xs-12 col-sm-3 ">
+                        <span class="scoreClass"> {{this.winnerObj?.netWinner?.[0]?.['TotalNet'] }}</span> 
+                    </div>
+                         <div class="col-lg-4 col-md-4 col-xs-6 col-sm-4 ">
+                        {{this.winnerObj?.netWinner?.[0]?.['playerName'] | titlecase}}
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-sm-3">
+                           Net Winner
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12 col-sm-2">
+                            {{this.winnerObj?.netWinner?.[0]?.['Totalholes'] }}
+                        </div>
+                       
+                   </div>
+              
+                 </div>
+             </div>
+        </div>
+       
+        <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <div class="netWinner">
+
+
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-xs-12 col-sm-3 ">
+                        <span class="scoreClass">{{this.winnerObj?.netWinner?.[1]?.['TotalNet'] }}
+                        </span> 
+                        </div>
+                    <div class="col-lg-4 col-md-4 col-xs-6 col-sm-4 ">
+                        {{this.winnerObj?.netWinner?.[1]?.['playerName'] | titlecase }}
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-sm-3">
+                            Net Runner-up
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12 col-sm-2">
+                            {{this.winnerObj?.netWinner?.[1]?.['Totalholes'] }}
+                        </div>
+                       
+                    </div>
+              
+                </div>
+             </div>
+        </div>
+        <div class="row ">
+            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <div class="netWinner">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-xs-12 col-sm-3 ">
+                        <span class="scoreClass">
+                        {{this.winnerObj?.birdieWinner?.['TotalBirdie'] }}</span>
+                    </div>
+                         <div class="col-lg-4 col-md-4 col-xs-6 col-sm-4 ">
+                        {{this.winnerObj?.birdieWinner?.['playerName'] | titlecase }}
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-12 col-sm-3">
+                            Birdie Winner
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12 col-sm-2">
+                            {{this.winnerObj?.birdieWinner?.['Totalholes'] }}
+                        </div>
+                       
+                </div>
+             
+             </div>
         </div>
     </div>
 </div>
-
-
