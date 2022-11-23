@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 18, 2022 at 02:05 PM
+-- Generation Time: Nov 23, 2022 at 02:12 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
 
@@ -52,19 +52,19 @@ END IF;
 Select err,msg from DUAL;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `CalculateCourseHandicap` (IN `param_playerId` INT, IN `param_courseId` INT, IN `param_Tee` VARCHAR(255))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `CalculateCourseHandicap` (IN `param_playerId` INT, IN `param_courseId` INT, IN `param_Tee` INT(50))  BEGIN
 
 DECLARE courseHandicap varchar(1000);
 DECLARE isRecordExist int;
-Declare handicapIndex varchar(1000);
+Declare playerhandicapIndex varchar(1000);
 Declare slopeRatng varchar(1000);
 Declare courseRatng varchar(1000);
 Declare par int;
 SELECT count(*) into isRecordExist from user_details WHERE p_id=param_playerId AND isDeleted=0;
 if (isRecordExist=1)THEN
-select handicapIndex into handicapIndex from user_details where p_id=param_playerId  AND isDeleted=0;
+select handicapIndex into playerhandicapIndex from user_details where p_id=param_playerId  AND isDeleted=0;
 select (pinn+pout) into par from courses where cid=param_courseId  AND is_deleted=0;
-select round(((12.70*(slopeRating/113)) +(courseRating-72)),1)  into courseHandicap from course_rating where courseId=param_courseId and cRatingId=param_Tee;
+select round(((playerhandicapIndex*(slopeRating/113)) +(courseRating-par)))  into courseHandicap from course_rating where courseId=param_courseId and cRatingId=param_Tee;
 
 select courseHandicap;
 
@@ -999,7 +999,7 @@ set msg="Score inserted successfully";
 
 
  call CalculateHandicapIndex(param_playerId);
-  call updatePlayerHandicap(param_playerId,param_cid,param_teeName);
+  call 	updatePlayerHandicap(param_playerId,param_cid,param_teeName);
 ELSE
 set err="X";
 set msg="Record not found";
@@ -1318,7 +1318,7 @@ set err="";
 set msg="Score updated successfully";
 END IF;
  call CalculateHandicapIndex(param_playerId);
- call updatePlayerHandicap(param_playerId,param_cid,param_teeName);
+ call 	updatePlayerHandicap(param_playerId,param_cid,param_teeName);
 ELSE
 set err="X";
 set msg="Record not found";
@@ -1509,19 +1509,19 @@ END IF;
 select err,msg from dual;
  END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePlayerHandicap` (IN `param_playerId` INT, IN `param_courseId` INT, IN `param_Tee` VARCHAR(255))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePlayerHandicap` (IN `param_playerId` INT, IN `param_courseId` INT, IN `param_Tee` INT(255))  BEGIN
 
 DECLARE courseHandicap varchar(1000);
 DECLARE isRecordExist int;
-Declare handicapIndex varchar(1000);
+Declare playerHandicapIndex varchar(1000);
 Declare slopeRatng varchar(1000);
 Declare courseRatng varchar(1000);
 Declare par int;
 SELECT count(*) into isRecordExist from user_details WHERE p_id=param_playerId AND isDeleted=0;
 if (isRecordExist=1)THEN
-select handicapIndex into handicapIndex from user_details where p_id=param_playerId  AND isDeleted=0;
+select handicapIndex into playerHandicapIndex from user_details where p_id=param_playerId  AND isDeleted=0;
 select (pinn+pout) into par from courses where cid=param_courseId  AND is_deleted=0;
-select round(((12.70*(slopeRating/113)) +(courseRating-72)),1)  into courseHandicap from course_rating where courseId=param_courseId and cRatingId=param_Tee;
+select round(((playerHandicapIndex*(slopeRating/113)) +(courseRating-par)))  into courseHandicap from course_rating where courseId=param_courseId and cRatingId=param_Tee;
 
 
 
@@ -2643,13 +2643,18 @@ INSERT INTO `tournament_score_details` (`tour_score_id`, `p_id`, `tour_id`, `sco
 (16, 2, 0, 8, 6, 5, 6, 2, 4, 4, 5, 6, 5, 5, 6, 5, 5, 4, 5, 6, 5, 0, 15, 46, 46, 92, 77, 1, 17, '2', '17.9', '2022-10-02', 0, '15', ''),
 (17, 2, 0, 5, 6, 5, 4, 4, 4, 5, 5, 6, 5, 4, 4, 5, 4, 5, 5, 4, 4, 0, 12, 40, 44, 84, 72, 3, 17, '1', '11.1', '2022-10-03', 0, '18', ''),
 (18, 2, 7, 5, 6, 7, 6, 6, 5, 4, 5, 6, 6, 5, 5, 4, 5, 5, 6, 5, 5, 19, 14, 46, 50, 96, 82, 0, 18, '2', '21.2', '2022-11-09', 0, '14', '4'),
-(19, 3, 7, 5, 6, 5, 4, 4, 5, 6, 5, 5, 4, 4, 5, 5, 6, 5, 4, 4, 4, 19, 0, 41, 45, 86, 86, 1, 18, '2', '11', '2022-11-09', 0, '13', '4'),
+(19, 3, 7, 5, 6, 5, 4, 4, 5, 6, 5, 5, 4, 4, 5, 5, 6, 5, 4, 4, 4, 19, 0, 41, 45, 86, 86, 0, 18, '2', '11', '2022-11-09', 0, '13', '4'),
 (20, 4, 7, 5, 6, 5, 4, 5, 6, 5, 6, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 14, 0, 47, 47, 33, 0, 17, '1', '-24.4', '2022-11-14', 0, '17', '6'),
 (21, 4, 7, 5, 6, 5, 6, 5, 6, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 15, 0, 38, 38, 23, 0, 18, '1', '-33.6', '2022-11-14', 0, '17', '6'),
 (22, 2, 7, 6, 5, 7, 6, 5, 4, 5, 9, 8, 7, 6, 6, 5, 7, 6, 5, 6, 5, 20, 15, 53, 55, 108, 93, 0, 18, '1', '27.5', '2022-11-14', 0, '17', '6'),
 (23, 3, 7, 5, 6, 7, 6, 5, 5, 4, 6, 7, 6, 6, 4, 5, 7, 6, 8, 7, 5, 20, 15, 54, 51, 105, 90, 0, 18, '1', '25.7', '2022-11-14', 0, '17', '6'),
 (24, 4, 0, 6, 6, 5, 4, 5, 4, 3, 4, 4, 4, 4, 5, 6, 5, 4, 5, 4, 3, 0, 15, 40, 41, 81, 66, 6, 17, '2', '6.8', '2022-11-16', 0, '13', ''),
-(25, 2, 0, 5, 4, 6, 7, 6, 5, 4, 4, 4, 5, 7, 5, 5, 4, 4, 3, 4, 4, 0, 15, 41, 45, 86, 71, 3, 17, '1', '9.9', '2022-11-15', 0, '17', '');
+(25, 2, 0, 5, 4, 6, 7, 6, 5, 4, 4, 4, 5, 7, 5, 5, 4, 4, 3, 4, 4, 0, 15, 41, 45, 86, 71, 3, 17, '1', '9.9', '2022-11-15', 0, '17', ''),
+(26, 2, 0, 5, 6, 7, 6, 5, 4, 4, 5, 6, 6, 5, 5, 4, 4, 5, 5, 4, 4, 0, 15, 42, 48, 90, 75, 2, 18, '2', '17.2', '2022-11-01', 0, '14', ''),
+(27, 2, 0, 5, 6, 5, 7, 6, 5, 4, 4, 4, 5, 6, 5, 5, 5, 5, 5, 6, 5, 0, 12, 47, 46, 93, 81, 1, 18, '2', '16.8', '2022-11-23', 0, '15', ''),
+(28, 2, 0, 6, 5, 7, 7, 4, 6, 6, 6, 6, 5, 6, 5, 4, 5, 6, 7, 7, 8, 0, 16, 50, 40, 107, 90, 1, 18, '2', '15.5', '2022-09-21', 0, 'Black', ''),
+(29, 2, 0, 5, 6, 5, 5, 4, 5, 5, 6, 5, 5, 5, 5, 6, 7, 6, 5, 6, 5, 0, 14, 50, 46, 96, 82, 0, 18, '2', '23.5', '2022-11-23', 0, '15', ''),
+(30, 2, 0, 6, 5, 5, 4, 5, 5, 6, 6, 5, 5, 5, 8, 7, 5, 4, 4, 5, 6, 0, 10, 49, 47, 96, 86, 0, 18, '2', '21.2', '2022-11-03', 0, '14', '');
 
 -- --------------------------------------------------------
 
@@ -2786,7 +2791,7 @@ CREATE TABLE `user_details` (
 
 INSERT INTO `user_details` (`p_id`, `firstName`, `lastName`, `playerName`, `userName`, `contactNumber`, `email`, `password`, `dob`, `gender`, `homeCourse`, `hdcp`, `handicapIndex`, `hdcpCertificate`, `platformLink`, `vaccineStatus`, `employment`, `companyName`, `jobTitle`, `industry`, `profileImg`, `roleId`, `isDeleted`, `isWebUser`, `isFirstLogin`, `countryId`, `stateId`, `createdDate`, `updatedDate`, `isAccountVerified`, `device_id`, `device_platform`) VALUES
 (1, 'Meenakshi', 'Dhariwal', 'Meenakshi Dhariwal', 'Meen1234', '8786567898', 'meenakshi@echelonedge.com', 'test123@A', '1994-01-07', 'female', 'undefined', '0.00', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 1, 0, 0, 0, NULL, NULL, '2022-10-15 16:13:19', '2022-10-15 16:13:19', 0, 'undefined', 'undefined'),
-(2, 'Ankit', 'Khandelwal', 'Ankit K', 'ankit123', '8278767678', 'ankit.khandelwal@echelonedge.com', 'test123@A', '2022-07-31', 'male', 'undefined', '15.00', '7.40', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 2, 0, 0, 0, 1, 25, '2022-10-16 20:00:45', '2022-10-16 20:00:45', 0, 'undefined', 'undefined'),
+(2, 'Ankit', 'Khandelwal', 'Ankit K', 'ankit123', '8278767678', 'ankit.khandelwal@echelonedge.com', 'test123@A', '2022-07-31', 'male', 'undefined', '8.00', '10.50', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 2, 0, 0, 0, 1, 25, '2022-10-16 20:00:45', '2022-10-16 20:00:45', 0, 'undefined', 'undefined'),
 (3, 'anuj', 'chauhan', 'anuj chauhan', 'anujc', '7010112233', 'anuj.chauhan@echelonedge.com', 'Anuj@1234', '2000-04-07', 'male', 'undefined', '15.00', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 3, 0, 0, 0, 1, 6, '2022-11-03 12:10:23', '2022-11-03 12:10:23', 0, 'undefined', 'undefined'),
 (4, 'shivani', 'singh', 'shivani singh', 'shivaniSingh', '7010112233', 'shivani.singh@echelonedge.com', 'Shivi@1234', '1999-09-10', 'male', 'undefined', '14.60', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 3, 0, 0, 0, 1, 37, '2022-11-03 12:12:19', '2022-11-03 12:12:19', 0, 'undefined', 'undefined');
 
@@ -3200,7 +3205,7 @@ ALTER TABLE `tournament_player_list`
 -- AUTO_INCREMENT for table `tournament_score_details`
 --
 ALTER TABLE `tournament_score_details`
-  MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `tournament_winners`

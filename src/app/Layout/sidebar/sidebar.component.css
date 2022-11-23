@@ -31,6 +31,8 @@
     transition: all 0.3s;
     position: fixed!important;
     overflow-y: scroll;
+    margin-top: 20px;
+    width:200px;
   }
 
 
@@ -55,8 +57,8 @@
 
   .sidebar p{
     font-size: 14px!important;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
   }
   
   /* Sidebar links */
@@ -65,7 +67,7 @@
     color: #ffffff;
     padding: 8px 20px;
     text-decoration: none;
-    margin: 5px 5px 5px 0;
+    margin: 2px 0px 2px 0;
     border-radius: 0px 20px 20px 0px;  
   }
   
@@ -101,10 +103,10 @@
   }
   
   /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
-  div.content {
+  .sidebar.content {
     margin-left: 200px;
     padding: 1px 16px;
-    height: 100%1!important;
+    height: 100%!important;
   }
   
   /* On screens that are less than 700px wide, make the sidebar into a topbar */

@@ -907,17 +907,21 @@ tourCtrl.getTournamentWinnersByTourId = (req, res) => {
             if (error) {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             } else {
-                res.send(JSON.stringify({ "error": "", "response": { grossWinner: results[0],netWinner:results[1],birdieWinner:results[2][0] }}));
+                let birdiewinner;
+                if(results?.[2]!=""){
+                    birdiewinner=results[2][0];
+                }
+else{
+    birdiewinner=[];
+}
+
+                res.send(JSON.stringify({ "error": "", "response": { grossWinner: results[0],netWinner:results[1],birdieWinner: birdiewinner}}));
             }
         });
     } catch (error) {
         res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
     }
 };
-
-
-
-
 
 
 function releaseconnection() {
