@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 23, 2022 at 02:12 PM
+-- Generation Time: Dec 01, 2022 at 11:38 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
 
@@ -398,6 +398,29 @@ SELECT *,p_id as playerId, userName,firstName,lastName,email,user_details.roleId
  user_details.roleID !=1 order by playerName asc;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getPlayerScoresById` (IN `param_tour_id` VARCHAR(50), IN `param_player_id` VARCHAR(50), IN `param_startDate` DATE, IN `param_endDate` DATE)  BEGIN
+DECLARE isTourExist int;
+Declare err varchar(2);
+Declare  msg varchar(100);
+
+select count(*) into isTourExist from events where tourID=param_tour_id;
+
+if (isTourExist >0)  Then
+SELECT tournament_score_details.*,events.tournamentName as tournamentName,numRounds, round_details.round_name as roundName,event_Date,courses.* FROM `tournament_score_details`
+inner join events on events.tourID=tournament_score_details.tour_id
+inner join round_details on round_details.tourID=tournament_score_details.tour_id
+inner JOIN courses on courses.cid=tournament_score_details.cid
+WHERE  tournament_score_details.p_id=param_player_id and tournament_score_details.tour_id=param_tour_id and tournament_score_details.isDeleted=0;
+
+
+
+else
+SELECT  *, courses.* FROM `tournament_score_details`
+inner JOIN courses on courses.cid=tournament_score_details.cid
+WHERE  p_id=param_player_id and tour_id=0 and isDeleted=0  and createdDate BETWEEN param_startDate and param_endDate;
+end If;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getRoundDetails` (IN `param_tourID` VARCHAR(100))  BEGIN
 select * from round_details where tourID=param_tourID;
 END$$
@@ -504,7 +527,10 @@ Declare err varchar(2);
 Declare  msg varchar(100);
 DECLARE isRecordExist int;
 
+
 SELECT count(*) into isRecordExist from tournament_group_details WHERE tourID=param_tourId and groupId=param_groupId;
+
+
 if(isRecordExist>0) THEN
 
 select user_details.p_id as playerId,playerName,hdcp, round_name as roundName,tournament_group_details.round_Id,course_rating.courseRating, course_rating.slopeRating,course_rating.teeName ,round_details.cid,tournament_group_player_details.tee_time, tournament_group_player_details.isPlay, tournament_group_player_details.isWithdraw,  tournament_group_details.groupId as groupId, tournament_group_player_details.groupName FROM tournament_group_details 
@@ -514,6 +540,9 @@ INNER JOIN round_details on round_details.round_Id=tournament_group_details.roun
 WHERE tournament_group_player_details.tournamentId=param_tourId AND groupId=param_groupId
 And tournament_group_player_details.isplay=1
 ORDER by user_details.p_id DESC;
+ 
+
+ 
  
 ELSE
 set err="X";
@@ -574,6 +603,14 @@ select user_details.p_id as playerId,playerName, user_details.hdcp,tournament_gr
 inner join tournament_group_player_details  on tournament_group_player_details.groupName =tournament_group_details.groupName 
 inner JOIN user_details  on user_details.p_id=tournament_group_player_details.playerId
 WHERE tournament_group_player_details.tournamentId=param_tour_id AND round_Id=param_round_id and groupid=param_group_id and isWithdraw=0 ORDER by user_details.p_id DESC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournamentId` ()  BEGIN
+Declare tournamentId int;
+Declare roundId int;
+	SELECT tourId into tournamentId FROM `round_details` WHERE Date(event_Date)=Date(DATE_ADD(now(), INTERVAL 1 DAY));
+    SELECT round_details.round_Id into roundId FROM `round_details` WHERE Date(event_Date)=Date(DATE_ADD(now(), INTERVAL 1 DAY));
+   update  live_tournament_round_details set live_tournament_round_details.tour_id=tournamentId,live_tournament_round_details.round_Id=roundId;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getTournamentInvitedPlayerList` (IN `param_tournamentId` VARCHAR(50))  BEGIN
@@ -750,7 +787,9 @@ Declare err varchar(2);
 Declare  msg varchar(100);
 SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 select count(*) into isTourExist from events where tourID=param_tour_id;
-if (isTourExist >0)  Then
+
+
+IF (isTourExist >0)  Then
 if(param_isLead=0) THEN
 
 
@@ -816,6 +855,8 @@ else
 set err="X";
 set msg="Tournament not exist";
 end If;
+SELECT err,msg from DUAL;
+
 
 END$$
 
@@ -1299,6 +1340,7 @@ Declare err varchar(2);
 Declare  msg varchar(100);
 DECLARE isRecordExist int;
 DECLARE recordExist int;
+ DECLARE isScoreExist int;
 
 SELECT count(*) into isRecordExist from tournament_group_details WHERE tourID=param_tourId and round_Id=param_roundId and groupId=param_groupId;
 if(isRecordExist>0) THEN
@@ -1319,6 +1361,16 @@ set msg="Score updated successfully";
 END IF;
  call CalculateHandicapIndex(param_playerId);
  call 	updatePlayerHandicap(param_playerId,param_cid,param_teeName);
+ 
+
+ 
+SELECT count(*) into isScoreExist from tournament_score_details WHERE p_id=param_playerId and tour_id=param_tourId and round_Id=param_roundId and groupId=param_groupId; 
+if(isScoreExist>0) THEN
+select hdcp from  tournament_score_details WHERE p_id=param_playerId and tour_id=param_tourId and round_Id=param_roundId and groupId=param_groupId; 
+ELSE
+select hdcp from  user_details WHERE p_id=param_playerId;
+end if;
+
 ELSE
 set err="X";
 set msg="Record not found";
@@ -1774,9 +1826,9 @@ CREATE TABLE `courses` (
 --
 
 INSERT INTO `courses` (`cid`, `c_code`, `cname`, `caddress`, `par1`, `par2`, `par3`, `par4`, `par5`, `par6`, `par7`, `par8`, `par9`, `par10`, `par11`, `par12`, `par13`, `par14`, `par15`, `par16`, `par17`, `par18`, `pinn`, `pout`, `hdcp1`, `hdcp2`, `hdcp3`, `hdcp4`, `hdcp5`, `hdcp6`, `hdcp7`, `hdcp8`, `hdcp9`, `hdcp10`, `hdcp11`, `hdcp12`, `hdcp13`, `hdcp14`, `hdcp15`, `hdcp16`, `hdcp17`, `hdcp18`, `is_deleted`) VALUES
-(1, '', 'GOLDEN GREENS GOLF & RESORTS', 'Sector 79, Village, Sakatpur Rd, Gurugram, Haryana 122002', 4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 5, 3, 4, 4, 4, 3, 4, 5, 36, 36, 15, 3, 11, 17, 7, 9, 1, 13, 5, 14, 8, 18, 2, 12, 6, 16, 4, 10, 0),
-(2, '', 'CLASSIC GOLF RESORT | RIDGE/VALLEY', ' P.O. Hasanpur, Tauru, Haryana 122105', 4, 3, 5, 4, 3, 4, 4, 4, 5, 4, 3, 4, 4, 5, 4, 4, 3, 5, 36, 36, 13, 15, 3, 7, 17, 11, 5, 1, 9, 6, 14, 16, 4, 12, 8, 2, 18, 10, 0),
-(3, '', 'Qutab Golf Course', ' 249/5 B, Sri Aurobindo Marg, Lado Sarai Extension, Lado Sarai, New Delhi, Delhi 110030', 4, 4, 4, 4, 4, 3, 4, 5, 4, 3, 4, 4, 3, 3, 4, 5, 4, 4, 34, 36, 1, 17, 11, 15, 7, 13, 3, 5, 9, 18, 12, 10, 14, 6, 8, 4, 2, 16, 0),
+(1, 'course1', 'GOLDEN GREENS GOLF & RESORTS', 'Sector 79, Village, Sakatpur Rd, Gurugram, Haryana 122002', 4, 4, 4, 3, 5, 4, 4, 3, 5, 4, 5, 3, 4, 4, 4, 3, 4, 5, 36, 36, 15, 3, 11, 17, 7, 9, 1, 13, 5, 14, 8, 18, 2, 12, 6, 16, 4, 10, 0),
+(2, 'course2', 'CLASSIC GOLF RESORT | RIDGE/VALLEY', ' P.O. Hasanpur, Tauru, Haryana 122105', 4, 3, 5, 4, 3, 4, 4, 4, 5, 4, 3, 4, 4, 5, 4, 4, 3, 5, 36, 36, 13, 15, 3, 7, 17, 11, 5, 1, 9, 6, 14, 16, 4, 12, 8, 2, 18, 10, 0),
+(3, 'course3', 'Qutab Golf Course', ' 249/5 B, Sri Aurobindo Marg, Lado Sarai Extension, Lado Sarai, New Delhi, Delhi 110030', 4, 4, 4, 4, 4, 3, 4, 5, 4, 3, 4, 4, 3, 3, 4, 5, 4, 4, 34, 36, 1, 17, 11, 15, 7, 13, 3, 5, 9, 18, 12, 10, 14, 6, 8, 4, 2, 16, 0),
 (29, 'course29', 'CLASSIC GOLF RESORT | CANYON/RIDGE', 'P.O. Hasanpur, Tauru, Haryana 122105', 3, 5, 3, 4, 4, 4, 4, 5, 4, 4, 3, 5, 4, 3, 4, 4, 4, 5, 36, 36, 17, 1, 15, 13, 11, 9, 5, 3, 7, 14, 16, 4, 8, 18, 12, 6, 2, 10, 0);
 
 -- --------------------------------------------------------
@@ -1897,7 +1949,8 @@ INSERT INTO `events` (`tourID`, `tournamentName`, `eventType`, `numRounds`, `is_
 (4, 'test', '6', 2, 0, '2022-11-08 18:30:00', '2022-11-09 18:30:00', '2022-11-09 06:44:50', '2022-11-09 06:44:50', '', '', 0, 18),
 (5, 'dsddd', '6', 2, 1, '2022-11-09 18:30:00', '2022-11-11 18:30:00', '2022-11-09 07:28:27', '2022-11-09 07:28:27', '', '', 0, 18),
 (6, 'gg', '1', 2, 0, '2022-11-08 18:30:00', '2022-11-09 18:30:00', '2022-11-09 07:39:34', '2022-11-09 07:39:34', '', '', 0, 18),
-(7, 'aaaaa', '1', 2, 0, '2022-11-09 18:30:00', '2022-11-10 18:30:00', '2022-11-09 07:45:42', '2022-11-09 07:45:42', '', '', 0, 18);
+(7, 'aaaaa', '1', 2, 0, '2022-11-09 18:30:00', '2022-11-10 18:30:00', '2022-11-09 07:45:42', '2022-11-09 07:45:42', '', '', 0, 18),
+(8, '28nov', '1', 3, 0, '2022-11-27 18:30:00', '2022-11-29 18:30:00', '2022-11-28 06:23:52', '2022-11-28 06:23:52', '', '', 0, 18);
 
 -- --------------------------------------------------------
 
@@ -2025,7 +2078,7 @@ CREATE TABLE `live_tournament_round_details` (
 --
 
 INSERT INTO `live_tournament_round_details` (`st_id`, `tour_id`, `round_Id`) VALUES
-(1, 1, 3);
+(1, 7, 20);
 
 -- --------------------------------------------------------
 
@@ -2250,7 +2303,10 @@ INSERT INTO `round_details` (`round_Id`, `event_Date`, `cid`, `tourID`, `created
 (17, '2022-11-09 00:00:00', 2, 6, '2022-11-09 07:39:34', '2022-11-09 07:39:34', 'Round1'),
 (18, ' 2022-11-10 00:00:00', 1, 6, '2022-11-09 07:39:34', '2022-11-09 07:39:34', 'Round2'),
 (19, '2022-11-10 00:00:00', 2, 7, '2022-11-09 07:45:42', '2022-11-09 07:45:42', 'Round1'),
-(20, ' 2022-11-11 00:00:00', 1, 7, '2022-11-09 07:45:42', '2022-11-09 07:45:42', 'Round2');
+(20, ' 2022-12-2 00:00:00', 1, 7, '2022-11-09 07:45:42', '2022-11-09 07:45:42', 'Round2'),
+(21, '2022-11-28 00:00:00', 2, 8, '2022-11-28 06:23:52', '2022-11-28 06:23:52', 'Round1'),
+(22, ' 2022-11-29 00:00:00', 1, 8, '2022-11-28 06:23:52', '2022-11-28 06:23:52', 'Round2'),
+(23, ' 2022-11-30 00:00:00', 2, 8, '2022-11-28 06:23:52', '2022-11-28 06:23:52', 'Round3');
 
 -- --------------------------------------------------------
 
@@ -2476,7 +2532,8 @@ INSERT INTO `tournament_group_details` (`groupId`, `groupName`, `tee_Number`, `t
 (1, 'Group1', 13, '12:10', 1, 1),
 (2, 'Group1', 14, '12:12', 3, 11),
 (3, 'Group2', 13, '12:30', 3, 11),
-(6, 'Group1', 17, '12:12', 7, 20);
+(6, 'Group1', 17, '12:12', 7, 20),
+(7, 'Group1', 13, '10:10', 8, 21);
 
 --
 -- Triggers `tournament_group_details`
@@ -2540,7 +2597,10 @@ INSERT INTO `tournament_group_player_details` (`t_player_Id`, `tournamentId`, `g
 (6, 7, 'Group1', 4, '12:22', 0, 0, '19'),
 (7, 7, 'Group1', 2, '12:32', 0, 0, '19'),
 (9, 7, 'Group1', 3, '12:12', 0, 0, '20'),
-(10, 7, 'Group1', 2, '12:22', 0, 0, '20');
+(10, 7, 'Group1', 2, '12:22', 0, 0, '20'),
+(11, 8, 'Group1', 2, '10:10', 1, 0, '21'),
+(12, 8, 'Group1', 4, '10:20', 1, 0, '21'),
+(13, 8, 'Group1', 3, '10:30', 1, 0, '21');
 
 -- --------------------------------------------------------
 
@@ -2577,7 +2637,10 @@ INSERT INTO `tournament_player_list` (`tour_player_id`, `tourID`, `playerID`, `i
 (11, 6, 2, 0, 1, 0, 0, 0, 0, '2022-11-09'),
 (12, 7, 4, 0, 1, 1, 1, 0, 0, '2022-11-09'),
 (13, 7, 3, 0, 1, 1, 1, 0, 0, '2022-11-09'),
-(14, 7, 2, 0, 1, 1, 1, 0, 0, '2022-11-09');
+(14, 7, 2, 0, 1, 1, 1, 0, 0, '2022-11-09'),
+(15, 8, 4, 0, 1, 1, 1, 0, 0, '2022-11-28'),
+(16, 8, 3, 0, 1, 1, 1, 0, 0, '2022-11-28'),
+(17, 8, 2, 0, 1, 1, 1, 0, 0, '2022-11-28');
 
 -- --------------------------------------------------------
 
@@ -2654,7 +2717,8 @@ INSERT INTO `tournament_score_details` (`tour_score_id`, `p_id`, `tour_id`, `sco
 (27, 2, 0, 5, 6, 5, 7, 6, 5, 4, 4, 4, 5, 6, 5, 5, 5, 5, 5, 6, 5, 0, 12, 47, 46, 93, 81, 1, 18, '2', '16.8', '2022-11-23', 0, '15', ''),
 (28, 2, 0, 6, 5, 7, 7, 4, 6, 6, 6, 6, 5, 6, 5, 4, 5, 6, 7, 7, 8, 0, 16, 50, 40, 107, 90, 1, 18, '2', '15.5', '2022-09-21', 0, 'Black', ''),
 (29, 2, 0, 5, 6, 5, 5, 4, 5, 5, 6, 5, 5, 5, 5, 6, 7, 6, 5, 6, 5, 0, 14, 50, 46, 96, 82, 0, 18, '2', '23.5', '2022-11-23', 0, '15', ''),
-(30, 2, 0, 6, 5, 5, 4, 5, 5, 6, 6, 5, 5, 5, 8, 7, 5, 4, 4, 5, 6, 0, 10, 49, 47, 96, 86, 0, 18, '2', '21.2', '2022-11-03', 0, '14', '');
+(30, 2, 0, 6, 5, 5, 4, 5, 5, 6, 6, 5, 5, 5, 8, 7, 5, 4, 4, 5, 6, 0, 10, 49, 47, 96, 86, 0, 18, '2', '21.2', '2022-11-03', 0, '14', ''),
+(31, 2, 8, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 5, 0, 4, 4, 1, 0, 2, '3', '0', '2022-11-28', 0, '2', '7');
 
 -- --------------------------------------------------------
 
@@ -2791,7 +2855,7 @@ CREATE TABLE `user_details` (
 
 INSERT INTO `user_details` (`p_id`, `firstName`, `lastName`, `playerName`, `userName`, `contactNumber`, `email`, `password`, `dob`, `gender`, `homeCourse`, `hdcp`, `handicapIndex`, `hdcpCertificate`, `platformLink`, `vaccineStatus`, `employment`, `companyName`, `jobTitle`, `industry`, `profileImg`, `roleId`, `isDeleted`, `isWebUser`, `isFirstLogin`, `countryId`, `stateId`, `createdDate`, `updatedDate`, `isAccountVerified`, `device_id`, `device_platform`) VALUES
 (1, 'Meenakshi', 'Dhariwal', 'Meenakshi Dhariwal', 'Meen1234', '8786567898', 'meenakshi@echelonedge.com', 'test123@A', '1994-01-07', 'female', 'undefined', '0.00', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 1, 0, 0, 0, NULL, NULL, '2022-10-15 16:13:19', '2022-10-15 16:13:19', 0, 'undefined', 'undefined'),
-(2, 'Ankit', 'Khandelwal', 'Ankit K', 'ankit123', '8278767678', 'ankit.khandelwal@echelonedge.com', 'test123@A', '2022-07-31', 'male', 'undefined', '8.00', '10.50', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 2, 0, 0, 0, 1, 25, '2022-10-16 20:00:45', '2022-10-16 20:00:45', 0, 'undefined', 'undefined'),
+(2, 'Ankit', 'Khandelwal', 'Ankit K', 'ankit123', '8278767678', 'ankit.khandelwal@echelonedge.com', 'test123@A', '2022-07-31', 'male', 'undefined', NULL, '8.90', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 2, 0, 0, 0, 1, 25, '2022-10-16 20:00:45', '2022-10-16 20:00:45', 0, 'undefined', 'undefined'),
 (3, 'anuj', 'chauhan', 'anuj chauhan', 'anujc', '7010112233', 'anuj.chauhan@echelonedge.com', 'Anuj@1234', '2000-04-07', 'male', 'undefined', '15.00', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 3, 0, 0, 0, 1, 6, '2022-11-03 12:10:23', '2022-11-03 12:10:23', 0, 'undefined', 'undefined'),
 (4, 'shivani', 'singh', 'shivani singh', 'shivaniSingh', '7010112233', 'shivani.singh@echelonedge.com', 'Shivi@1234', '1999-09-10', 'male', 'undefined', '14.60', '0.00', 'undefined', 'undefined', 0, 0, 'undefined', 'undefined', '0', NULL, 3, 0, 0, 0, 1, 37, '2022-11-03 12:12:19', '2022-11-03 12:12:19', 0, 'undefined', 'undefined');
 
@@ -3079,7 +3143,7 @@ ALTER TABLE `employment`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `tourID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `event_details`
@@ -3145,7 +3209,7 @@ ALTER TABLE `player_details`
 -- AUTO_INCREMENT for table `round_details`
 --
 ALTER TABLE `round_details`
-  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `round_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `score_details`
@@ -3187,25 +3251,25 @@ ALTER TABLE `tournament_details`
 -- AUTO_INCREMENT for table `tournament_group_details`
 --
 ALTER TABLE `tournament_group_details`
-  MODIFY `groupId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `groupId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tournament_group_player_details`
 --
 ALTER TABLE `tournament_group_player_details`
-  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `t_player_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tournament_player_list`
 --
 ALTER TABLE `tournament_player_list`
-  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `tour_player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `tournament_score_details`
 --
 ALTER TABLE `tournament_score_details`
-  MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `tour_score_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `tournament_winners`
@@ -3230,6 +3294,14 @@ ALTER TABLE `user_details`
 --
 ALTER TABLE `user_role`
   MODIFY `roleId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+DELIMITER $$
+--
+-- Events
+--
+CREATE DEFINER=`root`@`localhost` EVENT `e` ON SCHEDULE EVERY 5 SECOND STARTS '2022-12-01 14:31:11' ON COMPLETION NOT PRESERVE ENABLE DO CALL getTournamentId()$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
