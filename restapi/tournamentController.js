@@ -611,7 +611,7 @@ function getGroupDetails(playerList, groupList) {
 
 tourCtrl.getPlayerDetailForScore = (req, res) => {
     try {
-        let sql = `call getTournamentGroupById("${req.query.tour_id}","${req.query.group_id}")`;
+        let sql = `call getTournamentGroupById("${req.query.tour_id}","${req.query.group_id}",)`;    
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {
@@ -659,7 +659,7 @@ tourCtrl.savetournamentScore = (req, res) => {
                 // }
 
 
-                res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
+                res.send(JSON.stringify({ "error": "", "response": { result: results[1][0],hdcp: results[0][0] } }));
             }
         });
     } catch (error) {
@@ -908,8 +908,9 @@ tourCtrl.getTournamentWinnersByTourId = (req, res) => {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             } else {
                 let birdiewinner;
+                
                 if(results?.[2]!=""){
-                    birdiewinner=results[2][0];
+                    birdiewinner=results?.[2]?.[0];
                 }
 else{
     birdiewinner=[];
@@ -922,6 +923,27 @@ else{
         res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
     }
 };
+
+
+tourCtrl.playerScoreDetailById= (req, res) => {
+    try {
+        let sql = `call getPlayerScoresById("${req.query.tour_id}","${req.query.player_id}","${req.query.startDate}","${req.query.endDate}")`;
+        connection.query(sql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            } else {
+
+                res.send(JSON.stringify({ "error": "", "response": { result: results[0] } }));
+            }
+        });
+    } catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
+};
+
+
+
 
 
 function releaseconnection() {
