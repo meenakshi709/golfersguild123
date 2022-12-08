@@ -360,7 +360,8 @@ export class AddEditLeaderboardComponent implements OnInit {
             this.teeNameList = res[0].response.result;
             this.groupList = res[1].response.result;
             if (this.data.selectedRecordDetails) {
-              this.scoreForm.controls['groupId'].setValue(this.data.selectedRecordDetails['groupId']);
+              debugger;
+              this.scoreForm.controls['groupId'].setValue(Number(this.data.selectedRecordDetails['groupId']));
               this.scoreForm.controls['teeName'].setValue(Number(this.data.selectedRecordDetails['teeName']));
               this.teeNameList.forEach((item: any) => {
 

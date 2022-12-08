@@ -20,7 +20,7 @@ export class LeaderboardTableComponent {
   dataOption: DataTables.Settings = {};
   roundsArr: any = [];
 
-  //leadData = leaderboardData;
+  
 
   constructor(private service: CommonServiceService) {
     //get request from web api
@@ -47,25 +47,17 @@ export class LeaderboardTableComponent {
 
 
   summryTable() {
-
     this.service.getAPIMethod('/tournament/tourDetails').subscribe((APIresponse: any) => {
-
-
       const tourId = APIresponse.response?.result?.tour_id;
-      // var roundID = APIresponse.response.result.round_Id;
-
       this.service.getAPIMethod('/tournament/tournamentScoreById?tournamentId=' + tourId + '&playerId=0').subscribe((APTres: any) => {
         this.combinedplayerData = [];
         if (APTres.response && APTres.response.result) {
 
-          const getResponse = APTres.response.result;
+          //const getResponse = APTres.response.result;
           this.respnseData = APTres.response.result;
-          const newArr: any = [];
+         // const newArr: any = [];
           this.respnseData.filter((item: any, index: any) => {
-
             const recordDetails = item[0];
-
-            const isActive = false;
             let finalData: any = {
 
               'playerName': recordDetails?.playerName,
@@ -74,22 +66,15 @@ export class LeaderboardTableComponent {
               'TotalNet': recordDetails?.TotalNet,
               'TotalBirdie': recordDetails?.TotalBirdie,
               'round': recordDetails?.round,
-
-
-            }
-            debugger;
+            }    
             if (recordDetails.round.length > this.roundsArr.length) {
               recordDetails.round.forEach((round: any) => {
                 this.roundsArr.push(round.round);
               });
-
             }
             this.combinedplayerData.push(finalData);
             // console.log('final',finalData);
           });
-          debugger;
-          console.log('final', this.combinedplayerData);
-
         }
       }, error => console.error(error));
 
