@@ -611,7 +611,7 @@ function getGroupDetails(playerList, groupList) {
 
 tourCtrl.getPlayerDetailForScore = (req, res) => {
     try {
-        let sql = `call getTournamentGroupById("${req.query.tour_id}","${req.query.group_id}",)`;    
+        let sql = `call getTournamentGroupById("${req.query.tour_id}","${req.query.group_id}",)`;
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {
@@ -659,7 +659,7 @@ tourCtrl.savetournamentScore = (req, res) => {
                 // }
 
 
-                res.send(JSON.stringify({ "error": "", "response": { result: results[1][0],hdcp: results[0][0] } }));
+                res.send(JSON.stringify({ "error": "", "response": { result: results[1][0], hdcp: results[0][0] } }));
             }
         });
     } catch (error) {
@@ -861,7 +861,7 @@ tourCtrl.savePastScores = (req, res) => {
 };
 
 //invited player list 
-tourCtrl.getInvitedPlayerList= (req, res) => {
+tourCtrl.getInvitedPlayerList = (req, res) => {
     try {
         let sql = `call getTournamentInvitedPlayerList(${req.query.tourID})`;
         connection.query(sql, function (error, results) {
@@ -878,7 +878,7 @@ tourCtrl.getInvitedPlayerList= (req, res) => {
 };
 
 //tournament send invitation player  list 
-tourCtrl.getSendInvitePlayerList= (req, res) => {
+tourCtrl.getSendInvitePlayerList = (req, res) => {
     try {
         let sql = `call getTournamentPlayerList(${req.query.tourID})`;
         connection.query(sql, function (error, results) {
@@ -907,16 +907,15 @@ tourCtrl.getTournamentWinnersByTourId = (req, res) => {
             if (error) {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             } else {
-                let birdiewinner;
-                
-                if(results?.[2]!=""){
-                    birdiewinner=results?.[2]?.[0];
+                if (results[0][0].err != 'X') {
+                    let birdiewinner = [];
+                    if (results?.[2] != "") {
+                        birdiewinner = results?.[2]?.[0];
+                    }
+                    res.send(JSON.stringify({ "error": "", "response": { grossWinner: results[0], netWinner: results[1], birdieWinner: birdiewinner } }));
+                } else {
+                    res.send(JSON.stringify({ "error": "X", "response": { msg:results[0][0].msg } }));
                 }
-else{
-    birdiewinner=[];
-}
-
-                res.send(JSON.stringify({ "error": "", "response": { grossWinner: results[0],netWinner:results[1],birdieWinner: birdiewinner}}));
             }
         });
     } catch (error) {
@@ -925,7 +924,7 @@ else{
 };
 
 
-tourCtrl.playerScoreDetailById= (req, res) => {
+tourCtrl.playerScoreDetailById = (req, res) => {
     try {
         let sql = `call getPlayerScoresById("${req.query.tour_id}","${req.query.player_id}","${req.query.startDate}","${req.query.endDate}")`;
         connection.query(sql, function (error, results) {

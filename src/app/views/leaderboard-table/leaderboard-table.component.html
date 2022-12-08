@@ -11,7 +11,7 @@
               <thead>
               <tr >
                
-                <th scope="col" class="text-left">Players</th>
+                <th scope="col" class="text-left">Players </th>
                 <!-- <th scope="col">Par</th> -->
                 <!-- <th scope="col">R1</th>
                 <th scope="col">R2</th>
@@ -20,9 +20,11 @@
                 <!-- <span *ngFor="let rounds of combinedplayerData[0].round">
                   <th scope="col" style="min-width:50px;text-align: center;">{{rounds.round}}</th>
                 </span> -->
-                <th scope="col"  *ngFor="let rounds of combinedplayerData[0].round">
+                
+                <th scope="col"  *ngFor="let roundName of this.roundsArr">
+                  
                   <span style="min-width:30px;text-align: left;">
-                    {{rounds.round}}
+                    {{roundName}}
                   </span>                           
                 </th>
 
@@ -31,7 +33,7 @@
                 <th scope="col" sortable="net">NET</th>
                 <th scope="col" sortable="birdie" >Birdies</th>
                 
-                
+              
               </tr>
               </thead>
               <tbody>
@@ -40,7 +42,7 @@
                     
                                 
                                   <td class="text-left">{{score?.playerName}}</td>
-                                   <td *ngFor="let round of score.round">
+                                   <td *ngFor="let round of this.roundsArr">
                                      <span style="min-width:50px;text-align: left;">                              
                                          {{round?.score}}  </span>
                                     </td>
