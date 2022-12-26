@@ -49,7 +49,7 @@ router.post("/tournament/approvedListBytourOrganizer",tourCtrl.approvedListBytou
 router.get("/tournament/deleteTournament",tourCtrl.deleteTournament);
 router.post("/tournament/saveTournamentGroupDetails", tourCtrl.saveTournamentGroupDetails);
 router.post("/tournament/saveTournamentCouponDetails", tourCtrl.saveTournamentCouponDetails);
-router.get("/tournament/getTournamentCouponList",auth.verifyAuthToken, tourCtrl.getTournamentCouponList);
+router.get("/tournament/getTournamentCouponList", tourCtrl.getTournamentCouponList);
 router.post("/contactdetails",commonCtrl.contactdetails);
 router.get("/tournament/tournamentDetailedScoreById", tourCtrl.tournamentDetailedScoreById);
 router.get("/tournament/getApprovalStatusForPlayer",tourCtrl.getApprovalStatusForPlayer);

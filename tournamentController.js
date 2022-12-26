@@ -407,7 +407,7 @@ tourCtrl.saveTournamentCouponDetails = (req, res) => {
                     res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
                 } else {
                     data.couponArr.filter((item, eventIndex) => {
-                        let event = `call saveTournamentCouponDetails("${item.name}","${item.quantity}","${data.tourId}","${item.roundId}")`;
+                        let event = `call saveTournamentCouponDetails("${item.name}","${item.quantity}","${data.tourId}","${item.roundId}",0,0)`;
                         connection.query(event, function (error, results) {
                             if (error) {
                                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
@@ -435,7 +435,7 @@ tourCtrl.saveTournamentCouponDetails = (req, res) => {
 
 tourCtrl.getTournamentCouponList = (req, res) => {
     try {
-        let sql = `call getTournamentCouponDetails("${req.query.tourId}","${req.query.roundId}","${req.query.playerId}")`;
+        let sql = `call getTournamentCouponDetails("${req.query.tourId}","${req.query.roundId}")`;
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {
@@ -611,7 +611,7 @@ function getGroupDetails(playerList, groupList) {
 
 tourCtrl.getPlayerDetailForScore = (req, res) => {
     try {
-        let sql = `call getTournamentGroupById("${req.query.tour_id}","${req.query.group_id}",)`;
+        let sql = `call getTournamentGroupById("${req.query.tour_id}","${req.query.group_id}")`;
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {
@@ -659,13 +659,14 @@ tourCtrl.savetournamentScore = (req, res) => {
                 // }
 
 
-                res.send(JSON.stringify({ "error": "", "response": { result: results[1][0], hdcp: results[0][0] } }));
+                res.send(JSON.stringify({ "error": "", "response": { result: results[1][0],hdcp: results[0][0] } }));
             }
         });
     } catch (error) {
         res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
     }
 };
+
 
 
 //updated new api
@@ -861,7 +862,7 @@ tourCtrl.savePastScores = (req, res) => {
 };
 
 //invited player list 
-tourCtrl.getInvitedPlayerList = (req, res) => {
+tourCtrl.getInvitedPlayerList= (req, res) => {
     try {
         let sql = `call getTournamentInvitedPlayerList(${req.query.tourID})`;
         connection.query(sql, function (error, results) {
@@ -878,7 +879,7 @@ tourCtrl.getInvitedPlayerList = (req, res) => {
 };
 
 //tournament send invitation player  list 
-tourCtrl.getSendInvitePlayerList = (req, res) => {
+tourCtrl.getSendInvitePlayerList= (req, res) => {
     try {
         let sql = `call getTournamentPlayerList(${req.query.tourID})`;
         connection.query(sql, function (error, results) {
@@ -895,7 +896,7 @@ tourCtrl.getSendInvitePlayerList = (req, res) => {
 };
 
 
-
+//winner api
 
 tourCtrl.getTournamentWinnersByTourId = (req, res) => {
 
@@ -924,7 +925,9 @@ tourCtrl.getTournamentWinnersByTourId = (req, res) => {
 };
 
 
-tourCtrl.playerScoreDetailById = (req, res) => {
+
+
+tourCtrl.playerScoreDetailById= (req, res) => {
     try {
         let sql = `call getPlayerScoresById("${req.query.tour_id}","${req.query.player_id}","${req.query.startDate}","${req.query.endDate}")`;
         connection.query(sql, function (error, results) {
@@ -940,7 +943,6 @@ tourCtrl.playerScoreDetailById = (req, res) => {
         res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
     }
 };
-
 
 
 

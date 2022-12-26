@@ -24,8 +24,8 @@
             (click)="getRoundDetailByID(tourData?.tourID);this.selectedTournament=ij">
             <div class="row bgColorClass" >
               <div class="col-lg-9 col-sm-9 col-xs-9 col-md-9 ">
-                <h5 class="text-red">{{tourData?.tournamentName}}</h5>
-                <p>Event Type - {{tourData?.eventType}}</p>
+                <h5 class="text-red">{{tourData?.tournamentName | titlecase}}</h5>
+                <p>Event Type - {{tourData?.eventTypeName}}</p>
               </div>
               <div class="col-lg-3 col-sm-3 col-xs-3 col-md-3 text-center">
                 <p><span class="small-box text-center">{{tourData?.numRounds}}</span><br><b>Rounds</b></p>

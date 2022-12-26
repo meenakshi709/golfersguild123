@@ -1,6 +1,6 @@
-import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { HttpBackend, HttpClient,HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, from } from 'rxjs';
+import { Observable, of, from, Subscriber } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
@@ -12,8 +12,11 @@ export class CommonServiceService {
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
+
+
+  updated!: Subscriber<boolean>;
  // baseURL:any = environment['serverUrl'];
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private httpbackend: HttpBackend) { }
 getScoreApi()
 {
   return this.http.get('/score');
@@ -80,5 +83,34 @@ showToasterMsg(typeIcon: any, msg: any) {
     title: msg,
   });
 }
+
+
+
+httpOptionsauth() {
+  return {
+    headers: new HttpHeaders({
+      Authorization: 'Bearer ' + sessionStorage.getItem('access-token'),
+   //   role_id:this.role?this.role:'',
+      "Access-Control-Allow-Methods": "GET, POST,PUT,DELETE",
+      // 'Content-Type': 'application/json'
+    })
+  };
+}
+
+
+public uploadImg(url: any, imgObj:any): Observable<any> {
+  let http = new HttpClient(this.httpbackend);
+  return http.post<any>(url, imgObj, this.httpOptionsauth()).pipe(
+    map((res: any) => {
+      this.updated.next(true);
+      return res;
+    }),
+    catchError(<T>(error: any, result?: T) => {
+      return of(result as T);
+    })
+  );
+}
+
+
 
 }

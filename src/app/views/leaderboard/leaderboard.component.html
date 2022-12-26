@@ -72,18 +72,18 @@
                                                 <th colspan="3" class="text-left"><h5><img src="../../assets/images/congo.svg" width="60"><br> &nbsp;Congratulations!!</h5></th>
                                             </tr>
                                             <tr class="p-0 m-0" *ngFor="let item of filteredGross">
-                                                <td><p>  {{ item?.name}}
+                                                <td><p>  {{ item?.name | titlecase}}
                                                 </td>
                                                 <td> <p> {{ item?.gross}}</p> </td>
                                                 <td ><span class="gross"> Gross</span></td>
                                             </tr>
                                             <tr *ngFor="let item of filteredNet">
-                                                <td><p>{{ item?.name}}</p></td>
+                                                <td><p>{{ item?.name | titlecase}}</p></td>
                                                 <td>  <p>{{ item?.net}}</p> </td>
                                                 <td><span class="net"> Net</span></td>
                                             </tr>
                                             <tr *ngFor="let item of filteredBirdie">
-                                                <td><p>{{ item?.name}}</p></td>
+                                                <td><p>{{ item?.name | titlecase}}</p></td>
                                                 <td> <p>{{ item?.birdie}}</p> </td>
                                                 <td><span class="birdie"> Birdie</span></td>
                                             </tr>
@@ -141,7 +141,7 @@
                                     
                                     <th scope="row" class="starbg" width="40"> </th>
                                     <td class="holebox2" width="130" >
-                                        {{ player?.board?.playerName }} <mat-icon style="color:#fcb430;font-size:14px;" (click)="isSfpShown=!isSfpShown">info</mat-icon>
+                                        {{ player?.board?.playerName | titlecase }} <mat-icon style="color:#fcb430;font-size:14px;" (click)="isSfpShown=!isSfpShown">info</mat-icon>
                                     </td>
                               
                                    

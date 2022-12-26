@@ -167,12 +167,13 @@ export class AddEditPlayerComponent implements OnInit {
     if (event.target.files && event.target.files[0]) {
       let fileType = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
       if (fileType === "jpg" || fileType === "png" || fileType === "jpeg") {
-        if (file.size < 28097 && file.size > 1097) {
+        if (file.size < 2809007 && file.size > 1097) {
           this.Uploadedfile = file;
           reader.readAsDataURL(file);
           // When file uploads set it to file formcontrol
           reader.onload = () => {
             this.imageUrl = reader.result;
+            this.uploadImg(file);
             fileInput.value = "";
           }
         } else {
@@ -186,5 +187,31 @@ export class AddEditPlayerComponent implements OnInit {
 
     }
   }
+
+
+
+
+
+//upload image
+
+uploadImg(file:any) {
+debugger
+  let img = {
+    baseImg: this.imageUrl
+  }
+  let formdata=new FormData;
+  formdata.append('fileName',file);
+  this.service.uploadImg('/addUpdateProfilePic',formdata).subscribe((result) => {
+  
+    if (result.error === 'X') {
+      this.sweetAlertMsg('error', result.msg);
+    } else {
+      this.sweetAlertMsg('success', result.msg);
+      //this.userDetails()
+    }
+  });
+}
+
+
 
 }

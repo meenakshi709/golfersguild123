@@ -161,12 +161,13 @@
                             Please select gender
                         </mat-error>
                     </div>
-                    <!-- <div class="col-sm-3 col-xs-12 col-lg-3 col-md-3" *ngIf="!this.data.userDetails">
+                    <div class="col-sm-3 col-xs-12 col-lg-3 col-md-3">
                         <div class="upload-btn-wrapper mt-3">
                             <button class="btn1">Upload a file</button>
-                            <input type="file" name="myfile" />
+                            <input type="file" #fileInput  (change)="uploadFile($event, fileInput)" name="myfile" />
                         </div>
-                    </div> -->
+                    </div>
+                    
                 </div>
 
 

@@ -15,8 +15,8 @@ usrCtrl.userlogin = (req, res) => {
     try {
         const data = req.body;
         let sql = `Call user_login("${data.email}", "${data.password}","")`;
-        if (data.isWebLogin==1) {
-             sql = `Call user_login("${data.email}", "${data.password}",${data.isWebLogin})`;
+        if (data.isWebLogin == 1) {
+            sql = `Call user_login("${data.email}", "${data.password}",${data.isWebLogin})`;
         }
 
         connection.query(sql, function (error, results) {
@@ -25,7 +25,7 @@ usrCtrl.userlogin = (req, res) => {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             } else {
                 if (results[1][0]?.err == '') {
-                  
+
                     const key = config.JWTSECRET;
                     let token = auth.generateJwt(results[0][0], key);
                     res.end(JSON.stringify({ "error": "", "response": { result: results[0], msg: results[1].msg, "token": token, "sessionKey": key } }));
@@ -221,7 +221,7 @@ usrCtrl.getUserDetails = (req, res) => {
             if (error) {
                 res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
             } else {
-                res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] ,scoreDiff:results[1][0]} }));
+                res.send(JSON.stringify({ "error": "", "response": { result: results[0][0], scoreDiff: results[1][0] } }));
             }
         });
     } catch (error) {
@@ -229,25 +229,7 @@ usrCtrl.getUserDetails = (req, res) => {
     }
 };
 
-// profile image 
 
-
-usrCtrl.addUpdateProfilePic = (req, res) => {
-    try {
-        const data = req.body;
-        let addUpdateSql = `Call save_user_picture("${data.p_id}", "${data.profileImg}"  )`;
-        connection.query(addUpdateSql, function (error, results) {
-            releaseconnection();
-            if (error) {
-                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-            } else {
-                res.end(JSON.stringify({ "error": "", "response": results[0] }));
-            }
-        });
-    } catch (error) {
-        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
-    }
-};
 
 
 
@@ -315,6 +297,49 @@ usrCtrl.getUserRole = (req, res) => {
         res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
     }
 };
+
+// profile image 
+
+usrCtrl.addUpdateProfilePic = (req, res) => {
+    try {
+
+        uploadMedia(req);
+        const data = req.body;
+        let addUpdateSql = `Call save_user_picture("${data.p_id}", "${data.profileImg}"  )`;
+        connection.query(addUpdateSql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            } else {
+                res.end(JSON.stringify({ "error": "", "response": results[0] }));
+            }
+        });
+    } catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
+};
+
+
+
+function uploadMedia(req) {
+    let uploadPath;
+    if (!req.files || Object.keys(req.files).length == 0) {
+        res.end(JSON.stringify({ 'error': "X", 'msg': "No files were uploaded. " + '' }));
+        return 0;
+    } else {
+        uploadPath = constants + req.files.fileName['name'];
+
+        const abc = req.files.fileName.mv(uploadPath, function (err) {
+            if (err) {
+
+                res.end(JSON.stringify({ 'error': "X", 'msg': "Something went wrong" + err }));
+                return 0;
+            } else {
+                return 1;
+            }
+        });
+    }
+}
 
 
 /**

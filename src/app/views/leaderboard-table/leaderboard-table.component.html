@@ -24,7 +24,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let score of combinedplayerData; let i=index " style="background-color: #fff;">
-                <td class="text-left">{{score?.playerName}}</td>
+                <td class="text-left">{{score?.playerName | titlecase}}</td>
                 <td *ngFor="let round of this.roundsArr;let i=index">
                   <span style="min-width:50px;text-align: left;">
                     {{score?.round[i]?.score}} </span>

@@ -28,7 +28,7 @@ auth.generateJwt = (option,key) => {
 
 auth.verifyAuthToken = (req, res, next) => {
     try {
-        let token = req.headers.authorization;
+        let token = req.oheaders.authorization;
         let secret = config.JWTSECRET;
         if (typeof token !== 'undefined') {
             token = token.split(" ")[1];
@@ -38,17 +38,17 @@ auth.verifyAuthToken = (req, res, next) => {
                 next();
             } else {
                 logoutFn(req)
-                res.status(401).json({ msg: "Unauthorized request" });
+                res.send({ "err":"X","response":{ msg: "Unauthorized request" }});
             }
         } else {
             logoutFn(req);
-            res.status(401).json({ msg: "Unauthorized request" });
+            res.send({ "err":"X","response":{ msg: "Unauthorized request" }});
         }
     } catch (error) {
         if (error.message === 'jwt expired') {
             logoutFn(req)
         }
-        res.status(401).json({ "err":"X","response":{ msg: "Your session has been expired" }});
+        res.send({ "err":"X","response":{ msg: "Your session has been expired" }});
     }
 }
 
@@ -56,7 +56,7 @@ auth.verifyAuthToken = (req, res, next) => {
 function logoutFn(req) {
     let token = req.headers.authorization;
     token = token.split(" ")[0];
-    let payload = jwt.verify(token, config.JWTSECRET, { ignoreExpiration: true });
+   // let payload = jwt.verify(token, config.JWTSECRET, { ignoreExpiration: true });
 }
 
 

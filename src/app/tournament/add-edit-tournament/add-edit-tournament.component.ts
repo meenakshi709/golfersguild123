@@ -205,8 +205,9 @@ export class AddEditTournamentComponent implements OnInit {
     const couponForm: FormGroup = new FormGroup({
       roundId: new FormControl(data.round_Id ? data.round_Id : '', []),
       name: new FormControl(data.couponCode ? data.couponCode : '', [Validators.required]),
-      quantity: new FormControl(data.couponCount ? data.couponCount : '', [Validators.required])
+      quantity: new FormControl(data.couponCount ? data.couponCount : '1', [Validators.required])
     });
+    couponForm.controls.quantity.disable();
     (this.couponFormGroup.get('couponArr') as FormArray).push(couponForm);
   }
 
