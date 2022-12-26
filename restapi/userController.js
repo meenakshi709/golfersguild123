@@ -327,7 +327,7 @@ function uploadMedia(req) {
         res.end(JSON.stringify({ 'error': "X", 'msg': "No files were uploaded. " + '' }));
         return 0;
     } else {
-        uploadPath = constants + req.files.fileName['name'];
+        uploadPath = 'dist/golfersguild/assets/upload/' + req.files.fileName['name'];
 
         const abc = req.files.fileName.mv(uploadPath, function (err) {
             if (err) {

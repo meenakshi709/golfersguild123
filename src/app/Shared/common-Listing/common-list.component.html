@@ -37,13 +37,6 @@
                            
                             {{ (element[columData] && (element[columData]).length>20)? ( element[columData] | slice:0:20)+'..':( element[columData]) }}
                         </p>
-                       
-
-                       
-                        
-                
-                        
-
                         <!--  shown a Action Menu in listing -->
                         <div *ngIf="(CommonListProperties.columnLabels[i] === 'action' ||columData === 'Action')"
                             class="text-right">

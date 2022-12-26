@@ -13,7 +13,7 @@ var cookieParser = require('cookie-parser');
 // const helmet = require('helmet');
 // app.use(helmet());
 var cors = require('cors');
-
+const fileUpload = require('express-fileupload');
 
 
 // app.use(express.static(path.join(__dirname, 'public')));
@@ -47,7 +47,7 @@ var https = require('https');
 // require('https').globalAgent.options.ca = require('ssl-root-cas').create();
 var fs = require('fs');
 const { exit } = require('process');
-
+app.use(fileUpload());
 app.use(cookieParser({ SameSite: true }));
 app.use(express.json({ limit: "6mb" }));
 app.use(express.urlencoded({ extended: true }));
@@ -55,6 +55,7 @@ app.set('view engine', 'ejs');
 // app.use(express.static(path.join(__dirname, 'nodeproject')));
 app.use('/dataApi', dataApi, cache(10));
 app.use('/', routes);
+
 app.use(express.static(path.join(__dirname, './dist/golfersguild/')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, './dist/golfersguild/index.html'));

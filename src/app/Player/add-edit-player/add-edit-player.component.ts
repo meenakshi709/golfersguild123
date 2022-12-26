@@ -163,8 +163,9 @@ export class AddEditPlayerComponent implements OnInit {
  
   uploadFile(event: any, fileInput: any) {
     let reader = new FileReader(); // HTML5 FileReader API
-    let file = event.target.files[0];
-    if (event.target.files && event.target.files[0]) {
+    debugger;
+    let file = event.currentTarget.files[0];
+    if (event.currentTarget.files && event.currentTarget.files[0]) {
       let fileType = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
       if (fileType === "jpg" || fileType === "png" || fileType === "jpeg") {
         if (file.size < 2809007 && file.size > 1097) {
@@ -199,8 +200,8 @@ debugger
   let img = {
     baseImg: this.imageUrl
   }
-  let formdata=new FormData;
-  formdata.append('fileName',file);
+  let formdata=new FormData();
+  formdata.append('fileName',file,file.name);
   this.service.uploadImg('/addUpdateProfilePic',formdata).subscribe((result) => {
   
     if (result.error === 'X') {
