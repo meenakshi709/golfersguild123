@@ -409,29 +409,50 @@ export class AddEditTournamentComponent implements OnInit {
   }
   saveGroupDetails() {
     const data = this.groupFormGroup.getRawValue();
-    data.tourId = this.data.details.tourID;
-    const grpArr: any = [];
+
+    const urlArr: any = [];
     if (data.groupDetailsArr.length > 0) {
-      data.groupDetailsArr.forEach((item: any) => {
-        grpArr.push(item.group);
+      data.groupDetailsArr.forEach((item: any, index: any) => {
+        debugger;
+        item['tourId'] = this.data.details.tourID;
+        item['roundId'] = data.roundId;
+        if (index == 0) {
+          item['isDeleteGroup'] = true;
+        } else {
+          item['isDeleteGroup'] = false;
+        }
+        const url = this.service.postAPIMethod("/tournament/saveTournamentGroupDetails", item);
+        urlArr.push(url);
       });
-
-      const filtered = grpArr.filter((el: any, index: any) => grpArr.indexOf(el) !== index);
-      if (filtered.length == 0) {
-
-        this.service.postAPIMethod("/tournament/saveTournamentGroupDetails", data).subscribe((APIResponse: any) => {
-      
-          if (APIResponse.error != 'X') {
-            this.sweetAlertMsg("success", APIResponse.response.result.msg);
-            this.closeDialogClick();
+      forkJoin(urlArr).subscribe((APIResponse: any) => {
+        let succesCount = 0;
+        let failureCount = 0;
+        let msg: any;
+        APIResponse.forEach((item: any) => {
+          if (item.error != 'X') {
+            succesCount = succesCount + 1;
+            if(failureCount==0){
+            msg = item.response.result.msg;
+            }
+            // this.sweetAlertMsg("success", item.response.result.msg);
+            // this.closeDialogClick();
           } else {
-            this.sweetAlertMsg("error", APIResponse.response.msg);
+            failureCount = failureCount + 1;
+            //  this.sweetAlertMsg("error", APIResponse.response.msg);
+            msg = item.response.msg;
           }
 
+
         })
-      } else {
-        this.sweetAlertMsg("error", 'Group count must be one');
+        if (succesCount == urlArr.length) {
+          this.sweetAlertMsg("success", msg);
+          this.closeDialogClick();
+        }
       }
+
+      );
+    } else {
+      this.sweetAlertMsg("error", 'Group count must be one');
     }
   }
   // ###############################################################################################
@@ -624,7 +645,7 @@ export class AddEditTournamentComponent implements OnInit {
       else {
         this.playerList = res.response.result;
         this.data.sectionName = 'sendInvite';
-      //  this.data.sectionName = 'invite'
+        //  this.data.sectionName = 'invite'
 
       }
 

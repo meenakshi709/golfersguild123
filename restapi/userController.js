@@ -302,10 +302,9 @@ usrCtrl.getUserRole = (req, res) => {
 
 usrCtrl.addUpdateProfilePic = (req, res) => {
     try {
-
-        uploadMedia(req);
+      const status=  uploadMedia(req);
         const data = req.body;
-        let addUpdateSql = `Call save_user_picture("${data.p_id}", "${data.profileImg}"  )`;
+        let addUpdateSql = `Call save_user_picture("${data.p_id}", "${req.files.fileName['name']}"  )`;
         connection.query(addUpdateSql, function (error, results) {
             releaseconnection();
             if (error) {
@@ -321,18 +320,16 @@ usrCtrl.addUpdateProfilePic = (req, res) => {
 
 
 
-function uploadMedia(req) {
+ function uploadMedia(req) {
     let uploadPath;
     if (!req.files || Object.keys(req.files).length == 0) {
-        res.end(JSON.stringify({ 'error': "X", 'msg': "No files were uploaded. " + '' }));
+       // res.end(JSON.stringify({ 'error': "X", 'msg': "No files were uploaded. " + '' }));
         return 0;
     } else {
         uploadPath = 'dist/golfersguild/assets/upload/' + req.files.fileName['name'];
-
-        const abc = req.files.fileName.mv(uploadPath, function (err) {
+         req.files.fileName.mv(uploadPath, function (err) {
             if (err) {
-
-                res.end(JSON.stringify({ 'error': "X", 'msg': "Something went wrong" + err }));
+              //  res.end(JSON.stringify({ 'error': "X", 'msg': "Something went wrong" + err }));
                 return 0;
             } else {
                 return 1;
@@ -340,6 +337,49 @@ function uploadMedia(req) {
         });
     }
 }
+
+
+
+
+usrCtrl.getUserProfilePic = (req, res) => {
+    try {
+
+        let sql = `call getUserProfilePic()`;
+        connection.query(sql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            } else {
+                res.end(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
+            }
+        });
+    }
+    catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
+};
+
+
+//delete user profile pic
+
+usrCtrl.deleteProfilePic = (req, res) => {
+    try {
+
+        let sql = `call delete_profile_pic("${req.query.p_id}")`;
+        connection.query(sql, function (error, results) {
+            releaseconnection();
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            } else {
+                res.end(JSON.stringify({ "error": "", "response": results[0][0] }));
+            }
+        });
+    }
+    catch (error) {
+        res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
+    }
+};
+
 
 
 /**

@@ -359,39 +359,42 @@ tourCtrl.getCourseTeeList = (req, res) => {
 tourCtrl.saveTournamentGroupDetails = (req, res) => {
     try {
         const data = req.body;
-        if (data && data.groupDetailsArr.length > 0) {
+        
+        if (data.isDeleteGroup) {
             let deleteGroup = `call  delete_tournament_group_details("${data.tourId}")`;
             connection.query(deleteGroup, function (error, deleteGroup) {
                 if (error) {
                     res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
                 } else {
 
-                    data.groupDetailsArr.filter((item, eventIndex) => {
-                        let event = `call saveTournamentGroupDetails("${data.tourId}","${data.roundId}","${item.group}","${item.tee}","${item.teeTime}")`;
-                        connection.query(event, function (error, results) {
-                            if (error) {
-                                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-                            } else {
-                                item.playerDetails.filter((playerDetail, index) => {
-
-                                    let round = `call saveTournamentGroupPlayerDetails("${data.tourId}","${item.group}","${playerDetail.id}","${playerDetail.teeTime}","${data.roundId}")`;
-                                    connection.query(round, function (error, eventDetails) {
-                                        if (error) {
-                                            res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-                                        }
-                                    });
-                                });
-                            }
-                            if (eventIndex == data.groupDetailsArr.length - 1) {
-                                releaseconnection();
-                                res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
-                            }
-                        });
-
-                    });
                 }
             });
         }
+
+        let event = `call saveTournamentGroupDetails("${data.tourId}","${data.roundId}","${data.group}","${data.tee}","${data.teeTime}")`;
+        connection.query(event, function (error, results) {
+            if (error) {
+                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+            } else {
+                data.playerDetails.filter((playerDetail, index) => {
+
+                    let round = `call saveTournamentGroupPlayerDetails("${data.tourId}","${data.group}","${playerDetail.id}","${playerDetail.teeTime}","${data.roundId}")`;
+                    connection.query(round, function (error, eventDetails) {
+                        if (error) {
+                            res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+                        }
+                    });
+                });
+              
+                    releaseconnection();
+                    res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
+                
+            }
+            
+        });
+
+
+
     } catch (error) {
         res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
     }
@@ -611,7 +614,7 @@ function getGroupDetails(playerList, groupList) {
 
 tourCtrl.getPlayerDetailForScore = (req, res) => {
     try {
-        let sql = `call getTournamentGroupById("${req.query.tour_id}","${req.query.group_id}",)`;
+        let sql = `call getTournamentGroupById("${req.query.tour_id}","${req.query.group_id}")`;
         connection.query(sql, function (error, results) {
             releaseconnection();
             if (error) {
@@ -914,7 +917,7 @@ tourCtrl.getTournamentWinnersByTourId = (req, res) => {
                     }
                     res.send(JSON.stringify({ "error": "", "response": { grossWinner: results[0], netWinner: results[1], birdieWinner: birdiewinner } }));
                 } else {
-                    res.send(JSON.stringify({ "error": "X", "response": { msg:results[0][0].msg } }));
+                    res.send(JSON.stringify({ "error": "X", "response": { msg: results[0][0].msg } }));
                 }
             }
         });

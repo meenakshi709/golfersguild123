@@ -179,6 +179,7 @@ tourCtrl.tournamentScoreById = (req, res) => {
 
                     if (req.query.playerId == 0) {
                         tournamentData = getTournamentDetails(results[0]);
+                        console.log("result data", results);
                     } else {
                         tournamentData = getTournamentDetailsByPlayerId(results[0]);
                     }
@@ -359,44 +360,48 @@ tourCtrl.getCourseTeeList = (req, res) => {
 tourCtrl.saveTournamentGroupDetails = (req, res) => {
     try {
         const data = req.body;
-        if (data && data.groupDetailsArr.length > 0) {
+
+        if (data.isDeleteGroup) {
             let deleteGroup = `call  delete_tournament_group_details("${data.tourId}")`;
             connection.query(deleteGroup, function (error, deleteGroup) {
                 if (error) {
                     res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
                 } else {
-
-                    data.groupDetailsArr.filter((item, eventIndex) => {
-                        let event = `call saveTournamentGroupDetails("${data.tourId}","${data.roundId}","${item.group}","${item.tee}","${item.teeTime}")`;
-                        connection.query(event, function (error, results) {
-                            if (error) {
-                                res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-                            } else {
-                                item.playerDetails.filter((playerDetail, index) => {
-
-                                    let round = `call saveTournamentGroupPlayerDetails("${data.tourId}","${item.group}","${playerDetail.id}","${playerDetail.teeTime}","${data.roundId}")`;
-                                    connection.query(round, function (error, eventDetails) {
-                                        if (error) {
-                                            res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
-                                        }
-                                    });
-                                });
-                            }
-                            if (eventIndex == data.groupDetailsArr.length - 1) {
-                                releaseconnection();
-                                res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
-                            }
-                        });
-
-                    });
                 }
-            });
+            })
+            if (data && data.groupDetailsArr.length > 0) {
+                    let event = `call saveTournamentGroupDetails("${data.tourId}","${data.roundId}","${data.group}","${data.tee}","${data.teeTime}")`;
+                    connection.query(event, function (error, results) {
+                        if (error) {
+                            res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+                        } else {
+                            item.playerDetails.filter((playerDetail, index) => {
+
+                                let round = `call saveTournamentGroupPlayerDetails("${data.tourId}","${item.group}","${playerDetail.id}","${playerDetail.teeTime}","${data.roundId}")`;
+                                connection.query(round, function (error, eventDetails) {
+                                    if (error) {
+                                        res.end(JSON.stringify({ 'error': 'X', "response": { 'msg': 'Contact Developers ' + error } }));
+                                    }
+                                });
+                            });
+                        }
+                        if (eventIndex == data.groupDetailsArr.length - 1) {
+                            releaseconnection();
+                            res.send(JSON.stringify({ "error": "", "response": { result: results[0][0] } }));
+                        }
+                    });
+
+                
+            }
         }
     } catch (error) {
         res.end(JSON.stringify({ "err": 'X', "response": { "msg": "contact Developer" + error } }));
     }
-
 }
+
+
+
+
 tourCtrl.saveTournamentCouponDetails = (req, res) => {
     try {
         const data = req.body;
@@ -659,7 +664,7 @@ tourCtrl.savetournamentScore = (req, res) => {
                 // }
 
 
-                res.send(JSON.stringify({ "error": "", "response": { result: results[1][0],hdcp: results[0][0] } }));
+                res.send(JSON.stringify({ "error": "", "response": { result: results[1][0], hdcp: results[0][0] } }));
             }
         });
     } catch (error) {
@@ -862,7 +867,7 @@ tourCtrl.savePastScores = (req, res) => {
 };
 
 //invited player list 
-tourCtrl.getInvitedPlayerList= (req, res) => {
+tourCtrl.getInvitedPlayerList = (req, res) => {
     try {
         let sql = `call getTournamentInvitedPlayerList(${req.query.tourID})`;
         connection.query(sql, function (error, results) {
@@ -879,7 +884,7 @@ tourCtrl.getInvitedPlayerList= (req, res) => {
 };
 
 //tournament send invitation player  list 
-tourCtrl.getSendInvitePlayerList= (req, res) => {
+tourCtrl.getSendInvitePlayerList = (req, res) => {
     try {
         let sql = `call getTournamentPlayerList(${req.query.tourID})`;
         connection.query(sql, function (error, results) {
@@ -915,7 +920,7 @@ tourCtrl.getTournamentWinnersByTourId = (req, res) => {
                     }
                     res.send(JSON.stringify({ "error": "", "response": { grossWinner: results[0], netWinner: results[1], birdieWinner: birdiewinner } }));
                 } else {
-                    res.send(JSON.stringify({ "error": "X", "response": { msg:results[0][0].msg } }));
+                    res.send(JSON.stringify({ "error": "X", "response": { msg: results[0][0].msg } }));
                 }
             }
         });
@@ -927,7 +932,7 @@ tourCtrl.getTournamentWinnersByTourId = (req, res) => {
 
 
 
-tourCtrl.playerScoreDetailById= (req, res) => {
+tourCtrl.playerScoreDetailById = (req, res) => {
     try {
         let sql = `call getPlayerScoresById("${req.query.tour_id}","${req.query.player_id}","${req.query.startDate}","${req.query.endDate}")`;
         connection.query(sql, function (error, results) {

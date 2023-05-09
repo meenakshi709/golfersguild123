@@ -3,23 +3,23 @@
 <div class="container-fluid" id="leaderbrd">
     <div class="row">
         <div class="col-12 col-lg-12 col-sm-12 col-xs-12 col-md-12 text-center">
-            <h3 class="mt-5">GOLFERS GUILD CHAMPIONSHIP 2022</h3>
-            <h4 class="text-danger">LEADERBOARD</h4>
-            <p class="text-white" style="text-align:center;margin:auto;margin-bottom: 20px;">  Media Coverage Partner &nbsp;
-                <img src="../../../assets/images/GolfPlusLogo.jpg" width="150" style="border-radius:10px;"></p>
+            <h3 class="mt-5">GOLFERS GUILD TOURNAMENT 2023</h3>
+            <h4 class="text-danger">LEADERBOARD  <button class="btn  btn-outline-danger" (click)="openModal()">Rules</button> </h4>
+          <p class="text-white" style="text-align:center;margin:auto;margin-bottom: 30px;margin-top: 20px;"> 
+                <img src="../../../assets/images/sponserBanner.png" width="90%" style="border-radius:10px;"></p> 
               
         </div>
     </div>
  
     <div class="row">
         <div class="col-12 col-lg-12 col-sm-12 col-xs-12 col-md-12 text-center">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row">
                     <div class="col-12 col-lg-12 col-sm-12 col-xs-12 col-md-12 text-center">
             <ul  class="nav-tabs" >
                 <li>
                     
-                    <a class="btn btn-red mr-2" *ngFor="let item of roundData?.result" (click)="getRoundDetailByID(item?.tourID,item?.round_Id)" >{{item?.round_name}} </a>
+                    <a class="btn btn-red mr-2 mt-3" *ngFor="let item of roundData?.result" (click)="getRoundDetailByID(item?.tourID,item?.round_Id)" >{{item?.round_name}} </a>
 
                         <div   class="div-static" *ngFor="let rd of scoreData;let ij=index;">
                             <div class="div-scroll" >
@@ -31,8 +31,7 @@
                                             src="../../../assets/images/loc.svg"></h6></th>
 
 
-                                </tr
-                                >
+                                </tr>
                           
                                 <tr>
                                     <td scope="col" class="holebox2 text-left" colspan="2">&nbsp;&nbsp;Holes</td>
@@ -140,8 +139,8 @@
                                   
                                     
                                     <th scope="row" class="starbg" width="40"> </th>
-                                    <td class="holebox2" width="130" >
-                                        {{ player?.board?.playerName | titlecase }} <mat-icon style="color:#fcb430;font-size:14px;" (click)="isSfpShown=!isSfpShown">info</mat-icon>
+                                    <td class="holebox2" width="150" >
+                                      <span class="overflow">{{ player?.board?.playerName | titlecase }} </span> <mat-icon style="color:#fcb430;font-size:14px;" (click)="isSfpShown=!isSfpShown">info</mat-icon>
                                     </td>
                               
                                    
@@ -153,10 +152,10 @@
                                     </td>   
 
                                    
-                                    <td class=""> {{player?.board?.gross}}</td>
-                                    <td class=""> {{player?.board?.hdcp}}</td>
-                                    <th> {{player?.board?.net}}</th>
-                                    <th scope="col" class=" text-center">
+                                    <td class="" width="50"> {{player?.board?.gross}}</td>
+                                    <td class="" width="40"> {{player?.board?.hdcp}}</td>
+                                    <th width="40"> {{player?.board?.net}}</th>
+                                    <th width="50" scope="col" class=" text-center">
                                         
                                         {{player?.board?.birdie}}
                                     </th>
@@ -268,7 +267,16 @@
 
 <h5 id="msg" *ngIf="(scoreData.length==0) && dnotfound==true" class="text-center btn-danger text-white"> You swing your best when you have the fewest things to think about.</h5>
 
-
+<ng-template #content let-modal>
+    
+        <div class="modal-header">
+        
+          <img src="../assets/images/paceofplay.jpeg" width="100%">
+        </div>
+     
+      </ng-template>  
+      
+      
 
 
 <app-footer></app-footer>

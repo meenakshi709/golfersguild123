@@ -1,7 +1,8 @@
 
 import { Component, OnInit, Directive, EventEmitter, Input, Output, QueryList, ViewChildren } from '@angular/core';
 import { CommonServiceService } from '../../Service/common.service';
-
+import { ViewChild, AfterViewInit } from '@angular/core';
+import { ModalDismissReasons, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-leaderboard',
   templateUrl: './leaderboard.component.html',
@@ -26,9 +27,21 @@ export class LeaderboardComponent implements OnInit {
   filteredBirdie: any = [];
   stableFordList: any = [];
   isSfpShown: boolean = false;
-  constructor(private service: CommonServiceService) {
-    //get request from web api
 
+  title = 'golfersguild';
+  modalOptions: NgbModalOptions;
+  closeResult: string = '';
+  @ViewChild('content') content: any;
+
+
+
+
+  constructor(private service: CommonServiceService, private modalService: NgbModal) {
+    //get request from web api
+    this.modalOptions = {
+      backdrop: 'static',
+      backdropClass: 'customBackdrop'
+    }
   }
 
   dtOptions: DataTables.Settings = {};
@@ -55,6 +68,13 @@ export class LeaderboardComponent implements OnInit {
       */
 
     //   this.courseApi();
+  }
+
+  // ngAfterViewInit() {
+  //   //  this.openModal();
+  //   }
+  openModal() {
+    this.modalService.open(this.content, { centered: true });
   }
 
   item: any;
@@ -163,17 +183,17 @@ export class LeaderboardComponent implements OnInit {
             let diff = (scoreValue - value);
             if (this.tournamentDetails.eventType == 1) {
               for (let i = 0; i < this.stableFordList.length; i++) {
-               
+
                 if (diff == this.stableFordList[i].netScorePoints) {
 
                   if (hdcpValue <= item.hdcp) {
-                   
+
                     let total = (this.stableFordList[i].points + 1);
                     stfArr.push(total);
                     break;
                   }
                   else {
-                   
+
                     stfArr.push(this.stableFordList[i].points);
                     break;
                   }
@@ -194,7 +214,7 @@ export class LeaderboardComponent implements OnInit {
             if (indexNumber == 9 || indexNumber == 18) {
               let stfSum = 0;
               if (stfArr.length > 0) {
-               
+
                 for (let i = 0; i < stfArr.length; i++) {
                   stfSum += parseInt(stfArr[i]);
                 }
@@ -283,7 +303,7 @@ export class LeaderboardComponent implements OnInit {
                 }
               }
             });
-           
+
             this.scoreData = uni;
           }
 
@@ -308,18 +328,30 @@ export class LeaderboardComponent implements OnInit {
   getTourDetail(tourId: string): void {
     this.service.getAPIMethod(`/tournament/tournamentScoreById?tournamentId=${tourId}&playerId=0`).subscribe((APTres: any) => {
      
-      this.tourDetail = APTres?.response?.result[0];
-      if (this.tourDetail) {
-        console.log(this.tourDetail)
-        this.getGross(this.tourDetail)
+      if (APTres?.response?.result.length > 0) {
 
+       
+        const arr: any = [];
+        APTres?.response?.result.forEach((itemArr: any, index: any) => {
+          itemArr.forEach((elem: any) => {
+            arr.push(elem);
+          })
+
+        })
+        this.tourDetail = arr;
+        if (this.tourDetail) {
+
+          console.log("tournament dateil", this.tourDetail)
+          this.getGross(this.tourDetail)
+
+        }
       }
-
     })
 
   }
 
   getGross(data: any) {
+
     const length = 2
     const filterData: any = data
     if (filterData && filterData.length > 0) {
@@ -327,8 +359,10 @@ export class LeaderboardComponent implements OnInit {
       let getNetData = filterData
       for (let index = 0; index < length; index++) {
         if (getGrossData?.length > 0) {
+         
           let topGross = Math.min(...getGrossData.map((o: any) => o['TotalGross']));
           const grossObj = getGrossData.filter((obj: any) => obj.TotalGross == topGross)
+         
           this.filteredGross.push({ name: grossObj[0]?.playerName, gross: grossObj[0]?.TotalGross })
           getGrossData = getGrossData.filter((obj: any) => obj.TotalGross !== topGross)
         }
@@ -363,6 +397,7 @@ export class LeaderboardComponent implements OnInit {
 
 
   getnet1(data: any) {
+
     if (data && data.length > 0) {
       let z = Math.min(...data.map((o: any) => o['board']['net']));
       let index = data.findIndex((x: any) => x['board']['net'] == z);
@@ -383,6 +418,7 @@ export class LeaderboardComponent implements OnInit {
   }
 
   getbird1(data: any) {
+
     if (data && data.length > 0) {
       console.log(data)
       let z = Math.max(...data.map((o: any) => o['board']['birdie']));

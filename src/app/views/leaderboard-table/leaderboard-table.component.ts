@@ -33,8 +33,12 @@ export class LeaderboardTableComponent {
       pagingType: 'full_numbers',
       pageLength: 5,
       processing: true,
+      // dom: 'Bfrtip',
+      // buttons: [
+      //     'copy', 'csv', 'excel', 'print'
+      // ],
       "columnDefs": [{
-        'targets': [1, 2], /* column index */
+        'targets': [1,2], /* column index */
         'orderable': false /* true or false */
 
 

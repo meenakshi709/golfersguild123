@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -34,13 +35,15 @@ export class AddEditPlayerComponent implements OnInit {
     profileImg: new FormControl('', []),
     password: new FormControl('', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}')]),
     isWebUser: new FormControl(1, []),
-    isFirstLogin: new FormControl(0, [])
+    isFirstLogin: new FormControl(0, []),
+
   })
   constructor(
     public dialogRef: MatDialogRef<AddEditPlayerComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private formBuilder: FormBuilder,
     private service: CommonServiceService,
+    public datePipe:DatePipe,
     public route: Router) { }
 
   get f() { return this.PlayerForm.controls; }
@@ -70,10 +73,15 @@ export class AddEditPlayerComponent implements OnInit {
     for (let i = 0; i < keys.length; i++) {
       const keyName = keys[i];
       if (keyName == 'dob') {
-        
-        formGroup[keyName].setValue(new Date(this.data.userDetails[keyName]))
+        debugger;
+        let dateParts = this.data.userDetails[keyName].split("/"); // month is 0-based, that's why we need dataParts[1] - 1 
+        let dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+
+        formGroup[keyName].setValue(new Date(dateObject))
       } else {
+        if(formGroup[keyName]){
         formGroup[keyName].setValue(this.data.userDetails[keyName])
+        }
       }
     }
   }
@@ -201,6 +209,8 @@ debugger
     baseImg: this.imageUrl
   }
   let formdata=new FormData();
+  
+  //formdata.append('userId',file,this.PlayerForm);
   formdata.append('fileName',file,file.name);
   this.service.uploadImg('/addUpdateProfilePic',formdata).subscribe((result) => {
   

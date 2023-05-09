@@ -35,7 +35,7 @@ router.get("/course", commonCtrl.course);
 router.get("/score",commonCtrl.score);
 router.post("/tournament/saveEventDetails",tourCtrl.saveEventDetails);
 router.post("/tournamentInvitation",tourCtrl.tournamentInvitation);
-router.get("/getTournamentListing", auth.verifyAuthToken,tourCtrl.getTournamentListing);
+router.get("/getTournamentListing",tourCtrl.getTournamentListing);
 router.get("/tournament/invitedTournamentListById",tourCtrl.invitedTournamentListById);
 router.post("/tournament/invitationAcceptDenyById",tourCtrl.invitationAcceptDenyById);
 router.get("/tournament/tournamentScoreById",tourCtrl.tournamentScoreById);
@@ -99,7 +99,7 @@ router.get("/tournament/getInvitedPlayerList",tourCtrl.getInvitedPlayerList);
 router.get("/tournament/getSendInvitePlayerList",tourCtrl.getSendInvitePlayerList);
 router.get("/tournament/getTournamentWinnersByTourId",tourCtrl.getTournamentWinnersByTourId);
 router.get("/tournament/playerScoreDetailById",tourCtrl.playerScoreDetailById);
-
+router.get("/deleteProfilePic",usrCtrl.deleteProfilePic);
 
 
 
