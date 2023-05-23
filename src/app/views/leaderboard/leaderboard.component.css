@@ -131,6 +131,7 @@ tfoot tr:last-child {
 
 .div-scroll {
     width: 76em;
+    margin: auto;
 }
 
 /* width */

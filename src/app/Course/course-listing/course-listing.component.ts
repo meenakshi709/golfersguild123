@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddEditCourseComponent } from '../add-edit-course/add-edit-course.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import Swal from 'sweetalert2';
+import { ExcelService } from 'src/app/Service/excel.service';
 
 @Component({
   selector: 'app-course-listing',
@@ -17,9 +18,10 @@ import Swal from 'sweetalert2';
   styleUrls: ['./course-listing.component.css']
 })
 export class CourseListingComponent implements OnInit {
+  downloadList: any = [];
   courseList: CommonListProperties = new CommonListProperties();
   isLoadingDone: boolean = false;
-  constructor(private service: CommonServiceService, public dialog: MatDialog, public loader: NgxUiLoaderService) { }
+  constructor(private service: CommonServiceService, public dialog: MatDialog, public loader: NgxUiLoaderService,public exportService: ExcelService) { }
 
   ngOnInit(): void {
     this.getCourseList();
@@ -38,7 +40,16 @@ export class CourseListingComponent implements OnInit {
         this.courseList.miDataSource = new MatTableDataSource(data.response.result);
         this.courseList.columnLabels = ['Course Name', 'Address',  'Par 1', 'Par 2', 'Par 3', 'Par 4', 'Par 5', 'Par 6', 'Par 7', 'Par 8', 'Par 9', 'Sum Out', 'Par 10', 'Par 11', 'Par 12', 'Par 13', 'Par 14', 'Par 15', 'Par 16', 'Par 17', 'Par 18', 'Sum In', 'HDCP 1', 'HDCP 2', 'HDCP 3', 'HDCP 4', 'HDCP 5', 'HDCP 6', 'HDCP 7', 'HDCP 8', 'HDCP 9', 'HDCP 10', 'HDCP 11', 'HDCP 12', 'HDCP 13', 'HDCP 14', 'HDCP 15', 'HDCP 16', 'HDCP 17', 'HDCP 18', 'Action'];
         this.courseList.displayedColumns = ['cname', 'caddress', 'par1', 'par2', 'par3', 'par4', 'par5', 'par6', 'par7', 'par8', 'par9', 'pout', 'par10', 'par11', 'par12', 'par13', 'par14', 'par15', 'par16', 'par17', 'par18', 'pinn', 'hdcp1', 'hdcp2', 'hdcp3', 'hdcp4', 'hdcp5', 'hdcp6', 'hdcp7', 'hdcp8', 'hdcp9', 'hdcp10', 'hdcp11', 'hdcp12', 'hdcp13', 'hdcp14', 'hdcp15', 'hdcp16', 'hdcp17', 'hdcp18', 'Action'];
-
+        data.response.result.forEach((item: any) => {
+          const data: any = {};
+          this.courseList.columnLabels.forEach((name: any, index: any) => {
+            if (name != 'Action') {
+              data[name] = item[this.courseList.displayedColumns[index]]
+            }
+          })
+        
+          this.downloadList.push(data);
+        })
         this.courseList.miListMenu = new CommonListMenu();
         this.courseList.miListMenu.menuItems =
           [
@@ -151,7 +162,11 @@ addEditCourseDialog(clickedRecordDetails:any){
     });
   }
 
-
+  downloadExcel() {
+    this.exportService.exportAsExcelFile(
+      this.downloadList, 'Courses List'
+    );
+  }
 
 
 }

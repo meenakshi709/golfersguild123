@@ -10,6 +10,7 @@ import { CommonListProperties } from 'src/app/Shared/common-Listing/common-prope
 import Swal from 'sweetalert2';
 import { AddEditLeaderboardComponent } from '../add-edit-leaderboard/add-edit-leaderboard.component';
 import { AddEditOldScoreComponent } from '../add-edit-old-score/add-edit-old-score.component';
+import { ExcelService } from 'src/app/Service/excel.service';
 
 @Component({
   selector: 'app-leaderboard-listing',
@@ -17,10 +18,10 @@ import { AddEditOldScoreComponent } from '../add-edit-old-score/add-edit-old-sco
   styleUrls: ['./leaderboard-listing.component.css']
 })
 export class LeaderboardListingComponent implements OnInit {
-
+  downloadList: any = [];
   scoreList: CommonListProperties = new CommonListProperties();
   isLoadingDone: boolean = false;
-  constructor(private service: CommonServiceService, public dialog: MatDialog, public loader: NgxUiLoaderService) { }
+  constructor(private service: CommonServiceService, public dialog: MatDialog, public loader: NgxUiLoaderService, public exportService: ExcelService) { }
 
   ngOnInit(): void {
     this.getScoreList();
@@ -40,6 +41,18 @@ export class LeaderboardListingComponent implements OnInit {
         this.scoreList.miDataSource = new MatTableDataSource(data.response.result);
         this.scoreList.columnLabels = ['Tournament Name', 'Player Name', 'Round',  'Group', 'Tournament Date','Gross', 'HDCP', 'Net Score', 'Birdie', 'AGS', 'Action'];
         this.scoreList.displayedColumns = ['tournamentName', 'playerName', 'round_name', 'groupName','ScoreCreatedDate', 'gross', 'hdcp', 'net', 'birdie', 'scoreDifferential', 'Action'];
+
+        data.response.result.forEach((item: any) => {
+          const data: any = {};
+          this.scoreList.columnLabels.forEach((name: any, index: any) => {
+            if (name != 'Action') {
+              data[name] = item[this.scoreList.displayedColumns[index]]
+            }
+          })
+        
+          this.downloadList.push(data);
+        })
+
 
         this.scoreList.miListMenu = new CommonListMenu();
         this.scoreList.miListMenu.menuItems =
@@ -222,6 +235,10 @@ export class LeaderboardListingComponent implements OnInit {
       }
     });
   }
-
+  downloadExcel() {
+    this.exportService.exportAsExcelFile(
+      this.downloadList, 'Scores List'
+    );
+  }
 
 }

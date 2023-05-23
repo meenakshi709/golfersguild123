@@ -11,6 +11,8 @@ import { AddEditTournamentComponent } from '../add-edit-tournament/add-edit-tour
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { response } from 'express';
+import { ExcelService } from 'src/app/Service/excel.service';
+
 
 
 @Component({
@@ -21,8 +23,9 @@ import { response } from 'express';
 export class TournamentListingComponent implements OnInit {
 
   courseList: CommonListProperties = new CommonListProperties();
+  downloadList: any = [];
   isLoadingDone: boolean = false;
-  constructor(private service: CommonServiceService, public dialog: MatDialog, public loader: NgxUiLoaderService) { }
+  constructor(private service: CommonServiceService, public dialog: MatDialog, public loader: NgxUiLoaderService, public exportService: ExcelService) { }
 
   ngOnInit(): void {
     this.getTournamentList();
@@ -42,9 +45,20 @@ export class TournamentListingComponent implements OnInit {
         //  let startDate= myDate.getDate()+ '/' +(myDate.getMonth() + 1)  + '/' + myDate.getFullYear();
 
         this.courseList.miDataSource = new MatTableDataSource(data.response.result);
+        // this.downloadList=data.response.result;
+
         this.courseList.columnLabels = ['Name', 'Event Type', 'Num of Rounds', ' Tournament Date', 'Holes', 'Action'];
         this.courseList.displayedColumns = ['tournamentName', 'formatName', 'numRounds', 'tournamentDate', 'holes', 'Action'];
-
+        data.response.result.forEach((item: any) => {
+          const data: any = {};
+          this.courseList.columnLabels.forEach((name: any, index: any) => {
+            if (name != 'Action') {
+              data[name] = item[this.courseList.displayedColumns[index]]
+            }
+          })
+        
+          this.downloadList.push(data);
+        })
         this.courseList.miListMenu = new CommonListMenu();
         this.courseList.miListMenu.menuItems =
           [
@@ -333,10 +347,12 @@ export class TournamentListingComponent implements OnInit {
 
   }
 
+  downloadExcel() {
+    this.exportService.exportAsExcelFile(
+      this.downloadList, 'Tournament List'
+    );
+  }
+}
 
-}
-function roundDetails(data: any, roundDetails: any) {
-  throw new Error('Function not implemented.');
-}
 
 

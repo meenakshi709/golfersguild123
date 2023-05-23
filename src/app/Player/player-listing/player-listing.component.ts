@@ -9,6 +9,7 @@ import { CommonListMenuItem } from 'src/app/Shared/common-Listing/common-list-me
 import { CommonListProperties } from 'src/app/Shared/common-Listing/common-properties';
 import Swal from 'sweetalert2';
 import { AddEditPlayerComponent } from '../add-edit-player/add-edit-player.component';
+import { ExcelService } from 'src/app/Service/excel.service';
 
 @Component({
   selector: 'app-player-listing',
@@ -16,10 +17,10 @@ import { AddEditPlayerComponent } from '../add-edit-player/add-edit-player.compo
   styleUrls: ['./player-listing.component.css']
 })
 export class PlayerListingComponent implements OnInit {
-
+  downloadList: any = [];
   playerList: CommonListProperties = new CommonListProperties();
   isLoadingDone: boolean = false;
-  constructor(private service: CommonServiceService, public dialog: MatDialog, public loader: NgxUiLoaderService) { }
+  constructor(private service: CommonServiceService, public dialog: MatDialog, public loader: NgxUiLoaderService,public exportService: ExcelService) { }
 
   ngOnInit(): void {
     this.getPlayerList();
@@ -40,6 +41,16 @@ export class PlayerListingComponent implements OnInit {
         this.playerList.columnLabels = ['UserName', 'Name', 'Email', 'Contact No', 'Gender', 'Role', 'State', 'Country', 'Action'];
         this.playerList.displayedColumns = ['userName', 'firstName', 'email', 'contactNumber', 'gender', 'roleName', 'state_name', 'country_name', 'Action'];
 
+        data.response.result.forEach((item: any) => {
+          const data: any = {};
+          this.playerList.columnLabels.forEach((name: any, index: any) => {
+            if (name != 'Action') {
+              data[name] = item[this.playerList.displayedColumns[index]]
+            }
+          })
+        
+          this.downloadList.push(data);
+        })
         this.playerList.miListMenu = new CommonListMenu();
         this.playerList.miListMenu.menuItems =
           [
@@ -140,6 +151,12 @@ export class PlayerListingComponent implements OnInit {
       timer: 5000,
       title: msg,
     });
+  }
+
+  downloadExcel() {
+    this.exportService.exportAsExcelFile(
+      this.downloadList, 'Players List'
+    );
   }
 
 }

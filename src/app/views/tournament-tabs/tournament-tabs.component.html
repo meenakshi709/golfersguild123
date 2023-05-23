@@ -1,7 +1,7 @@
 <div class="review">
 
 
-  <a class="btn   mr-2 mb-4" *ngFor="let item of yearData?.result;"
+  <a class="btn   mr-2 "mb-4 *ngFor="let item of yearData?.result;"
     [ngClass]="{'btn-white': item?.year !=this.selectedYear,'selectedYear':item?.year==this.selectedYear}"
     (click)="getMonthDetails(item?.year);this.selectedYear=item?.year">
     {{item?.year}}</a>

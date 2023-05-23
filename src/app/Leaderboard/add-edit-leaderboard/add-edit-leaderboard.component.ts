@@ -6,12 +6,15 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { forkJoin } from 'rxjs';
 import { CommonServiceService } from 'src/app/Service/common.service';
 import Swal from 'sweetalert2';
+import { Socket, io } from 'socket.io-client';
+
 @Component({
   selector: 'app-add-edit-leaderboard',
   templateUrl: './add-edit-leaderboard.component.html',
   styleUrls: ['./add-edit-leaderboard.component.css']
 })
 export class AddEditLeaderboardComponent implements OnInit {
+  private socket:any= Socket ;
   class11: any = 0;
   playerList: any = [];
   submitted = false;
@@ -89,6 +92,12 @@ export class AddEditLeaderboardComponent implements OnInit {
     private service: CommonServiceService,
     public route: Router) { }
   ngOnInit(): void {
+    this.socket = io('http://localhost:4200');
+
+    // Listen for events
+    this.socket.on('message', (data:any) => {
+      console.log(data);
+    });
     for (let i = 1; i <= 18; i++) {
       const agsKeyName = "ags" + i;
       const scoreKeyName = "score" + i;
@@ -454,4 +463,10 @@ export class AddEditLeaderboardComponent implements OnInit {
     const newFieldName = "ags" + fieldNum;
     this.scoreForm.controls[newFieldName].setValue(ags);
   }
+
+ // Emit data
+ sendMessage() {
+  this.socket.emit('message', 'Hello from Angular!');
+}
+
 }

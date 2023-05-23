@@ -1,14 +1,37 @@
 .review{
-    background-color:#fff ;
-    border-radius: 20px;
-    padding: 20px;
-    color: #000;
-    text-align: left;
-    margin-top:6rem;
-    margin-bottom:2rem;
+    background:url(../../../assets/images/eventbg.png) no-repeat bottom center;
+   min-height: 35rem;
     
-}
+    color: #fff;
+    text-align: left;
+  
+    position: relative;
+    background-size: cover;
 
+}
+ .select-outside-frame{
+    width:14rem;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border-radius: 38px;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem 0.5rem;
+    height: 40px;
+    position: relative;
+}
+.select-outside-frame img{
+    float: left;
+    margin-top: 4px;
+    position: absolute;
+}
+.review select{
+    width:11rem;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: none;
+  float: left;
+  margin-left: 1.5rem;
+  position: absolute;
+   
+}
 
 .nav-tabs .nav-link{
     margin-bottom: 10px!important;
@@ -65,7 +88,7 @@ float:right;
 #lead{
     background: url("../../../assets/images/background.png") no-repeat top center;
     background-size: cover;
-    padding: 3rem 1rem 1rem 1rem;
+   
 }
 .nav-tabs .nav-link{
     background:rgba(0, 0, 0, 0.61)!important;
@@ -185,7 +208,7 @@ vertical-align: middle!important;
 
 
 #leadertable{
-    width: 75em;
+    width: 76em;
     overflow-x: auto;
     white-space: nowrap;
     margin: auto;
@@ -197,16 +220,36 @@ vertical-align: middle!important;
     margin: auto;
 }
 .div-scroll{
-     width: 75em;
+     width: 76em;
+     margin: auto;
 }
 
+
+.div-static::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 20px;
+}
+
+/* Handle */
+.div-static::-webkit-scrollbar-thumb {
+    background: rgb(184, 12, 12);
+}
+
+/* Handle on hover */
+.div-static::-webkit-scrollbar-thumb:hover {
+    background: rgb(131, 12, 12);
+}
 @media screen and (max-width:600px) {
     #leadertable{
-            width: 75em;
+            width: 76em;
             overflow-x: auto;
             white-space: nowrap;
         }
-
+        #leaderbrd{
+            padding-left: 0!important;
+            padding-right: 0!important;
+            
+        }
 }
 .dblcircle
 {
@@ -319,7 +362,7 @@ table.dataTable thead th, table.dataTable thead td{
   
         float: left!important;
         text-align: center!important;
-        width: 31px;
+        width: 30px;
         margin-right: 2px;
         margin-left: 2px;
         
@@ -329,7 +372,7 @@ table.dataTable thead th, table.dataTable thead td{
         float: left!important;
         font-weight:400;
         text-align: center!important;
-        width: 31px;
+        width: 28px;
         margin-right: 2px;
         margin-left: 2px;
       
@@ -358,3 +401,16 @@ table.dataTable thead th, table.dataTable thead td{
   ::-webkit-scrollbar-thumb:hover {
     background: #555; 
   } 
+  
+  
+  ul{
+    list-style-type:none!important ;
+    padding:0!important;
+}.overflow{
+    /* display:inline-block; */
+
+    white-space: nowrap; 
+    overflow:hidden !important;
+    text-overflow: ellipsis;
+     min-width: 130px!important;
+}

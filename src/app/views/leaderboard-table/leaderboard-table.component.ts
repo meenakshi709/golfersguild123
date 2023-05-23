@@ -16,9 +16,10 @@ export class LeaderboardTableComponent {
   respnseSmallData: any = [];
   title = 'datatables';
   playerData: any
-  combinedplayerData: any
-  dataOption: DataTables.Settings = {};
+  combinedplayerData: any;
   roundsArr: any = [];
+  dataOption: DataTables.Settings = {};
+
 
   
 

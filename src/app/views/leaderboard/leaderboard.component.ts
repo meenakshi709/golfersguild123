@@ -113,6 +113,7 @@ export class LeaderboardComponent implements OnInit {
 
     })
   }
+  
   getRoundDetailByID(tourID: string, roundID: string): void {
 
     this.service.getAPIMethod('/tournament/tournamentDetailedScoreById?tour_id=' + tourID + '&player_id=0&round_Id=' + roundID).subscribe((APTres: any) => {
