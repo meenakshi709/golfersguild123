@@ -27,7 +27,7 @@ export class LeaderboardComponent implements OnInit {
   filteredBirdie: any = [];
   stableFordList: any = [];
   isSfpShown: boolean = false;
-
+  clickedRecordIndex: any;
   title = 'golfersguild';
   modalOptions: NgbModalOptions;
   closeResult: string = '';
@@ -113,7 +113,7 @@ export class LeaderboardComponent implements OnInit {
 
     })
   }
-  
+
   getRoundDetailByID(tourID: string, roundID: string): void {
 
     this.service.getAPIMethod('/tournament/tournamentDetailedScoreById?tour_id=' + tourID + '&player_id=0&round_Id=' + roundID).subscribe((APTres: any) => {
@@ -184,9 +184,7 @@ export class LeaderboardComponent implements OnInit {
             let diff = (scoreValue - value);
             if (this.tournamentDetails.eventType == 1) {
               for (let i = 0; i < this.stableFordList.length; i++) {
-
                 if (diff == this.stableFordList[i].netScorePoints) {
-
                   if (hdcpValue <= item.hdcp) {
 
                     let total = (this.stableFordList[i].points + 1);
@@ -328,10 +326,10 @@ export class LeaderboardComponent implements OnInit {
 
   getTourDetail(tourId: string): void {
     this.service.getAPIMethod(`/tournament/tournamentScoreById?tournamentId=${tourId}&playerId=0`).subscribe((APTres: any) => {
-     
+
       if (APTres?.response?.result.length > 0) {
 
-       
+
         const arr: any = [];
         APTres?.response?.result.forEach((itemArr: any, index: any) => {
           itemArr.forEach((elem: any) => {
@@ -360,10 +358,10 @@ export class LeaderboardComponent implements OnInit {
       let getNetData = filterData
       for (let index = 0; index < length; index++) {
         if (getGrossData?.length > 0) {
-         
+
           let topGross = Math.min(...getGrossData.map((o: any) => o['TotalGross']));
           const grossObj = getGrossData.filter((obj: any) => obj.TotalGross == topGross)
-         
+
           this.filteredGross.push({ name: grossObj[0]?.playerName, gross: grossObj[0]?.TotalGross })
           getGrossData = getGrossData.filter((obj: any) => obj.TotalGross !== topGross)
         }

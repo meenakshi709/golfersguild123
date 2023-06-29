@@ -15,9 +15,10 @@ body {
     padding: 0;
     box-sizing: border-box;
     background-color: #15181f;
-    color: #fff;
+    color: #ffffffe1;
     font-size: 1rem;
-    font-family: poppins-Regular !important;
+    font-family: poppins-Regular !important; 
+    height: 100vh;
 }
 
 * {
@@ -223,11 +224,7 @@ body {
     height: 100%;
 }
 
-body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    height: 100vh;
-}
+
 
 /*course */
 .largeBox {
@@ -472,6 +469,7 @@ mat-label {
 .mat-form-field:not(.mat-form-field-appearance-legacy) .mat-form-field-prefix .mat-icon,
 .mat-form-field:not(.mat-form-field-appearance-legacy) .mat-form-field-suffix .mat-icon {
     color: #00215A !important;
+    margin-right: 2px!important;
 }
 
 .mat-paginator {
@@ -567,3 +565,8 @@ mat-label {
 font-size: 0.9rem!important;
 color:rgb(99, 98, 98)!important;
   }
+  .mat-form-field-appearance-outline .mat-form-field-outline{
+
+    border-radius: 30px!important;
+    border: none!important;
+}

@@ -9,6 +9,9 @@
     background-size: cover;
 
 }
+p{
+
+}
  .select-outside-frame{
     width:14rem;
     background: #FFFFFF 0% 0% no-repeat padding-box;
@@ -86,8 +89,7 @@ float:right;
 }
 
 #lead{
-    background: url("../../../assets/images/background.png") no-repeat top center;
-    background-size: cover;
+background-color: #15181F;
    
 }
 .nav-tabs .nav-link{
@@ -219,8 +221,9 @@ vertical-align: middle!important;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     margin: auto;
 }
-.div-scroll{
-     width: 76em;
+.div-scrollsmall{
+    
+     width: 74em;
      margin: auto;
 }
 
@@ -288,7 +291,6 @@ padding: 3px;
 
 }
 table.dataTable thead th, table.dataTable thead td{
-    padding:3px 5px!important;
     vertical-align: middle;
 }
 .cornerCard{
@@ -363,8 +365,8 @@ table.dataTable thead th, table.dataTable thead td{
         float: left!important;
         text-align: center!important;
         width: 30px;
-        margin-right: 2px;
-        margin-left: 2px;
+        margin-right: 3px;
+        margin-left: 3px;
         
     }
     td span{
@@ -372,9 +374,9 @@ table.dataTable thead th, table.dataTable thead td{
         float: left!important;
         font-weight:400;
         text-align: center!important;
-        width: 28px;
-        margin-right: 2px;
-        margin-left: 2px;
+        width: 30px;
+        margin-right: 3px;
+        margin-left: 3px;
       
     
     }
@@ -413,4 +415,10 @@ table.dataTable thead th, table.dataTable thead td{
     overflow:hidden !important;
     text-overflow: ellipsis;
      min-width: 130px!important;
+}
+#year{
+    font-size: 0.9rem;
+}
+mat-label{
+    font-size: 0.9rem; 
 }

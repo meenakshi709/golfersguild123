@@ -68,7 +68,7 @@ export class MatchFormatListingComponent implements OnInit {
 
     if (clickedRecord.name == 'Edit') {
 
-      this.addEditEventDetails(clickedRecord.data)
+      this.addEditMatchFromatDetails(clickedRecord.data)
     }
     else if (clickedRecord.name == 'Delete') {
       this.deleteTournamentFormat(clickedRecord.data)
@@ -174,7 +174,7 @@ debugger
 
   // approved list status
 
-  addEditEventDetails(clickedRecordDetails: any) {
+  addEditMatchFromatDetails(clickedRecordDetails: any) {
 debugger
 
         const dialogRef = this.dialog.open(AddEditMatchFormatComponent, {
@@ -185,6 +185,7 @@ debugger
     });
        
         dialogRef.afterClosed().subscribe(result => {
+          debugger
           if (result) {
             this.getMatchFormatList();
           }

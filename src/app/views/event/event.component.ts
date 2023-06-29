@@ -26,6 +26,7 @@ export class EventComponent implements OnInit {
   stableFordList: any = [];
   tournamentDetails: any;
   isSfpShown: boolean = false;
+  clickedRow: any;
   combinedplayerData: any;
   roundsArr: any = [];
   playerData: any;
@@ -69,7 +70,7 @@ export class EventComponent implements OnInit {
 
       }]
     };
-    this.summryTable();
+    // this.summryTable();
     // this.onMonthChange(0);
     this.getYearAccordingRoute();
 
@@ -82,7 +83,7 @@ export class EventComponent implements OnInit {
       "paging": false,
       "order": [[3, "asc"]],
       "columnDefs": [{
-        'targets': [2, 3, 5, 8], /* column index */
+        'targets': [2, 3], /* column index */
         'orderable': false, /* true or false */
 
         orderData: [0]
@@ -484,7 +485,7 @@ export class EventComponent implements OnInit {
 
 
   getYearAccordingRoute(): void {
- 
+
     this.loader.start();
     this.service.getAPIMethod(`/tournament/getTourYearDetails`).subscribe((APIresponse: any) => {
       this.yearData = APIresponse?.response
@@ -514,7 +515,7 @@ export class EventComponent implements OnInit {
         }
 
 
-        this.getMonthWiseTour()
+        this.getMonthWiseTour();
       }
     })
   }
@@ -522,7 +523,7 @@ export class EventComponent implements OnInit {
   getMonthWiseTour(): void {
     const controls: any = this.filterGroup.controls;
     this.service.getAPIMethod(`/tournament/getTourDetails?year=${controls.year.value}&month=${controls.month.value}`).subscribe((APTres: any) => {
-      debugger
+   
       if (APTres.response && APTres.response.result.length > 0) {
 
         this.respnseData = APTres.response.result;
@@ -530,39 +531,44 @@ export class EventComponent implements OnInit {
         if (this.filterGroup.controls.tour.value) {
           this.filterGroup.controls.tour.setValue(this.filterGroup.controls.tour.value)
         } else {
-          this.filterGroup.controls.tour.setValue( APTres.response.result[0].tourID)
+       //  this.filterGroup.controls.tour.setValue(APTres.response.result[0].tourID)
         }
-        
-        this.getRoundAccordingRoute(this.tourId);
+       debugger
+        //this.getRoundAccordingRoute(this.tourId);
+        this.selectedTournament=this.tourId;
+        this.summryTable();
+   
       }
     });
   }
   getRoundAccordingRoute(tour_id: string): void {
-    debugger;
+debugger
     const controls: any = this.filterGroup.controls;
     this.service.getAPIMethod(`/tournament/getTournamentRoundDetails?tourId=${controls.tour.value}`).subscribe((APIresponse: any) => {
-
+      debugger;
       this.roundData = APIresponse?.response;
       if (this.tournamentDetails.eventType == 1) {
         this.service.getAPIMethod('/tournament/getStablefordPoints').subscribe((res: any) => {
           if (res.response.result) {
             this.stableFordList = res.response.result;
             if (this.roundData && this.roundData?.result.length > 0)
-             this.getRoundDetailByID(this.roundData?.result[0]?.tourID, this.roundData?.result[0]?.round_Id)
+              this.getRoundDetailByID(this.roundData?.result[0]?.tourID, this.roundData?.result[0]?.round_Id)
           }
         })
       } else {
         if (this.roundData && this.roundData?.result.length > 0)
-         this.getRoundDetailByID(this.roundData?.result[0]?.tourID, this.roundData?.result[0]?.round_Id)
+          this.getRoundDetailByID(this.roundData?.result[0]?.tourID, this.roundData?.result[0]?.round_Id)
       }
 
     })
   }
 
   summryTable() {
-    this.service.getAPIMethod('/tournament/tourDetails').subscribe((APIresponse: any) => {
-      const tourId = APIresponse.response?.result?.tour_id;
-      this.service.getAPIMethod('/tournament/tournamentScoreById?tournamentId=' + tourId + '&playerId=0').subscribe((APTres: any) => {
+    debugger
+
+this.getRoundAccordingRoute(this.selectedTournament);
+
+      this.service.getAPIMethod('/tournament/tournamentScoreById?tournamentId=' +this.selectedTournament + '&playerId=0').subscribe((APTres: any) => {
         this.combinedplayerData = [];
         if (APTres.response && APTres.response.result) {
 
@@ -579,6 +585,7 @@ export class EventComponent implements OnInit {
               'TotalNet': recordDetails?.TotalNet,
               'TotalBirdie': recordDetails?.TotalBirdie,
               'round': recordDetails?.round,
+              'isExpand': false
             }
             if (recordDetails.round.length > this.roundsArr.length) {
               recordDetails.round.forEach((round: any) => {
@@ -591,7 +598,7 @@ export class EventComponent implements OnInit {
         }
       }, error => console.error(error));
 
-    }, error => console.error(error));
+  
 
 
   }

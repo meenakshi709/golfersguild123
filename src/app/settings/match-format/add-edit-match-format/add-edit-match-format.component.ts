@@ -58,7 +58,7 @@ export class AddEditMatchFormatComponent implements OnInit {
 debugger
       if (APIresponse.error != 'X') {
 
-        this.closeDialogClick();
+        this.dialogRef.close(true);     
         this.sweetAlertMsg("success", APIresponse.response.result.msg)
       }
       else {

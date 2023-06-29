@@ -61,7 +61,8 @@ export class AddUpdateStablefordComponent implements OnInit {
 
       if (APIresponse.error != 'X') {
 
-        this.closeDialogClick();
+       
+        this.dialogRef.close(true);
         this.sweetAlertMsg("success", APIresponse.response.result.msg)
       }
       else {
@@ -90,7 +91,7 @@ export class AddUpdateStablefordComponent implements OnInit {
   }
   
   closeDialogClick(): void {
-    this.dialogRef.close(false);
+    this.dialogRef.close();
   }
 // Toaster msg function
 sweetAlertMsg(typeIcon: any, msg: any) {
