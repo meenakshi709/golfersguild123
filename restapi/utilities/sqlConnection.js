@@ -1,10 +1,3 @@
-/**
- * Project Name: FIDS.
- * Date: 22/01/2021
- * Author: Mohit
- * Contact: Echelon Edge FIDS Development Team.
- * Copyright: Echelon Edge Pvt. Ltd.
- */
 
 "use strict";
 

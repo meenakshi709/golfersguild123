@@ -142,7 +142,7 @@
                                             <td>{{score?.TotalNet}}</td>
                                             <td>{{score?.TotalBirdie}}</td>
                                             <td (click)="score.isExpand=!score.isExpand;clickedRow=score">
-                                                <mat-icon>people </mat-icon></td>
+                                                <mat-icon>people </mat-icon>{{clickedRow}}</td>
 
                                               
 
@@ -258,7 +258,7 @@
                                                                                     <td class="holebox2" width="150">
                                                                                         <span class="overflow">{{ player?.board?.playerName | titlecase
                                                                                             }} </span> <mat-icon style="color:#fcb430;font-size:14px;"
-                                                                                            (click)="isSfpShown=!isSfpShown">info</mat-icon>
+                                                                                            (click)="isSfpShown=!isSfpShown;clickedRecordIndex=k">info</mat-icon>
                                                                                     </td>
                                 
                                 
@@ -288,7 +288,7 @@
                                                                                     </td>
                                 
                                 
-                                                                                    <td *ngFor="let stf of rd.data[0]?.stf" width="350">
+                                                                                    <td *ngFor="let stf of rd.data[clickedRecordIndex]?.stf" width="350">
                                                                                         <span *ngFor="let stfData of stf.stfValue;let ik=index">
                                                                                             <!-- <span class="{{ getactiveClass(stf,ik)}}"> -->
                                                                                             {{stfData}}

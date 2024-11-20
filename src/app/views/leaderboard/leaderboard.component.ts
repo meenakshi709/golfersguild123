@@ -454,6 +454,10 @@ export class LeaderboardComponent implements OnInit {
         class11 = "dblcircle";
 
         break;
+        case -3:
+          class11 = "dblcircle2";
+  
+          break;
       case 0:
         class11 = "equal";
 

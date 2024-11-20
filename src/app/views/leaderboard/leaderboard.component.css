@@ -192,6 +192,13 @@ h3{
     padding: 3px;
 
 }
+.dblcircle2 {
+    border-radius: 50%;
+    border: 1px solid #ff7700;
+    box-shadow: 0 0 0 .5px rgb(255, 136, 0), 0 0 0 1.5px white, 0 0 0 2px rgb(252, 194, 37);
+    padding: 3px;
+
+}
 
 .circle {
     border-radius: 50%;

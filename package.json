@@ -43,7 +43,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.4.0",
     "file-saver": "^2.0.5",
-    "firebase-admin": "^11.8.0",
+    "firebase-admin": "^13.0.0",
     "jquery": "^3.6.0",
     "jsonwebtoken": "^9.0.0",
     "jspdf": "^2.3.1",
@@ -65,8 +65,8 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~12.1.1",
-    "@angular/cli": "^12.2.18",
+    "@angular-devkit/build-angular": "^19.0.0",
+    "@angular/cli": "^19.0.0",
     "@angular/compiler-cli": "~12.1.1",
     "@types/datatables.net": "^1.10.18",
     "@types/file-saver": "^2.0.5",

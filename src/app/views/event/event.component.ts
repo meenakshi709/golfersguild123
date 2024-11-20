@@ -9,7 +9,8 @@ import { CommonServiceService } from 'src/app/Service/common.service';
 @Component({
   selector: 'app-event',
   templateUrl: './event.component.html',
-  styleUrls: ['./event.component.css']
+  styleUrls: ['./event.component.css'],
+  
 })
 export class EventComponent implements OnInit {
 
@@ -110,6 +111,7 @@ export class EventComponent implements OnInit {
   filteredNet: any = []
   filteredBirdie: any = [];
 
+  clickedRecordIndex: any;
 
   data: any;
   roundData: any = [];

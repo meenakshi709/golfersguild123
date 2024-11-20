@@ -93,7 +93,7 @@ const socketCtrl=require('./restapi/socketController');
 
 
 
-server1.listen(4200, '0.0.0.0', function () {
+server1.listen(port1, '0.0.0.0', function () {
 //     console.log("in server",__dirname);
 
   console.log('Listening to port http:' + port1);

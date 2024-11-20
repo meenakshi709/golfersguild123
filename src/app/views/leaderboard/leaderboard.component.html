@@ -165,7 +165,7 @@
                                                 <tr *ngFor="let player of rd.data;let k=index">
 
 
-                                                    <th scope="row" class="starbg" width="40"> </th>
+                                                    <th scope="row" class="starbg" width="30"> </th>
                                                     <td class="holebox2" width="150">
                                                         <span class="overflow">{{ player?.board?.playerName | titlecase
                                                             }} </span> <mat-icon style="color:#fcb430;font-size:14px;"
@@ -183,8 +183,8 @@
 
                                                     <td class="" width="50"> {{player?.board?.gross}}</td>
                                                     <td class="" width="40"> {{player?.board?.hdcp}}</td>
-                                                    <th width="40"> {{player?.board?.net}}</th>
-                                                    <th width="50" scope="col" class=" text-center">
+                                                    <th width="35"> {{player?.board?.net}}</th>
+                                                    <th width="45" scope="col" class=" text-center">
 
                                                         {{player?.board?.birdie}}
                                                     </th>
@@ -234,6 +234,9 @@
                                                     <td scope="col" colspan="4" class="holeboxBgFoot text-left">
                                                         <table class="table-condensed  text-white">
                                                             <tr>
+                                                                <td><span class="dblcircle2">&nbsp;</span>&nbsp;<i
+                                                                    class="pt-2">Albatross</i></td>
+
                                                                 <td><span class="dblcircle">&nbsp;</span>&nbsp;<i
                                                                         class="pt-2">Eagle</i></td>
 

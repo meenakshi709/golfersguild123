@@ -304,14 +304,9 @@ export class TournamentListingComponent implements OnInit {
 
   }
 
-
-
-
-
-
   // approved list status
 
-  addEditInvitedList(clickedRecordDetails: any) {
+  addEditInvitedList(clickedRecordDetails: any) { 
 
 
     this.loader.start();
